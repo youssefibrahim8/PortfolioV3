@@ -1,0 +1,8 @@
+# local editor / tool config
+.claude/
+# one-off image cleanup script from an earlier version (its source image is gone)
+tools/
+# OS clutter
+Thumbs.db
+desktop.ini
+.DS_Store

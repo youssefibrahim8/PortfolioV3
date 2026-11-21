@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Youssef Ibrahim — Portfolio</title>
+  <meta name="description" content="Portfolio of Youssef Ibrahim — Computer Science at Carleton University.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Josefin+Sans:wght@300;400;600&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/city.webp">
+  <link rel="stylesheet" href="styles.css?v=10">
+</head>
+<body>
+
+<!-- =====================================================
+     THE CITY — the balcony view
+     ===================================================== -->
+<main class="city" id="city">
+  <div class="city-scroll" id="cityScroll">
+    <div class="city-scene" id="cityScene">
+      <img class="scene-img" src="assets/city.webp" alt="" draggable="false">
+      <svg class="scene-svg" id="world" viewBox="0 0 1672 941" preserveAspectRatio="none" role="group" aria-label="City — choose a building"></svg>
+    </div>
+  </div>
+  <canvas class="rain" id="rain" aria-hidden="true"></canvas>
+  <header class="masthead">
+    <span class="mark" aria-hidden="true"><span>YI</span></span>
+    <div>
+      <h1>Youssef Ibrahim</h1>
+      <p>Computer Science · Carleton University</p>
+    </div>
+  </header>
+  <div class="hud">
+    <span class="time" id="time">--:--</span>
+    <span class="hint">Hover a building · click to go inside</span>
+  </div>
+  <p class="swipe-hint" aria-hidden="true">← swipe to look around →</p>
+</main>
+
+<div class="flash" aria-hidden="true"></div>
+
+<!-- =====================================================
+     PROJECTS — the boardroom
+     ===================================================== -->
+<section class="room room-projects" data-room="projects" aria-label="Projects" inert
+         style="--img:url(assets/boardroom.webp); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
+  <div class="scene">
+    <img class="scene-img" src="assets/boardroom.webp" alt="" draggable="false">
+    <div class="slides-quad" id="slidesQuad">
+      <div class="slides" id="slides" aria-live="polite">
+        <article class="slide slide-title on">
+          <p class="s-kicker">A presentation by Youssef Ibrahim</p>
+          <h3>Selected Projects</h3>
+          <i class="s-rule"></i>
+          <p class="s-sub">Carleton University · Computer Science</p>
+        </article>
+        <article class="slide slide-proj" data-seed="11">
+          <div class="s-body">
+            <p class="s-kicker">Project 01</p>
+            <h3>Project One</h3>
+            <p>Placeholder description: what it does, who it's for, and what you learned building it.</p>
+            <ul class="tags"><li>Tag</li><li>Tag</li><li>Tag</li></ul>
+            <a href="#" class="s-link">View project →</a>
+          </div>
+          <div class="s-art"><svg></svg></div>
+        </article>
+        <article class="slide slide-proj" data-seed="27">
+          <div class="s-body">
+            <p class="s-kicker">Project 02</p>
+            <h3>Project Two</h3>
+            <p>Placeholder description: what it does, who it's for, and what you learned building it.</p>
+            <ul class="tags"><li>Tag</li><li>Tag</li></ul>
+            <a href="#" class="s-link">View project →</a>
+          </div>
+          <div class="s-art"><svg></svg></div>
+        </article>
+        <article class="slide slide-proj" data-seed="43">
+          <div class="s-body">
+            <p class="s-kicker">Project 03</p>
+            <h3>Project Three</h3>
+            <p>Placeholder description: what it does, who it's for, and what you learned building it.</p>
+            <ul class="tags"><li>Tag</li><li>Tag</li><li>Tag</li></ul>
+            <a href="#" class="s-link">View project →</a>
+          </div>
+          <div class="s-art"><svg></svg></div>
+        </article>
+        <article class="slide slide-proj" data-seed="61">
+          <div class="s-body">
+            <p class="s-kicker">Project 04</p>
+            <h3>Project Four</h3>
+            <p>Placeholder description: what it does, who it's for, and what you learned building it.</p>
+            <ul class="tags"><li>Tag</li><li>Tag</li></ul>
+            <a href="#" class="s-link">View project →</a>
+          </div>
+          <div class="s-art"><svg></svg></div>
+        </article>
+        <article class="slide slide-title">
+          <p class="s-kicker">End of deck</p>
+          <h3>Questions?</h3>
+          <i class="s-rule"></i>
+          <p class="s-sub">Find me at the red phone booth on the corner.</p>
+        </article>
+        <div class="s-ui">
+          <button class="s-btn prev" type="button" aria-label="Previous slide">‹</button>
+          <div class="s-dots"></div>
+          <span class="s-count">01 / 06</span>
+          <button class="s-btn next" type="button" aria-label="Next slide">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <header class="room-head">
+    <a class="back" href="#">← Street</a>
+    <div class="room-title"><p class="label">Top Floor · Projects</p><h2>The Boardroom</h2></div>
+    <nav class="elevator" aria-label="Rooms"></nav>
+  </header>
+</section>
+
+<!-- =====================================================
+     PROFILE — the precinct desk
+     ===================================================== -->
+<section class="room room-profile" data-room="profile" aria-label="Profile" inert
+         style="--img:url(assets/precinct.webp); --ar:1.3333; --fx:.5; --fy:.6; --mw:200">
+  <div class="scene">
+    <img class="scene-img" src="assets/precinct.webp" alt="" draggable="false">
+    <svg class="scene-svg" viewBox="0 0 1448 1086" preserveAspectRatio="none">
+      <defs>
+        <radialGradient id="fileGlow" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ffd98a" stop-opacity=".45"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+      </defs>
+      <ellipse class="file-halo" cx="696" cy="668" rx="240" ry="100" fill="url(#fileGlow)"/>
+      <polygon class="file-hot" id="fileHot" points="627,597 877,611 883,628 878,642 826,733 812,743 660,729 514,717 510,703" tabindex="0" role="button" aria-label="Open the case file on Youssef Ibrahim"/>
+    </svg>
+    <div class="file-tag" aria-hidden="true"><b>Ibrahim, Y.</b><span>Case file · click to open</span></div>
+  </div>
+  <header class="room-head">
+    <a class="back" href="#">← Street</a>
+    <div class="room-title"><p class="label">The Precinct · Profile</p><h2>Detective Bureau</h2></div>
+    <nav class="elevator" aria-label="Rooms"></nav>
+  </header>
+
+  <div class="file-modal" hidden>
+    <div class="file-pop">
+      <button class="file-close" type="button">Back on the desk ✕</button>
+      <article class="folder">
+        <div class="folder-tab">Case No. 47-2189 — Ibrahim, Y.</div>
+        <div class="page page-l">
+          <i class="clip"></i>
+          <figure class="polaroid">
+            <div class="photo"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="#2a1f4a"/><circle cx="50" cy="40" r="17" fill="#0d0a1c"/><path d="M18 100 Q20 64 50 62 Q80 64 82 100Z" fill="#0d0a1c"/></svg></div>
+            <figcaption>Photo goes here</figcaption>
+          </figure>
+          <dl class="fields">
+            <dt>Name</dt><dd>Youssef Ibrahim</dd>
+            <dt>Program</dt><dd>B.C.S. Computer Science</dd>
+            <dt>Institution</dt><dd>Carleton University</dd>
+            <dt>Based in</dt><dd>City, Province</dd>
+            <dt>Status</dt><dd>Open to opportunities</dd>
+          </dl>
+          <span class="stamp">Confidential</span>
+        </div>
+        <div class="page page-r">
+          <h3>Summary</h3>
+          <p>Placeholder bio. Two or three sentences about who you are, what you build, and what you're curious about right now.</p>
+          <p>Second placeholder paragraph: what you're studying, what kind of work you're looking for, or something people should know about you.</p>
+          <h3>Currently</h3>
+          <p>Placeholder: a course, project, or role you're working on.</p>
+          <p class="sig">Y. Ibrahim</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     SKILLS — the library
+     ===================================================== -->
+<section class="room room-skills" data-room="skills" aria-label="Skills" inert
+         style="--img:url(assets/library.webp); --ar:1.7758; --fx:.72; --fy:.45; --mw:240">
+  <div class="scene">
+    <img class="scene-img" src="assets/library.webp" alt="" draggable="false">
+    <svg class="scene-svg" viewBox="0 0 1671 941" preserveAspectRatio="none">
+      <polygon class="book-hot" data-i="0" points="1187,302 1210,290 1236,293 1282,301 1262,512 1257,576 1198,553 1149,564" tabindex="0" role="button" aria-label="Skill One"/>
+      <polygon class="book-hot" data-i="1" points="1289,234 1312,222 1336,222 1426,238 1408,283 1338,307 1323,508 1261,512" tabindex="0" role="button" aria-label="Skill Two"/>
+      <polygon class="book-hot" data-i="2" points="1438,163 1464,144 1570,148 1568,208 1559,525 1464,520 1393,523" tabindex="0" role="button" aria-label="Skill Three"/>
+    </svg>
+    <div class="book-tip" aria-hidden="true"></div>
+    <p class="lib-hint">Take a book from the shelf</p>
+
+    <div class="tome" id="tome" aria-live="polite">
+      <div class="tome-page right">
+        <p class="t-kicker">Notes</p>
+        <p class="t-note"></p>
+        <p class="t-kicker">Used in</p>
+        <ul class="t-used"><li>Placeholder project</li><li>Placeholder course</li></ul>
+        <span class="t-folio">— ii —</span>
+      </div>
+      <div class="tome-flip">
+        <div class="tome-face cover"><i class="cover-emblem"></i><b class="cover-title"></b></div>
+        <div class="tome-face back">
+          <p class="t-kicker t-section"></p>
+          <h3 class="t-title"></h3>
+          <i class="t-rule"></i>
+          <p class="t-label">Proficiency</p>
+          <div class="t-level"></div>
+          <span class="t-folio">— i —</span>
+        </div>
+      </div>
+    </div>
+    <button class="tome-close" type="button">Return to shelf ✕</button>
+  </div>
+  <header class="room-head">
+    <a class="back" href="#">← Street</a>
+    <div class="room-title"><p class="label">The Library · Skills</p><h2>Reading Room</h2></div>
+    <nav class="elevator" aria-label="Rooms"></nav>
+  </header>
+</section>
+
+<!-- =====================================================
+     HOBBIES — the museum
+     ===================================================== -->
+<section class="room room-hobbies" data-room="hobbies" aria-label="Hobbies" inert
+         style="--img:url(assets/museum.webp); --ar:1.7758; --fx:.5; --fy:.5; --mw:240">
+  <div class="scene">
+    <img class="scene-img" src="assets/museum.webp" alt="" draggable="false">
+    <svg class="scene-svg" viewBox="0 0 1671 941" preserveAspectRatio="none" id="museumSvg">
+      <defs>
+        <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a8"/><stop offset=".5" stop-color="#d9a24a"/><stop offset="1" stop-color="#7a4e1c"/></linearGradient>
+        <linearGradient id="gBronze" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a2a14"/><stop offset=".45" stop-color="#b8743a"/><stop offset="1" stop-color="#3a1e0e"/></linearGradient>
+        <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3a0a12"/><stop offset=".45" stop-color="#9b1c24"/><stop offset="1" stop-color="#2a060c"/></linearGradient>
+        <linearGradient id="gGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".16"/><stop offset=".5" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#ffffff" stop-opacity=".08"/></linearGradient>
+        <radialGradient id="gCaseLight" cx=".5" cy="1" r=".8"><stop offset="0" stop-color="#ffd98a" stop-opacity=".35"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+      </defs>
+      <!-- placeholder exhibits inside the glass cases -->
+      <g class="exhibit" data-i="0">
+        <ellipse cx="160" cy="742" rx="110" ry="14" fill="url(#gCaseLight)"/>
+        <rect x="112" y="712" width="96" height="26" rx="3" fill="#2a160c" stroke="#d9a24a" stroke-width="2"/>
+        <path d="M160 552 c-22 0 -26 12 -18 22 c-34 16 -46 52 -38 86 c6 26 26 46 56 52 c30 -6 50 -26 56 -52 c8 -34 -4 -70 -38 -86 c8 -10 4 -22 -18 -22z" fill="url(#gRed)" stroke="#f2c46b" stroke-width="2"/>
+        <path d="M110 640 h100 M114 620 h92" stroke="#f2c46b" stroke-width="3" opacity=".8"/>
+        <path d="M140 660 l20 -18 l20 18 l-20 18z" fill="none" stroke="#f2c46b" stroke-width="2"/>
+      </g>
+      <g class="exhibit" data-i="1">
+        <ellipse cx="433" cy="690" rx="60" ry="8" fill="url(#gCaseLight)"/>
+        <rect x="402" y="672" width="62" height="16" rx="2" fill="#2a160c" stroke="#d9a24a" stroke-width="1.5"/>
+        <path d="M433 600 l22 32 l-10 0 l0 40 l-24 0 l0 -40 l-10 0z" fill="url(#gGold)"/>
+        <circle cx="433" cy="604" r="16" fill="url(#gGold)" stroke="#7a4e1c" stroke-width="1.5"/>
+        <path d="M425 604 h16 M433 596 v16" stroke="#7a4e1c" stroke-width="2"/>
+      </g>
+      <g class="exhibit" data-i="2">
+        <ellipse cx="1233" cy="690" rx="60" ry="8" fill="url(#gCaseLight)"/>
+        <rect x="1202" y="672" width="62" height="16" rx="2" fill="#2a160c" stroke="#d9a24a" stroke-width="1.5"/>
+        <path d="M1213 600 h40 v10 c0 22 -10 32 -20 34 c-10 -2 -20 -12 -20 -34z" fill="url(#gGold)"/>
+        <path d="M1213 608 c-12 0 -14 16 0 18 M1253 608 c12 0 14 16 0 18" fill="none" stroke="#d9a24a" stroke-width="3"/>
+        <rect x="1228" y="644" width="10" height="16" fill="url(#gGold)"/><rect x="1216" y="660" width="34" height="10" fill="url(#gGold)"/>
+      </g>
+      <g class="exhibit" data-i="3">
+        <ellipse cx="1505" cy="742" rx="120" ry="14" fill="url(#gCaseLight)"/>
+        <rect x="1440" y="712" width="130" height="26" rx="3" fill="#2a160c" stroke="#d9a24a" stroke-width="2"/>
+        <circle cx="1505" cy="640" r="64" fill="#140c22" stroke="url(#gGold)" stroke-width="6"/>
+        <circle cx="1505" cy="640" r="48" fill="none" stroke="#d9a24a" stroke-width="1.5" opacity=".7"/>
+        <path d="M1505 640 l0 -40 M1505 640 l26 16" stroke="#f2c46b" stroke-width="4" stroke-linecap="round"/>
+        <path d="M1505 576 v-10 M1569 640 h10 M1505 704 v8 M1441 640 h-10" stroke="#f2c46b" stroke-width="3"/>
+        <rect x="1495" y="704" width="20" height="10" fill="url(#gGold)"/>
+      </g>
+      <!-- the cases themselves are clickable -->
+      <polygon class="case-hot" data-i="0" points="4,500 325,505 325,762 4,762" tabindex="0" role="button" aria-label="Exhibit I"/>
+      <polygon class="case-hot" data-i="1" points="358,565 508,565 508,698 358,698" tabindex="0" role="button" aria-label="Exhibit II"/>
+      <polygon class="case-hot" data-i="2" points="1160,565 1305,565 1305,698 1160,698" tabindex="0" role="button" aria-label="Exhibit III"/>
+      <polygon class="case-hot" data-i="3" points="1340,482 1668,482 1668,762 1340,762" tabindex="0" role="button" aria-label="Exhibit IV"/>
+    </svg>
+    <div class="case-tip" aria-hidden="true"></div>
+    <div class="wall-text" aria-live="polite">
+      <div class="wt-inner">
+        <p class="wt-kicker">Exhibit I of IV</p>
+        <h3 class="wt-title">Hobby One</h3>
+        <i class="wt-rule"></i>
+        <p class="wt-desc">Placeholder: what this hobby is, when you got into it, and why it matters to you.</p>
+        <p class="wt-credit">Gift of Y. Ibrahim, 2026</p>
+      </div>
+      <nav class="wt-nav" aria-label="Exhibits">
+        <button class="wt-btn prev" type="button" aria-label="Previous exhibit">‹</button>
+        <div class="wt-dots"></div>
+        <button class="wt-btn next" type="button" aria-label="Next exhibit">›</button>
+      </nav>
+    </div>
+  </div>
+  <header class="room-head">
+    <a class="back" href="#">← Street</a>
+    <div class="room-title"><p class="label">The Museum · Hobbies</p><h2>Museum of Pastimes</h2></div>
+    <nav class="elevator" aria-label="Rooms"></nav>
+  </header>
+</section>
+
+<!-- =====================================================
+     CONTACT — inside the red phone booth
+     ===================================================== -->
+<section class="room room-contact" data-room="contact" aria-label="Contact" inert
+         style="--img:url(assets/booth.webp); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
+  <div class="scene">
+    <img class="scene-img" src="assets/booth.webp" alt="" draggable="false">
+    <div class="lcd" aria-hidden="true"><span id="lcd">INSERT 10¢</span></div>
+    <div class="dial-panel">
+      <p class="dp-head">Make a call</p>
+      <a class="dp-btn" href="#" target="_blank" rel="noopener" data-who="GITHUB">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.6.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+        <span><b>GitHub</b><small>github.com/yourname</small></span>
+      </a>
+      <a class="dp-btn" href="#" target="_blank" rel="noopener" data-who="LINKEDIN">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.2c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21h-4z"/></svg>
+        <span><b>LinkedIn</b><small>in/yourname</small></span>
+      </a>
+      <button class="dp-btn copy" type="button" data-email="you@example.com" data-who="EMAIL">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.2L4.4 7H19.6L12 12.2zM4 9v8h16V9l-8 5.4z"/></svg>
+        <span><b class="copy-label">Copy email</b><small>you@example.com</small></span>
+      </button>
+      <p class="dp-foot">Lines open after dark</p>
+    </div>
+  </div>
+  <header class="room-head">
+    <a class="back" href="#">← Street</a>
+    <div class="room-title"><p class="label">Corner Booth · Contact</p><h2>Public Telephone</h2></div>
+    <nav class="elevator" aria-label="Rooms"></nav>
+  </header>
+</section>
+
+<!-- =====================================================
+     KEYBOARD CONTROLS — shown while inside a room
+     ===================================================== -->
+<aside class="controls" id="controls" aria-label="Keyboard controls">
+  <i class="ctl-crown" aria-hidden="true"></i>
+  <div class="ctl-row">
+    <div class="ctl-group">
+      <button class="key" type="button" data-act="prev" aria-label="Previous room (Q)"><span>Q</span></button>
+      <button class="key" type="button" data-act="next" aria-label="Next room (E)"><span>E</span></button>
+      <span class="ctl-label">Switch<small id="ctlWhere"></small></span>
+    </div>
+    <i class="ctl-sep" aria-hidden="true"></i>
+    <div class="ctl-group">
+      <button class="key wide" type="button" data-act="back" aria-label="Back to the street (Esc)"><span>Esc</span></button>
+      <span class="ctl-label">Back<small>to the street</small></span>
+    </div>
+  </div>
+</aside>
+
+<script src="main.js?v=10"></script>
+</body>
+</html>
