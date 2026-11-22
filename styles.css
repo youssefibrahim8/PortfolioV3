@@ -63,21 +63,21 @@ button { font: inherit; color: inherit; }
 .sky-drift {
   position: absolute; left: 23.5048%; top: 0; width: 76.4952%; height: 46.7588%;
   overflow: hidden; pointer-events: none;
-  -webkit-mask: url(assets/sky-mask.png?v=15) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png?v=15) 0 0 / 100% 100% no-repeat;
+  -webkit-mask: url(assets/sky-mask.png?v=18) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png?v=18) 0 0 / 100% 100% no-repeat;
 }
 .sky-strip, .sky-front {
-  position: absolute; top: 0; height: 100%; left: -84.363%; width: 268.725%;
-  animation: skyDrift 140s linear infinite; will-change: transform;
+  position: absolute; top: 0; height: 100%; left: -92.963%; width: 192.963%;
+  animation: skyDrift 154s linear infinite; will-change: transform;
 }
-.sky-strip { background: url(assets/sky-tile.webp?v=17) 0 0 / 31.394% 100% repeat-x; }
+.sky-strip { background: url(assets/sky-tile.webp?v=18) 0 0 / 48.177% 100% repeat-x; }
 .sky-moon { position: absolute; left: 0; top: 0; width: 55.747%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
 .sky-front-wrap {
   position: absolute; inset: 0;
   -webkit-mask: radial-gradient(ellipse 10.6% 30.9% at 24.94% 20.91%, #000 0, #000 92%, transparent 100%) 0 0 / 100% 100% no-repeat;
   mask: radial-gradient(ellipse 10.6% 30.9% at 24.94% 20.91%, #000 0, #000 92%, transparent 100%) 0 0 / 100% 100% no-repeat;
 }
-.sky-front { background: url(assets/cloud-front-tile.webp?v=15) 0 0 / 31.394% 100% repeat-x; }
-@keyframes skyDrift { to { transform: translateX(31.394%); } }
+.sky-front { background: url(assets/cloud-front-tile.webp?v=18) 0 0 / 48.177% 100% repeat-x; }
+@keyframes skyDrift { to { transform: translateX(48.177%); } }
 /* cars on the street, and what stands in front of them (balcony, trees, near lamp) */
 .traffic { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .city-front { position: absolute; left: 29.9043%; top: 72.9012%; width: 39.5933%; height: auto; pointer-events: none; user-select: none; -webkit-user-drag: none; }
