@@ -58,6 +58,21 @@ button { font: inherit; color: inherit; }
 .poi .cone { transform-box: view-box; animation: lampSway 4.6s ease-in-out infinite alternate; animation-play-state: paused; }
 .poi.lit .cone, .poi:focus-visible .cone { animation-play-state: running; }
 @keyframes lampSway { from { transform: rotate(-1.4deg); } to { transform: rotate(1.4deg); } }
+/* the clouds drift slowly across the sky; the moon, spire and rooftops stay put */
+.sky-drift {
+  position: absolute; left: 21.4115%; top: 0; width: 78.5885%; height: 26.5675%;
+  overflow: hidden; pointer-events: none;
+  -webkit-mask: url(assets/sky-mask.png) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png) 0 0 / 100% 100% no-repeat;
+}
+.sky-strip {
+  position: absolute; top: 0; height: 100%; left: -158.4475%; width: 407.9148%;
+  background: url(assets/sky-tile.webp) 0 0 / 20% 100% repeat-x;
+  animation: skyDrift 260s linear infinite; will-change: transform;
+}
+@keyframes skyDrift { to { transform: translateX(20%); } }
+/* cars on the street, and what stands in front of them (balcony, trees, near lamp) */
+.traffic { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.city-front { position: absolute; left: 29.9043%; top: 72.9012%; width: 39.5933%; height: auto; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .room-rain { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .rain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; }
 
@@ -185,7 +200,7 @@ body.pannable .swipe-hint { display: block; }
 .file-halo { animation: halo 2.2s ease-in-out infinite; pointer-events: none; }
 @keyframes halo { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 .file-tag {
-  position: absolute; left: 56.6%; top: 77.6%; z-index: 3; pointer-events: none; transform: translate(-50%, -100%);
+  position: absolute; left: 48%; top: 53.5%; z-index: 3; pointer-events: none; transform: translate(-50%, -100%);
   padding: 7px 14px 5px; background: rgba(14,9,32,.88); border: 1px solid rgba(242,196,107,.7);
   box-shadow: 0 0 16px rgba(242,196,107,.35);
   display: flex; flex-direction: column; align-items: center; line-height: 1.2;
@@ -199,7 +214,7 @@ body.pannable .swipe-hint { display: block; }
 
 /* steam rising off the detective's coffee */
 .steam { pointer-events: none; }
-.wisp { fill: none; stroke: rgba(236,214,178,.55); stroke-width: 7; stroke-linecap: round; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; animation: steamRise 4.2s ease-out infinite; }
+.wisp { fill: none; stroke: rgba(236,214,178,.55); stroke-width: 6; stroke-linecap: round; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; animation: steamRise 4.2s ease-out infinite; }
 .wisp.w2 { stroke-width: 5; animation-delay: 1.4s; animation-duration: 4.8s; }
 .wisp.w3 { stroke-width: 6; animation-delay: 2.8s; animation-duration: 4.5s; }
 @keyframes steamRise {
@@ -209,8 +224,6 @@ body.pannable .swipe-hint { display: block; }
   100% { opacity: 0;   transform: translate(6px, -58px) scale(1.35, 1.2) skewX(10deg); }
 }
 
-/* the presenter's hand stays in front of the slides */
-.presenter-hand { position: absolute; left: 24.253%; top: 54.787%; width: 6.93%; height: auto; z-index: 2; pointer-events: none; user-select: none; }
 
 .file-modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 56px var(--gutter) 24px; overflow: auto; background: rgba(5,3,12,0); transition: background .4s; }
 .file-modal[hidden] { display: none; }
@@ -250,7 +263,7 @@ body.pannable .swipe-hint { display: block; }
 }
 .book-tip.on, .case-tip.on { opacity: 1; }
 .lib-hint {
-  position: absolute; left: 82%; top: 73.5%; transform: translateX(-50%); z-index: 3; margin: 0;
+  position: absolute; left: 82%; top: 64%; transform: translateX(-50%); z-index: 3; margin: 0;
   font-size: clamp(.55rem, .8vw, .72rem); letter-spacing: .3em; text-transform: uppercase; color: var(--gold);
   text-shadow: 0 1px 8px rgba(0,0,0,.9), var(--glow); pointer-events: none; transition: opacity .4s; white-space: nowrap;
 }
@@ -306,7 +319,7 @@ body.pannable .swipe-hint { display: block; }
 .exhibit.on { filter: drop-shadow(0 0 10px rgba(255,214,140,.75)) brightness(1.15); }
 .case-hot.on { fill: rgba(242,196,107,.1); stroke: rgba(255,236,200,.9); filter: drop-shadow(0 0 10px rgba(242,196,107,.85)); }
 .wall-text {
-  position: absolute; left: 30.19%; top: 30.66%; width: 39.89%; height: 38.33%; z-index: 3;
+  position: absolute; left: 30.2%; top: 29.6%; width: 41.4%; height: 38.6%; z-index: 3;
   container-type: size;
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
   padding: 2% 4% 0;
@@ -329,7 +342,7 @@ body.pannable .swipe-hint { display: block; }
    CONTACT — the red phone booth
    ========================================================== */
 .lcd {
-  position: absolute; left: 62.3%; top: 34.3%; width: 5.5%; height: 2.5%; z-index: 3;
+  position: absolute; left: 55.9%; top: 36.4%; width: 4.9%; height: 2.9%; z-index: 3;
   display: grid; place-items: center; overflow: hidden;
   background: rgba(30,40,20,.9); border: 1px solid rgba(242,196,107,.5);
   container-type: size;
@@ -338,13 +351,16 @@ body.pannable .swipe-hint { display: block; }
 .room-contact.ringing .lcd span { animation: lcdBlink .4s steps(1) infinite; }
 @keyframes lcdBlink { 50% { opacity: .25; } }
 .dial-panel {
-  position: absolute; left: 37.9%; top: 32.6%; width: 12.3%; height: 29.8%; z-index: 3;
+  position: absolute; left: 36.6%; top: 22%; width: 12.6%; height: 52%; z-index: 3;
   container-type: size;
-  display: flex; flex-direction: column; align-items: stretch; justify-content: center; gap: clamp(5px, 1.6vh, 16px);
-  padding: clamp(8px, 2vh, 20px) clamp(6px, 1vh, 14px);
+  display: flex; flex-direction: column; align-items: stretch; justify-content: center; gap: clamp(6px, 1.8vh, 18px);
+  padding: clamp(10px, 2.4vh, 24px) clamp(6px, 1vh, 14px);
+  background: linear-gradient(rgba(30,8,10,.55), rgba(20,6,8,.4));
+  border: 1px solid rgba(242,196,107,.45);
+  box-shadow: inset 0 0 30px rgba(0,0,0,.35), 0 0 0 4px rgba(20,6,8,.35);
 }
 .dial-panel::before, .dial-panel::after { content: ""; position: absolute; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
-.dial-panel::before { top: 2px; } .dial-panel::after { bottom: 2px; }
+.dial-panel::before { top: 7px; } .dial-panel::after { bottom: 7px; }
 .dp-head { margin: 0; text-align: center; font-family: var(--display); font-size: clamp(9px, 9cqw, 17px); line-height: 1.1; letter-spacing: .14em; text-transform: uppercase; color: #ffe9bc; text-shadow: 0 1px 6px rgba(0,0,0,.7); }
 .dp-btn {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1cqh; text-decoration: none; text-align: center; cursor: pointer;
@@ -376,7 +392,7 @@ body.pannable .swipe-hint { display: block; }
 .phone-hot:hover, .phone-hot:focus-visible { animation: none; }
 .phone-halo { pointer-events: none; animation: halo 2.4s ease-in-out infinite; }
 .phone-tag {
-  position: absolute; left: 64.2%; top: 31.4%; z-index: 3; pointer-events: none; transform: translate(-50%, -100%);
+  position: absolute; left: 56.1%; top: 31%; z-index: 3; pointer-events: none; transform: translate(-50%, -100%);
   padding: 7px 14px 5px; background: rgba(20,6,8,.9); border: 1px solid rgba(242,196,107,.7);
   box-shadow: 0 0 16px rgba(242,196,107,.35);
   display: flex; flex-direction: column; align-items: center; line-height: 1.2;
