@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Josefin+Sans:wght@300;400;600&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/city.webp">
-  <link rel="stylesheet" href="styles.css?v=10">
+  <link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body>
 
@@ -20,7 +20,7 @@
   <div class="city-scroll" id="cityScroll">
     <div class="city-scene" id="cityScene">
       <img class="scene-img" src="assets/city.webp" alt="" draggable="false">
-      <svg class="scene-svg" id="world" viewBox="0 0 1672 941" preserveAspectRatio="none" role="group" aria-label="City — choose a building"></svg>
+      <svg class="scene-svg" id="world" viewBox="0 0 1671 941" preserveAspectRatio="none" role="group" aria-label="City — choose a building"></svg>
     </div>
   </div>
   <canvas class="rain" id="rain" aria-hidden="true"></canvas>
@@ -44,7 +44,7 @@
      PROJECTS — the boardroom
      ===================================================== -->
 <section class="room room-projects" data-room="projects" aria-label="Projects" inert
-         style="--img:url(assets/boardroom.webp); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
+         style="--img:url(assets/boardroom.webp); --ar:1.7809; --fx:.5; --fy:.45; --mw:230">
   <div class="scene">
     <img class="scene-img" src="assets/boardroom.webp" alt="" draggable="false">
     <div class="slides-quad" id="slidesQuad">
@@ -109,6 +109,7 @@
         </div>
       </div>
     </div>
+    <img class="presenter-hand" src="assets/presenter-hand.webp" alt="" draggable="false">
   </div>
   <header class="room-head">
     <a class="back" href="#">← Street</a>
@@ -121,15 +122,22 @@
      PROFILE — the precinct desk
      ===================================================== -->
 <section class="room room-profile" data-room="profile" aria-label="Profile" inert
-         style="--img:url(assets/precinct.webp); --ar:1.3333; --fx:.5; --fy:.6; --mw:200">
+         style="--img:url(assets/precinct.webp); --ar:1.7747; --fx:.55; --fy:.7; --mw:230">
   <div class="scene">
     <img class="scene-img" src="assets/precinct.webp" alt="" draggable="false">
-    <svg class="scene-svg" viewBox="0 0 1448 1086" preserveAspectRatio="none">
+    <svg class="scene-svg" viewBox="0 0 1670 941" preserveAspectRatio="none">
       <defs>
         <radialGradient id="fileGlow" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ffd98a" stop-opacity=".45"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+        <filter id="steamBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
       </defs>
-      <ellipse class="file-halo" cx="696" cy="668" rx="240" ry="100" fill="url(#fileGlow)"/>
-      <polygon class="file-hot" id="fileHot" points="627,597 877,611 883,628 878,642 826,733 812,743 660,729 514,717 510,703" tabindex="0" role="button" aria-label="Open the case file on Youssef Ibrahim"/>
+      <!-- steam curling up off the coffee -->
+      <g class="steam" filter="url(#steamBlur)" aria-hidden="true">
+        <path class="wisp w1" d="M500 746 c-18 -18 16 -34 0 -52 c-16 -18 18 -34 2 -54"/>
+        <path class="wisp w2" d="M490 746 c14 -20 -16 -34 2 -54 c18 -20 -14 -32 4 -52"/>
+        <path class="wisp w3" d="M510 746 c-14 -16 14 -30 -2 -48 c-14 -18 16 -30 0 -50"/>
+      </g>
+      <ellipse class="file-halo" cx="950" cy="806" rx="250" ry="85" fill="url(#fileGlow)"/>
+      <polygon class="file-hot" id="fileHot" points="757,760 982,743 1142,833 1143,843 860,869 850,862" tabindex="0" role="button" aria-label="Open the case file on Youssef Ibrahim"/>
     </svg>
     <div class="file-tag" aria-hidden="true"><b>Ibrahim, Y.</b><span>Case file · click to open</span></div>
   </div>
@@ -176,13 +184,13 @@
      SKILLS — the library
      ===================================================== -->
 <section class="room room-skills" data-room="skills" aria-label="Skills" inert
-         style="--img:url(assets/library.webp); --ar:1.7758; --fx:.72; --fy:.45; --mw:240">
+         style="--img:url(assets/library.webp); --ar:2.1875; --fx:.76; --fy:.45; --mw:260">
   <div class="scene">
     <img class="scene-img" src="assets/library.webp" alt="" draggable="false">
-    <svg class="scene-svg" viewBox="0 0 1671 941" preserveAspectRatio="none">
-      <polygon class="book-hot" data-i="0" points="1187,302 1210,290 1236,293 1282,301 1262,512 1257,576 1198,553 1149,564" tabindex="0" role="button" aria-label="Skill One"/>
-      <polygon class="book-hot" data-i="1" points="1289,234 1312,222 1336,222 1426,238 1408,283 1338,307 1323,508 1261,512" tabindex="0" role="button" aria-label="Skill Two"/>
-      <polygon class="book-hot" data-i="2" points="1438,163 1464,144 1570,148 1568,208 1559,525 1464,520 1393,523" tabindex="0" role="button" aria-label="Skill Three"/>
+    <svg class="scene-svg" viewBox="0 0 1855 848" preserveAspectRatio="none">
+      <polygon class="book-hot" data-i="0" points="1300,300 1310,285 1330,279 1350,280 1418,296 1400,310 1396,560 1398,605 1340,598 1288,592 1292,520" tabindex="0" role="button" aria-label="Skill One"/>
+      <polygon class="book-hot" data-i="1" points="1420,300 1424,232 1432,212 1465,199 1492,200 1578,218 1574,288 1560,285 1500,300 1492,330 1488,545 1450,553 1402,548 1408,420" tabindex="0" role="button" aria-label="Skill Two"/>
+      <polygon class="book-hot" data-i="2" points="1600,128 1615,113 1650,104 1680,106 1748,96 1750,555 1700,568 1640,575 1560,560 1552,540" tabindex="0" role="button" aria-label="Skill Three"/>
     </svg>
     <div class="book-tip" aria-hidden="true"></div>
     <p class="lib-hint">Take a book from the shelf</p>
@@ -220,10 +228,10 @@
      HOBBIES — the museum
      ===================================================== -->
 <section class="room room-hobbies" data-room="hobbies" aria-label="Hobbies" inert
-         style="--img:url(assets/museum.webp); --ar:1.7758; --fx:.5; --fy:.5; --mw:240">
+         style="--img:url(assets/museum.webp); --ar:2.1875; --fx:.5; --fy:.5; --mw:260">
   <div class="scene">
     <img class="scene-img" src="assets/museum.webp" alt="" draggable="false">
-    <svg class="scene-svg" viewBox="0 0 1671 941" preserveAspectRatio="none" id="museumSvg">
+    <svg class="scene-svg" viewBox="0 0 1855 848" preserveAspectRatio="none" id="museumSvg">
       <defs>
         <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a8"/><stop offset=".5" stop-color="#d9a24a"/><stop offset="1" stop-color="#7a4e1c"/></linearGradient>
         <linearGradient id="gBronze" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a2a14"/><stop offset=".45" stop-color="#b8743a"/><stop offset="1" stop-color="#3a1e0e"/></linearGradient>
@@ -232,28 +240,28 @@
         <radialGradient id="gCaseLight" cx=".5" cy="1" r=".8"><stop offset="0" stop-color="#ffd98a" stop-opacity=".35"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
       </defs>
       <!-- placeholder exhibits inside the glass cases -->
-      <g class="exhibit" data-i="0">
+      <g class="exhibit" data-i="0" transform="translate(303 652) scale(.8) translate(-160 -742)">
         <ellipse cx="160" cy="742" rx="110" ry="14" fill="url(#gCaseLight)"/>
         <rect x="112" y="712" width="96" height="26" rx="3" fill="#2a160c" stroke="#d9a24a" stroke-width="2"/>
         <path d="M160 552 c-22 0 -26 12 -18 22 c-34 16 -46 52 -38 86 c6 26 26 46 56 52 c30 -6 50 -26 56 -52 c8 -34 -4 -70 -38 -86 c8 -10 4 -22 -18 -22z" fill="url(#gRed)" stroke="#f2c46b" stroke-width="2"/>
         <path d="M110 640 h100 M114 620 h92" stroke="#f2c46b" stroke-width="3" opacity=".8"/>
         <path d="M140 660 l20 -18 l20 18 l-20 18z" fill="none" stroke="#f2c46b" stroke-width="2"/>
       </g>
-      <g class="exhibit" data-i="1">
+      <g class="exhibit" data-i="1" transform="translate(587 610) translate(-433 -690)">
         <ellipse cx="433" cy="690" rx="60" ry="8" fill="url(#gCaseLight)"/>
         <rect x="402" y="672" width="62" height="16" rx="2" fill="#2a160c" stroke="#d9a24a" stroke-width="1.5"/>
         <path d="M433 600 l22 32 l-10 0 l0 40 l-24 0 l0 -40 l-10 0z" fill="url(#gGold)"/>
         <circle cx="433" cy="604" r="16" fill="url(#gGold)" stroke="#7a4e1c" stroke-width="1.5"/>
         <path d="M425 604 h16 M433 596 v16" stroke="#7a4e1c" stroke-width="2"/>
       </g>
-      <g class="exhibit" data-i="2">
+      <g class="exhibit" data-i="2" transform="translate(1260 610) translate(-1233 -690)">
         <ellipse cx="1233" cy="690" rx="60" ry="8" fill="url(#gCaseLight)"/>
         <rect x="1202" y="672" width="62" height="16" rx="2" fill="#2a160c" stroke="#d9a24a" stroke-width="1.5"/>
         <path d="M1213 600 h40 v10 c0 22 -10 32 -20 34 c-10 -2 -20 -12 -20 -34z" fill="url(#gGold)"/>
         <path d="M1213 608 c-12 0 -14 16 0 18 M1253 608 c12 0 14 16 0 18" fill="none" stroke="#d9a24a" stroke-width="3"/>
         <rect x="1228" y="644" width="10" height="16" fill="url(#gGold)"/><rect x="1216" y="660" width="34" height="10" fill="url(#gGold)"/>
       </g>
-      <g class="exhibit" data-i="3">
+      <g class="exhibit" data-i="3" transform="translate(1551 652) scale(.8) translate(-1505 -742)">
         <ellipse cx="1505" cy="742" rx="120" ry="14" fill="url(#gCaseLight)"/>
         <rect x="1440" y="712" width="130" height="26" rx="3" fill="#2a160c" stroke="#d9a24a" stroke-width="2"/>
         <circle cx="1505" cy="640" r="64" fill="#140c22" stroke="url(#gGold)" stroke-width="6"/>
@@ -263,10 +271,10 @@
         <rect x="1495" y="704" width="20" height="10" fill="url(#gGold)"/>
       </g>
       <!-- the cases themselves are clickable -->
-      <polygon class="case-hot" data-i="0" points="4,500 325,505 325,762 4,762" tabindex="0" role="button" aria-label="Exhibit I"/>
-      <polygon class="case-hot" data-i="1" points="358,565 508,565 508,698 358,698" tabindex="0" role="button" aria-label="Exhibit II"/>
-      <polygon class="case-hot" data-i="2" points="1160,565 1305,565 1305,698 1160,698" tabindex="0" role="button" aria-label="Exhibit III"/>
-      <polygon class="case-hot" data-i="3" points="1340,482 1668,482 1668,762 1340,762" tabindex="0" role="button" aria-label="Exhibit IV"/>
+      <polygon class="case-hot" data-i="0" points="178,478 200,467 410,467 428,480 428,670 178,670" tabindex="0" role="button" aria-label="Exhibit I"/>
+      <polygon class="case-hot" data-i="1" points="515,500 525,493 650,493 660,500 660,622 515,622" tabindex="0" role="button" aria-label="Exhibit II"/>
+      <polygon class="case-hot" data-i="2" points="1188,500 1198,493 1322,493 1332,500 1332,622 1188,622" tabindex="0" role="button" aria-label="Exhibit III"/>
+      <polygon class="case-hot" data-i="3" points="1425,480 1445,467 1655,467 1678,478 1678,670 1425,670" tabindex="0" role="button" aria-label="Exhibit IV"/>
     </svg>
     <div class="case-tip" aria-hidden="true"></div>
     <div class="wall-text" aria-live="polite">
@@ -298,9 +306,17 @@
          style="--img:url(assets/booth.webp); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
   <div class="scene">
     <img class="scene-img" src="assets/booth.webp" alt="" draggable="false">
+    <svg class="scene-svg" viewBox="0 0 1672 941" preserveAspectRatio="none">
+      <defs>
+        <radialGradient id="phoneGlow" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ffd98a" stop-opacity=".32"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+      </defs>
+      <ellipse class="phone-halo" cx="1050" cy="540" rx="190" ry="290" fill="url(#phoneGlow)"/>
+      <polygon class="phone-hot" id="phoneHot" points="975,330 1003,305 1155,305 1172,325 1172,765 1015,768 985,800 960,812 935,790 930,700 938,580 925,560 925,420 945,385 975,372" tabindex="0" role="button" aria-label="Pick up the phone to send Youssef a message"/>
+    </svg>
     <div class="lcd" aria-hidden="true"><span id="lcd">INSERT 10¢</span></div>
+    <div class="phone-tag" aria-hidden="true"><b>Pick up</b><span>Leave a message</span></div>
     <div class="dial-panel">
-      <p class="dp-head">Make a call</p>
+      <p class="dp-head">Directory</p>
       <a class="dp-btn" href="#" target="_blank" rel="noopener" data-who="GITHUB">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.6.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
         <span><b>GitHub</b><small>github.com/yourname</small></span>
@@ -309,11 +325,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.2c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21h-4z"/></svg>
         <span><b>LinkedIn</b><small>in/yourname</small></span>
       </a>
-      <button class="dp-btn copy" type="button" data-email="you@example.com" data-who="EMAIL">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.2L4.4 7H19.6L12 12.2zM4 9v8h16V9l-8 5.4z"/></svg>
-        <span><b class="copy-label">Copy email</b><small>you@example.com</small></span>
-      </button>
-      <p class="dp-foot">Lines open after dark</p>
+      <p class="dp-foot">or pick up the phone →</p>
     </div>
   </div>
   <header class="room-head">
@@ -321,6 +333,29 @@
     <div class="room-title"><p class="label">Corner Booth · Contact</p><h2>Public Telephone</h2></div>
     <nav class="elevator" aria-label="Rooms"></nav>
   </header>
+
+  <div class="msg-modal" hidden>
+    <div class="msg-pop" role="dialog" aria-modal="true" aria-labelledby="msgTitle">
+      <button class="msg-close" type="button">Hang up ✕</button>
+      <form class="telegram" id="msgForm" novalidate>
+        <header class="tg-head">
+          <p class="tg-kicker">Night Line · Collect Call</p>
+          <h3 id="msgTitle">Leave a Message</h3>
+          <i class="tg-rule"></i>
+          <p class="tg-to">To: <b>Youssef Ibrahim</b></p>
+        </header>
+        <label class="tg-field"><span>Your name</span><input name="name" type="text" autocomplete="name" maxlength="120" required></label>
+        <label class="tg-field"><span>Your email <em>(so I can reply)</em></span><input name="email" type="email" autocomplete="email" maxlength="200" required></label>
+        <label class="tg-field"><span>Message</span><textarea name="message" rows="5" maxlength="5000" required></textarea></label>
+        <input class="tg-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="tg-foot">
+          <p class="tg-status" role="status" aria-live="polite"></p>
+          <button class="tg-send" type="submit"><span>Send message</span></button>
+        </div>
+        <p class="tg-alt">Prefer email? <button class="tg-copy" type="button" data-email="yimgi09@gmail.com">Copy my address</button></p>
+      </form>
+    </div>
+  </div>
 </section>
 
 <!-- =====================================================
@@ -342,6 +377,6 @@
   </div>
 </aside>
 
-<script src="main.js?v=10"></script>
+<script src="main.js?v=11"></script>
 </body>
 </html>

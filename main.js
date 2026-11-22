@@ -15,33 +15,33 @@
   /* ==========================================================
      THE CITY — hotspots on the painting (1672 x 941 pixels)
      ========================================================== */
-  const W = 1672, H = 941;
+  const W = 1671, H = 941;
   const POIS = {
     projects: {
-      label: 'PROJECTS', sign: { t: 'v', x: 1050, y: 178 },
-      poly: [[975, 45], [990, 120], [1002, 170], [1016, 200], [1022, 455], [938, 455], [944, 200], [958, 170], [964, 120]],
-      light: { tx: 1010, bx: 980, by: 460, bw: 78 }, zoom: [980, 330],
+      label: 'PROJECTS', sign: { t: 'h', x: 646, y: 236 },
+      poly: [[635, 32], [650, 55], [660, 75], [668, 100], [682, 130], [690, 180], [705, 215], [714, 240], [714, 535], [578, 535], [578, 240], [586, 215], [596, 180], [600, 130], [608, 100], [614, 75], [622, 55]],
+      light: { tx: 650, bx: 646, by: 540, bw: 82 }, zoom: [646, 300],
     },
     skills: {
-      label: 'SKILLS', sign: { t: 'h', x: 1556, y: 206 },
-      poly: [[1405, 300], [1495, 262], [1500, 222], [1610, 222], [1672, 250], [1672, 880], [1385, 880], [1385, 640], [1405, 640]],
-      light: { tx: 1570, bx: 1530, by: 890, bw: 170 }, zoom: [1515, 420],
+      label: 'SKILLS', sign: { t: 'h', x: 1165, y: 360 },
+      poly: [[1010, 455], [1100, 450], [1100, 410], [1130, 385], [1165, 372], [1200, 385], [1230, 410], [1250, 425], [1385, 420], [1420, 445], [1470, 470], [1480, 620], [1300, 660], [1250, 690], [1010, 690]],
+      light: { tx: 1250, bx: 1245, by: 695, bw: 250 }, zoom: [1165, 615],
     },
     profile: {
-      label: 'PROFILE', sign: { t: 'h', x: 1176, y: 486 },
-      poly: [[1005, 535], [1100, 495], [1200, 525], [1350, 522], [1350, 760], [1005, 760]],
-      light: { tx: 1215, bx: 1178, by: 772, bw: 195 }, zoom: [1105, 728],
+      label: 'PROFILE', sign: { t: 'h', x: 130, y: 438 },
+      poly: [[40, 470], [110, 450], [180, 440], [195, 415], [250, 408], [262, 395], [350, 395], [372, 415], [420, 420], [460, 445], [485, 470], [485, 690], [40, 690]],
+      light: { tx: 270, bx: 262, by: 695, bw: 240 }, zoom: [295, 615],
     },
     hobbies: {
-      label: 'HOBBIES', sign: { t: 'h', x: 652, y: 440 },
-      poly: [[495, 520], [560, 450], [760, 450], [810, 520], [810, 690], [495, 690]],
-      light: { tx: 690, bx: 652, by: 700, bw: 180 }, zoom: [652, 600],
+      label: 'HOBBIES', sign: { t: 'h', x: 618, y: 762 },
+      poly: [[488, 548], [545, 532], [740, 535], [748, 545], [745, 690], [690, 700], [620, 722], [560, 712], [505, 700], [490, 650]],
+      light: { tx: 625, bx: 618, by: 725, bw: 150 }, zoom: [618, 640],
     },
     contact: {
-      label: 'CONTACT', sign: { t: 'h', x: 1343, y: 733 }, small: true,
-      poly: [[1322, 745], [1366, 745], [1366, 862], [1322, 862]],
-      hit: [[1300, 720], [1390, 720], [1390, 872], [1300, 872]],
-      light: { tx: 1370, bx: 1344, by: 872, bw: 52 }, zoom: [1344, 806],
+      label: 'CONTACT', sign: { t: 'h', x: 922, y: 632 }, small: true,
+      poly: [[882, 660], [890, 648], [906, 642], [922, 648], [930, 660], [930, 725], [882, 725]],
+      hit: [[868, 636], [946, 636], [946, 742], [868, 742]],
+      light: { tx: 912, bx: 906, by: 730, bw: 46 }, zoom: [906, 690],
     },
   };
   const LIGHT_TOP = -320; // the lamp hangs above the frame
@@ -90,7 +90,7 @@
 
   /* ---------- the painting covers the screen; on phones you can swipe along it ---------- */
   const cityScroll = $('#cityScroll'), cityScene = $('#cityScene');
-  const FOCUS_X = 0.68;
+  const FOCUS_X = 0.45;
   function fitCity() {
     const vw = innerWidth, vh = innerHeight, ar = W / H;
     let sw = Math.max(vw, vh * ar), sh = sw / ar;
@@ -172,8 +172,9 @@
   /* ==========================================================
      PROJECTS — slides on the boardroom screen
      ========================================================== */
-  const QW = 1000, QH = 594;
-  const SCREEN = [[502, 202], [1176, 202], [1176, 602], [502, 602]];
+  const QW = 1000, QH = 577;
+  const SCREEN = [[406, 178], [1269, 178], [1269, 676], [406, 676]];
+  const BW = 1674; // boardroom painting width
   function solve(A, b) {
     const n = b.length;
     for (let i = 0; i < n; i++) {
@@ -202,7 +203,7 @@
   }
   const quad = $('#slidesQuad');
   function fitSlides() {
-    const s = quad.parentElement.clientWidth / W;
+    const s = quad.parentElement.clientWidth / BW;
     if (!s) return;
     quad.style.width = QW + 'px';
     quad.style.height = QH + 'px';
@@ -283,6 +284,7 @@
     { name: 'Skill Two', section: 'Frameworks & Tools', level: 3, note: 'Placeholder: what you have built with this, and how comfortable you are with it.' },
     { name: 'Skill Three', section: 'Concepts', level: 4, note: 'Placeholder: a course or project where you used this.' },
   ];
+  const LW = 1855, LH = 848; // library and museum paintings
   const skillsRoom = $('.room-skills'), tome = $('#tome'), tip = $('.book-tip');
   const bookPolys = $$('.book-hot');
   let openBook = -1;
@@ -296,8 +298,8 @@
     p.setAttribute('aria-label', SKILLS[i].name);
     const show = () => {
       tip.textContent = SKILLS[i].name;
-      tip.style.left = `${((b.x0 + b.x1) / 2 / 1671) * 100}%`;
-      tip.style.top = `${(b.y0 / 941) * 100}%`;
+      tip.style.left = `${((b.x0 + b.x1) / 2 / LW) * 100}%`;
+      tip.style.top = `${(b.y0 / LH) * 100}%`;
       tip.classList.add('on');
     };
     p.addEventListener('mouseenter', show);
@@ -320,7 +322,7 @@
       $('.t-title', tome).textContent = sk.name;
       $('.t-level', tome).innerHTML = Array.from({ length: 5 }, (_, k) => `<i class="${k < sk.level ? 'f' : ''}"></i>`).join('');
       $('.t-note', tome).textContent = sk.note;
-      const scene = tome.parentElement, s = scene.clientWidth / 1671;
+      const scene = tome.parentElement, s = scene.clientWidth / LW;
       const b = polyBox(bookPolys[i]);
       const tr = tome.getBoundingClientRect(), sr = scene.getBoundingClientRect();
       const coverCx = tr.left - sr.left + tr.width * 0.75, coverCy = tr.top - sr.top + tr.height / 2;
@@ -340,7 +342,7 @@
     tome.classList.remove('open');
     setTimeout(() => {
       tome.classList.remove('shown');
-      if (!quick) { skillsRoom.classList.remove('reading'); skillsRoom.style.setProperty('--fx', '.72'); }
+      if (!quick) { skillsRoom.classList.remove('reading'); skillsRoom.style.setProperty('--fx', '.76'); }
       bookPolys.forEach(p => p.classList.remove('taken'));
       openBook = -1;
     }, quick ? 250 : 500);
@@ -382,8 +384,8 @@
     c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHobby(i); } });
     c.addEventListener('mouseenter', () => {
       caseTip.textContent = `${ROMAN[i]} · ${HOBBIES[i].name}`;
-      caseTip.style.left = `${((b.x0 + b.x1) / 2 / 1671) * 100}%`;
-      caseTip.style.top = `${(b.y0 / 941) * 100}%`;
+      caseTip.style.left = `${((b.x0 + b.x1) / 2 / LW) * 100}%`;
+      caseTip.style.top = `${(b.y0 / LH) * 100}%`;
       caseTip.classList.add('on');
     });
     c.addEventListener('mouseleave', () => caseTip.classList.remove('on'));
@@ -397,21 +399,97 @@
      CONTACT — the booth buttons
      ========================================================== */
   const lcd = $('#lcd'), contactRoom = $('.room-contact');
+  const IDLE = 'INSERT 10¢';
   let lcdTimer;
   const setLcd = (txt, hold) => {
     clearTimeout(lcdTimer);
     lcd.textContent = txt;
-    if (hold) lcdTimer = setTimeout(() => { lcd.textContent = 'INSERT 10¢'; contactRoom.classList.remove('ringing'); }, hold);
+    if (hold) lcdTimer = setTimeout(() => { lcd.textContent = IDLE; contactRoom.classList.remove('ringing'); }, hold);
   };
+  const lcdIdle = () => { if (!contactRoom.classList.contains('ringing')) setLcd(IDLE); };
   $$('.dp-btn').forEach(a => {
-    a.addEventListener('mouseenter', () => setLcd(a.classList.contains('copy') ? 'COPY EMAIL' : `DIAL ${a.dataset.who}`));
-    a.addEventListener('mouseleave', () => { if (!contactRoom.classList.contains('ringing')) setLcd('INSERT 10¢'); });
+    a.addEventListener('mouseenter', () => setLcd(`DIAL ${a.dataset.who}`));
+    a.addEventListener('mouseleave', lcdIdle);
+    a.addEventListener('click', () => { contactRoom.classList.add('ringing'); setLcd(`CALLING ${a.dataset.who}…`, 2400); });
   });
-  $$('.dp-btn:not(.copy)').forEach(a => a.addEventListener('click', () => {
-    contactRoom.classList.add('ringing');
-    setLcd(`CALLING ${a.dataset.who}…`, 2400);
-  }));
-  const copyBtn = $('.dp-btn.copy'), copyLabel = $('.copy-label', copyBtn);
+
+  /* ---------- pick up the phone: leave a message that lands in Youssef's inbox ---------- */
+  const MAIL_TO = 'yimgi09@gmail.com';
+  const MAIL_ENDPOINT = `https://formsubmit.co/ajax/${MAIL_TO}`;
+  const phoneHot = $('#phoneHot'), msgModal = $('.msg-modal'), msgForm = $('#msgForm');
+  const msgStatus = $('.tg-status', msgForm), sendBtn = $('.tg-send', msgForm), sendLabel = $('span', sendBtn);
+  function openMsg() {
+    const r = phoneHot.getBoundingClientRect();
+    const pop = $('.msg-pop', msgModal);
+    msgModal.hidden = false;
+    const pr = pop.getBoundingClientRect();
+    pop.style.setProperty('--fx', `${f1(r.left + r.width / 2 - (pr.left + pr.width / 2))}px`);
+    pop.style.setProperty('--fy', `${f1(r.top + r.height / 2 - (pr.top + pr.height / 2))}px`);
+    requestAnimationFrame(() => requestAnimationFrame(() => msgModal.classList.add('show')));
+    contactRoom.classList.add('off-hook');
+    setLcd('LINE OPEN');
+    setTimeout(() => msgForm.elements.name.focus({ preventScroll: true }), 120);
+  }
+  function closeMsg() {
+    msgModal.classList.remove('show');
+    contactRoom.classList.remove('off-hook');
+    lcdIdle();
+    setTimeout(() => { msgModal.hidden = true; }, 450);
+  }
+  phoneHot.addEventListener('click', openMsg);
+  phoneHot.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMsg(); } });
+  phoneHot.addEventListener('mouseenter', () => { if (msgModal.hidden) setLcd('PICK UP'); });
+  phoneHot.addEventListener('mouseleave', () => { if (msgModal.hidden) lcdIdle(); });
+  $('.msg-close').addEventListener('click', closeMsg);
+  msgModal.addEventListener('click', e => { if (e.target === msgModal) closeMsg(); });
+
+  const setStatus = (txt, kind) => { msgStatus.textContent = txt; msgStatus.dataset.kind = kind || ''; };
+  msgForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = msgForm.elements;
+    const name = f.name.value.trim(), email = f.email.value.trim(), message = f.message.value.trim();
+    if (!name || !message) return setStatus('Add your name and a message first.', 'err');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setStatus('That email address doesn’t look right.', 'err');
+    if (f._honey.value) return; // bots fill the hidden field
+    sendBtn.disabled = true;
+    sendLabel.textContent = 'Sending…';
+    setStatus('Connecting your call…');
+    setLcd('SENDING…');
+    try {
+      const res = await fetch(MAIL_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name, email, message,
+          _replyto: email,
+          _subject: `Portfolio message from ${name}`,
+          _template: 'box',
+          _captcha: 'false',
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || String(data.success) !== 'true') throw new Error(data.message || `HTTP ${res.status}`);
+      msgForm.reset();
+      setStatus('Message sent. I’ll get back to you soon.', 'ok');
+      sendLabel.textContent = 'Sent ✓';
+      contactRoom.classList.add('ringing');
+      setLcd('MESSAGE SENT', 3000);
+      setTimeout(() => { sendLabel.textContent = 'Send message'; sendBtn.disabled = false; }, 3000);
+    } catch (err) {
+      sendBtn.disabled = false;
+      sendLabel.textContent = 'Try again';
+      setLcd('NO ANSWER', 2400);
+      const mailto = `mailto:${MAIL_TO}?subject=${encodeURIComponent(`Portfolio message from ${name}`)}&body=${encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')')}`;
+      msgStatus.dataset.kind = 'err';
+      msgStatus.textContent = 'The line dropped. ';
+      const a = document.createElement('a');
+      a.href = mailto;
+      a.textContent = 'Send it from your email app instead';
+      msgStatus.append(a, '.');
+    }
+  });
+
+  const copyBtn = $('.tg-copy');
   let copyTimer;
   copyBtn.addEventListener('click', async () => {
     clearTimeout(copyTimer);
@@ -422,13 +500,10 @@
       ta.value = email; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
       document.body.appendChild(ta); ta.select();
       try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
-      ta.remove();
+      ta.parentNode.removeChild(ta);
     }
-    copyLabel.textContent = ok ? 'Copied!' : 'Copy failed';
-    copyBtn.classList.toggle('done', ok);
-    contactRoom.classList.add('ringing');
-    setLcd(ok ? 'EMAIL COPIED' : 'TRY AGAIN', 2400);
-    copyTimer = setTimeout(() => { copyLabel.textContent = 'Copy email'; copyBtn.classList.remove('done'); }, 2400);
+    copyBtn.textContent = ok ? 'Copied!' : email;
+    copyTimer = setTimeout(() => { copyBtn.textContent = 'Copy my address'; }, 2400);
   });
 
   /* ==========================================================
@@ -450,20 +525,21 @@
      Window glass outlined in each painting's own pixels. Streaks fall
      behind the glass, and a few drops slide slowly down the panes. */
   const ROOM_WINDOWS = {
-    projects: { w: 1672, h: 941, polys: [
-      [[0, 0], [298, 0], [298, 470], [0, 470]],
-      [[1370, 40], [1672, 40], [1672, 470], [1370, 470]]] },
-    profile: { w: 1448, h: 1086, polys: [
-      [[122, 90], [150, 45], [190, 30], [230, 45], [255, 70], [275, 45], [330, 25], [390, 45], [420, 70],
-       [445, 45], [490, 30], [530, 45], [558, 90], [558, 395], [122, 395]]] },
-    skills: { w: 1671, h: 941, polys: [
-      [[468, 620], [468, 210], [500, 150], [560, 110], [632, 95], [700, 110], [760, 150], [797, 210], [797, 620],
-       [700, 620], [700, 505], [610, 505], [610, 620]]] },
-    hobbies: { w: 1671, h: 941, polys: [
-      [[0, 635], [0, 60], [40, 30], [100, 40], [150, 90], [158, 140], [158, 635]]] },
+    projects: { w: 1674, h: 940, polys: [
+      [[18, 0], [198, 0], [198, 545], [110, 552], [85, 580], [85, 650], [45, 650], [40, 520], [18, 515]],
+      [[1482, 0], [1674, 0], [1674, 505], [1600, 510], [1530, 525], [1525, 650], [1482, 650]]] },
+    profile: { w: 1670, h: 941, polys: [
+      [[1195, 48], [1585, 48], [1585, 550], [1195, 550]]] },
+    skills: { w: 1855, h: 848, polys: [
+      [[522, 650], [522, 200], [535, 150], [565, 110], [610, 82], [660, 68], [700, 65], [745, 68], [795, 82], [840, 110], [870, 150], [885, 200],
+       [885, 650], [800, 650], [795, 595], [765, 590], [762, 545], [740, 535], [718, 545], [712, 592], [700, 600], [700, 650], [610, 650],
+       [605, 640], [540, 640], [535, 650]]] },
+    hobbies: { w: 1855, h: 848, polys: [
+      [[100, 585], [100, 120], [110, 85], [140, 60], [185, 50], [230, 60], [258, 85], [270, 120], [270, 462], [178, 462], [178, 585]],
+      [[1585, 462], [1585, 120], [1597, 85], [1625, 60], [1672, 50], [1718, 60], [1748, 85], [1760, 120], [1760, 585], [1680, 585], [1680, 462]]] },
     contact: { w: 1672, h: 941, polys: [
-      [[163, 0], [528, 40], [528, 873], [163, 929]],
-      [[1161, 40], [1496, 0], [1496, 941], [1161, 880]]] },
+      [[72, 0], [445, 30], [445, 870], [72, 900]],
+      [[1235, 30], [1625, 0], [1625, 900], [1235, 870]]] },
   };
   const roomRain = {};
   Object.entries(ROOM_WINDOWS).forEach(([name, cfg]) => {
@@ -566,6 +642,7 @@
     document.title = `${LABELS[name]} — Youssef Ibrahim`;
     if (name === 'projects') requestAnimationFrame(fitSlides);
     if (name !== 'profile' && !modal.hidden) closeFile();
+    if (name !== 'contact' && !msgModal.hidden) closeMsg();
     later(() => $('.back', rooms[name]).focus({ preventScroll: true }), 60);
   }
 
@@ -637,6 +714,7 @@
   addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (!modal.hidden) return closeFile();
+      if (!msgModal.hidden) return closeMsg();
       if (openBook >= 0) return closeBook(false);
       if (current) {
         const k = $('.key[data-act="back"]', controls);
@@ -645,9 +723,12 @@
       }
       return;
     }
+    // typing in the message form must not move between rooms
+    if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) return;
     const key = e.key.toLowerCase();
     if ((key === 'q' || key === 'e') && current && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (!modal.hidden) closeFile();
+      if (!msgModal.hidden) closeMsg();
       switchRoom(key === 'q' ? -1 : 1);
       return;
     }
