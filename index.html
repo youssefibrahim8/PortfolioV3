@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Josefin+Sans:wght@300;400;600&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/city.webp?v=13">
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="preload" as="image" href="assets/city.webp?v=14">
+  <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body>
 
@@ -19,10 +19,10 @@
 <main class="city" id="city">
   <div class="city-scroll" id="cityScroll">
     <div class="city-scene" id="cityScene">
-      <img class="scene-img" src="assets/city.webp?v=13" alt="" draggable="false">
+      <img class="scene-img" src="assets/city.webp?v=14" alt="" draggable="false">
       <div class="sky-drift" aria-hidden="true"><div class="sky-strip"></div></div>
       <canvas class="traffic" id="traffic" aria-hidden="true"></canvas>
-      <img class="city-front" src="assets/city-front.webp?v=13" alt="" draggable="false">
+      <img class="city-front" src="assets/city-front.webp?v=14" alt="" draggable="false">
       <svg class="scene-svg" id="world" viewBox="0 0 1672 941" preserveAspectRatio="none" role="group" aria-label="City — choose a building"></svg>
     </div>
   </div>
@@ -47,9 +47,9 @@
      PROJECTS — the boardroom
      ===================================================== -->
 <section class="room room-projects" data-room="projects" aria-label="Projects" inert
-         style="--img:url(assets/boardroom.webp?v=13); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
+         style="--img:url(assets/boardroom.webp?v=14); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
   <div class="scene">
-    <img class="scene-img" src="assets/boardroom.webp?v=13" alt="" draggable="false">
+    <img class="scene-img" src="assets/boardroom.webp?v=14" alt="" draggable="false">
     <div class="slides-quad" id="slidesQuad">
       <div class="slides" id="slides" aria-live="polite">
         <article class="slide slide-title on">
@@ -124,21 +124,22 @@
      PROFILE — the precinct desk
      ===================================================== -->
 <section class="room room-profile" data-room="profile" aria-label="Profile" inert
-         style="--img:url(assets/precinct.webp?v=13); --ar:1.3333; --fx:.5; --fy:.6; --mw:200">
+         style="--img:url(assets/precinct.webp?v=14); --ar:1.3333; --fx:.5; --fy:.6; --mw:200">
   <div class="scene">
-    <img class="scene-img" src="assets/precinct.webp?v=13" alt="" draggable="false">
+    <img class="scene-img" src="assets/precinct.webp?v=14" alt="" draggable="false">
+    <i class="flicker flicker-desk" aria-hidden="true"></i>
     <svg class="scene-svg" viewBox="0 0 1448 1086" preserveAspectRatio="none">
       <defs>
         <radialGradient id="fileGlow" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ffd98a" stop-opacity=".45"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
-        <filter id="steamBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+        <filter id="steamWave" x="-30%" y="-20%" width="160%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.075" numOctaves="2" seed="4" result="noise">
+            <animate attributeName="baseFrequency" dur="8s" values="0.035 0.075;0.045 0.1;0.03 0.085;0.035 0.075" repeatCount="indefinite"/>
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
       </defs>
-      <!-- steam curling up off the coffee -->
-      <g class="steam" filter="url(#steamBlur)" aria-hidden="true">
-        <path class="wisp w1" d="M1046 596 c-16 -16 14 -30 0 -46 c-14 -16 16 -30 2 -48"/>
-        <path class="wisp w2" d="M1036 596 c12 -18 -14 -30 2 -48 c16 -18 -12 -28 4 -46"/>
-        <path class="wisp w3" d="M1056 596 c-12 -14 12 -26 -2 -42 c-12 -16 14 -26 0 -44"/>
-      </g>
-      <ellipse class="file-halo" cx="696" cy="668" rx="240" ry="100" fill="url(#fileGlow)"/>
+      <!-- the painted steam, set swirling -->
+      <image class="steam" href="assets/steam.png?v=14" x="1000" y="465" width="100" height="135" filter="url(#steamWave)" aria-hidden="true"/>
       <polygon class="file-hot" id="fileHot" points="627,597 877,611 883,628 878,642 826,733 812,743 660,729 514,717 510,703" tabindex="0" role="button" aria-label="Open the case file on Youssef Ibrahim"/>
     </svg>
     <div class="file-tag" aria-hidden="true"><b>Ibrahim, Y.</b><span>Case file · click to open</span></div>
@@ -152,30 +153,26 @@
   <div class="file-modal" hidden>
     <div class="file-pop">
       <button class="file-close" type="button">Back on the desk ✕</button>
-      <article class="folder">
-        <div class="folder-tab">Case No. 47-2189 — Ibrahim, Y.</div>
-        <div class="page page-l">
-          <i class="clip"></i>
-          <figure class="polaroid">
-            <div class="photo"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="#2a1f4a"/><circle cx="50" cy="40" r="17" fill="#0d0a1c"/><path d="M18 100 Q20 64 50 62 Q80 64 82 100Z" fill="#0d0a1c"/></svg></div>
-            <figcaption>Photo goes here</figcaption>
-          </figure>
-          <dl class="fields">
-            <dt>Name</dt><dd>Youssef Ibrahim</dd>
-            <dt>Program</dt><dd>B.C.S. Computer Science</dd>
-            <dt>Institution</dt><dd>Carleton University</dd>
-            <dt>Based in</dt><dd>City, Province</dd>
-            <dt>Status</dt><dd>Open to opportunities</dd>
-          </dl>
-          <span class="stamp">Confidential</span>
-        </div>
-        <div class="page page-r">
-          <h3>Summary</h3>
+      <article class="dossier" aria-label="Case file: Youssef Ibrahim">
+        <img class="ds-art" src="assets/case-file.webp?v=14" alt="" draggable="false">
+        <h3 class="sr-only">Case No. 47-2189 — Ibrahim, Y.</h3>
+        <dl class="ds-fields">
+          <div class="ds-f" style="--y:24.4%"><dt class="sr-only">Name</dt><dd>Youssef Ibrahim</dd></div>
+          <div class="ds-f" style="--y:37.8%"><dt class="sr-only">Program</dt><dd>B.C.S. Computer Science</dd></div>
+          <div class="ds-f" style="--y:51.5%"><dt class="sr-only">Institution</dt><dd>Carleton University</dd></div>
+          <div class="ds-f" style="--y:64.5%"><dt class="sr-only">Based in</dt><dd>City, Province</dd></div>
+          <div class="ds-f" style="--y:77.9%"><dt class="sr-only">Status</dt><dd>Open to opportunities</dd></div>
+        </dl>
+        <span class="ds-stamp">Confidential</span>
+        <div class="ds-summary">
+          <h4 class="sr-only">Summary</h4>
           <p>Placeholder bio. Two or three sentences about who you are, what you build, and what you're curious about right now.</p>
           <p>Second placeholder paragraph: what you're studying, what kind of work you're looking for, or something people should know about you.</p>
-          <h3>Currently</h3>
+        </div>
+        <div class="ds-current">
+          <h4 class="sr-only">Currently</h4>
           <p>Placeholder: a course, project, or role you're working on.</p>
-          <p class="sig">Y. Ibrahim</p>
+          <p class="ds-sig">Y. Ibrahim</p>
         </div>
       </article>
     </div>
@@ -186,9 +183,9 @@
      SKILLS — the library
      ===================================================== -->
 <section class="room room-skills" data-room="skills" aria-label="Skills" inert
-         style="--img:url(assets/library.webp?v=13); --ar:1.7758; --fx:.72; --fy:.45; --mw:240">
+         style="--img:url(assets/library.webp?v=14); --ar:1.7758; --fx:.72; --fy:.45; --mw:240">
   <div class="scene">
-    <img class="scene-img" src="assets/library.webp?v=13" alt="" draggable="false">
+    <img class="scene-img" src="assets/library.webp?v=14" alt="" draggable="false">
     <svg class="scene-svg" viewBox="0 0 1671 941" preserveAspectRatio="none">
       <polygon class="book-hot" data-i="0" points="1187,302 1210,290 1236,293 1282,301 1262,512 1257,576 1198,553 1149,564" tabindex="0" role="button" aria-label="Skill One"/>
       <polygon class="book-hot" data-i="1" points="1289,234 1312,222 1336,222 1426,238 1408,283 1338,307 1323,508 1261,512" tabindex="0" role="button" aria-label="Skill Two"/>
@@ -230,9 +227,9 @@
      HOBBIES — the museum
      ===================================================== -->
 <section class="room room-hobbies" data-room="hobbies" aria-label="Hobbies" inert
-         style="--img:url(assets/museum.webp?v=13); --ar:1.7758; --fx:.5; --fy:.5; --mw:240">
+         style="--img:url(assets/museum.webp?v=14); --ar:1.7758; --fx:.5; --fy:.5; --mw:240">
   <div class="scene">
-    <img class="scene-img" src="assets/museum.webp?v=13" alt="" draggable="false">
+    <img class="scene-img" src="assets/museum.webp?v=14" alt="" draggable="false">
     <svg class="scene-svg" viewBox="0 0 1671 941" preserveAspectRatio="none" id="museumSvg">
       <defs>
         <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a8"/><stop offset=".5" stop-color="#d9a24a"/><stop offset="1" stop-color="#7a4e1c"/></linearGradient>
@@ -305,9 +302,10 @@
      CONTACT — inside the red phone booth
      ===================================================== -->
 <section class="room room-contact" data-room="contact" aria-label="Contact" inert
-         style="--img:url(assets/booth.webp?v=13); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
+         style="--img:url(assets/booth.webp?v=14); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
   <div class="scene">
-    <img class="scene-img" src="assets/booth.webp?v=13" alt="" draggable="false">
+    <img class="scene-img" src="assets/booth.webp?v=14" alt="" draggable="false">
+    <i class="flicker flicker-booth" aria-hidden="true"></i>
     <svg class="scene-svg" viewBox="0 0 1672 941" preserveAspectRatio="none">
       <defs>
         <radialGradient id="phoneGlow" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ffd98a" stop-opacity=".3"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
@@ -339,22 +337,17 @@
   <div class="msg-modal" hidden>
     <div class="msg-pop" role="dialog" aria-modal="true" aria-labelledby="msgTitle">
       <button class="msg-close" type="button">Hang up ✕</button>
-      <form class="telegram" id="msgForm" novalidate>
-        <header class="tg-head">
-          <p class="tg-kicker">Night Line · Collect Call</p>
-          <h3 id="msgTitle">Leave a Message</h3>
-          <i class="tg-rule"></i>
-          <p class="tg-to">To: <b>Youssef Ibrahim</b></p>
-        </header>
-        <label class="tg-field"><span>Your name</span><input name="name" type="text" autocomplete="name" maxlength="120" required></label>
-        <label class="tg-field"><span>Your email <em>(so I can reply)</em></span><input name="email" type="email" autocomplete="email" maxlength="200" required></label>
-        <label class="tg-field"><span>Message</span><textarea name="message" rows="5" maxlength="5000" required></textarea></label>
+      <form class="callcard" id="msgForm" novalidate>
+        <img class="cc-art" src="assets/phone-card.webp?v=14" alt="" draggable="false">
+        <h3 class="sr-only" id="msgTitle">Leave a message for Youssef Ibrahim</h3>
+        <label class="cc-field cc-name"><span class="sr-only">Your name</span><input name="name" type="text" autocomplete="name" maxlength="120" required></label>
+        <label class="cc-field cc-email"><span class="sr-only">Your email (so I can reply)</span><input name="email" type="email" autocomplete="email" maxlength="200" required></label>
+        <label class="cc-field cc-msg"><span class="sr-only">Message</span><textarea name="message" maxlength="5000" required></textarea></label>
         <input class="tg-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <div class="tg-foot">
-          <p class="tg-status" role="status" aria-live="polite"></p>
-          <button class="tg-send" type="submit"><span>Send message</span></button>
-        </div>
-        <p class="tg-alt">Prefer email? <button class="tg-copy" type="button" data-email="yimgi09@gmail.com">Copy my address</button></p>
+        <p class="tg-status" role="status" aria-live="polite"></p>
+        <button class="tg-send" type="submit"><span class="sr-only">Send message</span><span class="cc-sent" aria-hidden="true"></span></button>
+        <button class="tg-copy" type="button" data-email="yimgi09@gmail.com"><span class="sr-only">Copy my address</span></button>
+        <span class="cc-copied" aria-hidden="true"></span>
       </form>
     </div>
   </div>
@@ -379,6 +372,6 @@
   </div>
 </aside>
 
-<script src="main.js?v=13"></script>
+<script src="main.js?v=14"></script>
 </body>
 </html>

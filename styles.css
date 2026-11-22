@@ -52,21 +52,22 @@ button { font: inherit; color: inherit; }
 .scene-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 .poi { cursor: pointer; outline: none; }
-.poi .cone { opacity: 0; transition: opacity .45s ease; pointer-events: none; mix-blend-mode: screen; }
-.poi.lit .cone, .poi:focus-visible .cone { opacity: 1; }
-/* the lamp swings gently from its mount above the screen */
-.poi .cone { transform-box: view-box; animation: lampSway 4.6s ease-in-out infinite alternate; animation-play-state: paused; }
-.poi.lit .cone, .poi:focus-visible .cone { animation-play-state: running; }
-@keyframes lampSway { from { transform: rotate(-1.4deg); } to { transform: rotate(1.4deg); } }
+.poi .beam { opacity: 0; transition: opacity .45s ease; pointer-events: none; mix-blend-mode: screen; transform-box: view-box; animation: sweepA 5.2s ease-in-out infinite alternate; animation-play-state: paused; }
+.poi .beam-b { animation-name: sweepB; animation-duration: 4.6s; }
+.poi.lit .beam, .poi:focus-visible .beam { opacity: 1; animation-play-state: running; }
+.poi .lamp-pool { fill: #fff2cc; filter: drop-shadow(0 0 4px rgba(255,220,150,.95)); }
+/* the searchlights sweep slowly, out of step with each other */
+@keyframes sweepA { from { transform: rotate(-5deg); } to { transform: rotate(4deg); } }
+@keyframes sweepB { from { transform: rotate(5deg); } to { transform: rotate(-4deg); } }
 /* the clouds drift slowly across the sky; the moon, spire and rooftops stay put */
 .sky-drift {
   position: absolute; left: 21.4115%; top: 0; width: 78.5885%; height: 26.5675%;
   overflow: hidden; pointer-events: none;
-  -webkit-mask: url(assets/sky-mask.png?v=13) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png?v=13) 0 0 / 100% 100% no-repeat;
+  -webkit-mask: url(assets/sky-mask.png?v=14) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png?v=14) 0 0 / 100% 100% no-repeat;
 }
 .sky-strip {
   position: absolute; top: 0; height: 100%; left: -158.4475%; width: 407.9148%;
-  background: url(assets/sky-tile.webp?v=13) 0 0 / 20% 100% repeat-x;
+  background: url(assets/sky-tile.webp?v=14) 0 0 / 20% 100% repeat-x;
   animation: skyDrift 260s linear infinite; will-change: transform;
 }
 @keyframes skyDrift { to { transform: translateX(20%); } }
@@ -212,16 +213,11 @@ body.pannable .swipe-hint { display: block; }
 @keyframes tagBob { 0%, 100% { transform: translate(-50%, -100%); } 50% { transform: translate(-50%, calc(-100% - 5px)); } }
 .room-profile.file-out .file-hot, .room-profile.file-out .file-tag, .room-profile.file-out .file-halo { opacity: 0; animation: none; }
 
-/* steam rising off the detective's coffee */
-.steam { pointer-events: none; }
-.wisp { fill: none; stroke: rgba(236,214,178,.55); stroke-width: 6; stroke-linecap: round; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; animation: steamRise 4.2s ease-out infinite; }
-.wisp.w2 { stroke-width: 5; animation-delay: 1.4s; animation-duration: 4.8s; }
-.wisp.w3 { stroke-width: 6; animation-delay: 2.8s; animation-duration: 4.5s; }
-@keyframes steamRise {
-  0%   { opacity: 0;   transform: translate(0, 14px) scale(.7, .55) skewX(0deg); }
-  20%  { opacity: .75; }
-  55%  { opacity: .45; transform: translate(-4px, -22px) scale(1, 1) skewX(-8deg); }
-  100% { opacity: 0;   transform: translate(6px, -58px) scale(1.35, 1.2) skewX(10deg); }
+/* the painted steam off the detective's coffee sways and breathes */
+.steam { pointer-events: none; transform-box: fill-box; transform-origin: 50% 100%; animation: steamBreathe 5.5s ease-in-out infinite; }
+@keyframes steamBreathe {
+  0%, 100% { opacity: .9; transform: translateY(0) scale(1, 1); }
+  50% { opacity: .6; transform: translateY(-4px) scale(1.04, 1.05); }
 }
 
 
@@ -454,6 +450,67 @@ body.pannable .swipe-hint { display: block; }
 .tg-alt { margin: 14px 0 0; padding-top: 10px; border-top: 1px dashed rgba(90,60,40,.3); font-size: .74rem; color: #6a5a50; text-align: center; }
 .tg-copy { all: unset; cursor: pointer; color: var(--red); border-bottom: 1px solid currentColor; }
 .tg-copy:hover, .tg-copy:focus-visible { color: #22142e; }
+
+
+/* ---------- the open case file (painted dossier) ---------- */
+.sr-only { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.file-pop { width: min(1000px, 96vw, calc((100vh - 110px) * 1.625)); }
+.dossier { position: relative; width: 100%; aspect-ratio: 1599 / 984; container-type: inline-size; color: #2a1d14; font-family: var(--type); filter: drop-shadow(0 30px 50px rgba(0,0,0,.7)); }
+.ds-art { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
+.ds-fields { margin: 0; }
+.ds-f { position: absolute; left: 23.4%; width: 21.4%; top: var(--y); }
+.ds-f dd { margin: 0; font-size: 1.62cqw; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-summary, .ds-current { position: absolute; left: 55.2%; width: 36.6%; }
+.ds-summary { top: 23.5%; height: 33%; overflow: hidden; }
+.ds-current { top: 64.5%; height: 20%; overflow: hidden; }
+.ds-summary p, .ds-current p { margin: 0 0 1.1cqw; font-size: 1.42cqw; line-height: 1.6; }
+.ds-sig { font-family: var(--hand); font-size: 2.6cqw !important; color: #1e2a5a; transform: rotate(-4deg); text-align: right; margin-top: 1.4cqw !important; }
+.ds-stamp { position: absolute; left: 6.6%; top: 71%; border: .3cqw double var(--red); color: var(--red); padding: .3cqw 1.2cqw .15cqw; font-family: var(--sans); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; font-size: 1.2cqw; transform: rotate(-12deg); opacity: .72; mix-blend-mode: multiply; }
+
+/* ---------- the leave-a-message card (painted deco card) ---------- */
+.msg-pop { width: min(560px, 94vw, calc((100vh - 90px) * .98)); }
+.callcard { position: relative; margin: 0; width: 100%; aspect-ratio: 1189 / 1213; container-type: inline-size; filter: drop-shadow(0 26px 50px rgba(0,0,0,.75)) drop-shadow(0 0 30px rgba(242,196,107,.12)); }
+.cc-art { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+.cc-field { position: absolute; left: 8.24%; width: 83.85%; display: block; }
+.cc-name { top: 24.98%; height: 5.44%; }
+.cc-email { top: 35.53%; height: 5.44%; }
+.cc-msg { top: 46.08%; height: 22.73%; }
+.cc-field input, .cc-field textarea {
+  display: block; width: 100%; height: 100%; margin: 0; border: 0; border-radius: 0; resize: none;
+  padding: .4cqw 1.6cqw 0; background: transparent; color: #241812;
+  font-family: var(--type); font-size: 2.7cqw; line-height: 1.5;
+  transition: box-shadow .25s, background .25s;
+}
+.cc-field textarea { padding-top: 1.2cqw; }
+.cc-field input:focus, .cc-field textarea:focus { outline: none; background: rgba(255,248,232,.35); box-shadow: 0 0 0 .25cqw rgba(255,214,140,.75), 0 0 1.6cqw rgba(242,196,107,.55); }
+.tg-send { box-shadow: none; position: absolute; left: 58.2%; top: 72.2%; width: 32%; height: 7.6%; padding: 0; cursor: pointer; background: transparent; border: 0; border-radius: 0; transition: box-shadow .3s, background .3s; }
+.tg-send:hover, .tg-send:focus-visible { outline: none; background: rgba(255,214,140,.1); box-shadow: 0 0 0 .2cqw rgba(255,226,170,.9), 0 0 2.4cqw rgba(242,196,107,.75); }
+.tg-send:active { transform: translateY(1px); }
+.tg-send:disabled { cursor: progress; }
+.cc-sent { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--sans); font-weight: 400; font-size: 2.6cqw; letter-spacing: .24em; text-transform: uppercase; color: #ffe2a6; background: linear-gradient(90deg, #3a0c14, #5a1420 50%, #3a0c14); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.cc-sent:not(:empty) { opacity: 1; }
+.callcard .tg-status { position: absolute; left: 8%; top: 72.6%; width: 47%; height: 7%; margin: 0; display: flex; align-items: center; font-family: var(--type); font-size: 2.15cqw; line-height: 1.35; color: #e8d8bc; }
+.callcard .tg-status[data-kind="ok"] { color: #c9f29a; }
+.callcard .tg-status[data-kind="err"] { color: #ff8a80; }
+.callcard .tg-status a { color: inherit; }
+.tg-copy { all: unset; position: absolute; left: 48.8%; top: 81.2%; width: 19.3%; height: 3.4%; cursor: pointer; border-radius: 2px; transition: box-shadow .3s, background .3s; }
+.tg-copy:hover, .tg-copy:focus-visible { background: rgba(255,120,110,.12); box-shadow: 0 0 1.4cqw rgba(255,120,110,.5); }
+.cc-copied { position: absolute; left: 48.8%; top: 81.2%; width: 19.3%; height: 3.4%; display: grid; place-items: center; background: #050405; color: #c9f29a; font-family: var(--type); font-size: 2.2cqw; pointer-events: none; opacity: 0; transition: opacity .2s; }
+.cc-copied:not(:empty) { opacity: 1; }
+
+
+/* ---------- tired bulbs: the desk lamp and the booth light stutter now and then ---------- */
+.flicker { position: absolute; z-index: 1; pointer-events: none; border-radius: 50%; opacity: 0; background: radial-gradient(closest-side, rgba(6,3,12,.7), rgba(6,3,12,.42) 55%, rgba(6,3,12,0)); animation: flickerA 7.3s linear infinite; }
+.flicker-desk { left: 32.5%; top: 23.9%; width: 45.6%; height: 55.2%; }
+.flicker-booth { left: 23.9%; top: -14.9%; width: 50.2%; height: 89.3%; animation-name: flickerB; animation-duration: 9.1s; }
+@keyframes flickerA {
+  0%, 61.9% { opacity: 0; } 62.4% { opacity: .85; } 63.1% { opacity: .15; } 63.6% { opacity: .7; } 64.4%, 81.9% { opacity: 0; }
+  82.3% { opacity: .55; } 83%, 100% { opacity: 0; }
+}
+@keyframes flickerB {
+  0%, 33.9% { opacity: 0; } 34.3% { opacity: .75; } 34.9%, 70.9% { opacity: 0; } 71.3% { opacity: .9; } 71.8% { opacity: .3; }
+  72.3% { opacity: .95; } 73.4% { opacity: .2; } 74%, 100% { opacity: 0; }
+}
 
 /* ==========================================================
    KEYBOARD CONTROLS — light hint, bottom right, keys styled

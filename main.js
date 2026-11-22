@@ -44,7 +44,6 @@
       light: { tx: 1370, bx: 1344, by: 872, bw: 52 }, zoom: [1344, 806],
     },
   };
-  const LIGHT_TOP = -320; // the lamp hangs above the frame
 
   function signSVG(name, poi) {
     const { t, x, y } = poi.sign, txt = poi.label;
@@ -71,13 +70,25 @@
     for (const [name, p] of Object.entries(POIS)) {
       const L = p.light;
       let inner = '';
-      // one lamp, hung above the frame: a clean cone of light, bright at the top,
-      // fading out as it reaches the ground (like a street lamp)
-      const tw = L.bw * 0.16, id = `gl-${name}`;
-      inner += `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${L.tx}" y1="${LIGHT_TOP}" x2="${L.bx}" y2="${L.by}">
-        <stop offset="0" stop-color="#fff4d6" stop-opacity=".8"/><stop offset=".45" stop-color="#ffe9bc" stop-opacity=".5"/>
-        <stop offset=".8" stop-color="#ffd98a" stop-opacity=".22"/><stop offset="1" stop-color="#ffd98a" stop-opacity=".04"/></linearGradient>`;
-      inner += `<polygon class="cone" style="transform-origin:${L.tx}px ${LIGHT_TOP}px" points="${L.tx - tw},${LIGHT_TOP} ${L.tx + tw},${LIGHT_TOP} ${L.bx + L.bw},${L.by} ${L.bx - L.bw},${L.by}" fill="url(#${id})"/>`;
+      // two searchlights at street level, one each side, crossing as they sweep up the building
+      const top = Math.min(...p.poly.map(q => q[1])) - (p.small ? 18 : 70);
+      const spread = L.bw * 0.62, reach = L.bw * (p.small ? 0.5 : 0.3);
+      [[-1, 'a'], [1, 'b']].forEach(([side, tag]) => {
+        const sx = L.bx + side * spread, sy = L.by;
+        const ex = L.bx - side * reach, len = Math.hypot(ex - sx, top - sy);
+        const half = Math.max(p.small ? 14 : 26, len * 0.11), id = `gl-${name}-${tag}`;
+        inner += `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${f1(sx)}" y1="${f1(sy)}" x2="${f1(ex)}" y2="${f1(top)}">
+          <stop offset="0" stop-color="#fff6dc" stop-opacity=".85"/><stop offset=".25" stop-color="#ffe9bc" stop-opacity=".5"/>
+          <stop offset=".7" stop-color="#ffd98a" stop-opacity=".18"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></linearGradient>`;
+        // the beam is drawn along its own axis and then turned, so it can sweep about the lamp
+        const ang = Math.atan2(top - sy, ex - sx) * 180 / Math.PI + 90;
+        inner += `<g class="beam beam-${tag}" style="transform-origin:${f1(sx)}px ${f1(sy)}px">` +
+          `<polygon class="cone" points="${f1(sx - 2.5)},${f1(sy)} ${f1(sx + 2.5)},${f1(sy)} ${f1(sx + half)},${f1(sy - len)} ${f1(sx - half)},${f1(sy - len)}" fill="url(#${id}-v)" transform="rotate(${f1(ang)} ${f1(sx)} ${f1(sy)})"/>` +
+          `<ellipse class="lamp-pool" cx="${f1(sx)}" cy="${f1(sy)}" rx="${p.small ? 5 : 9}" ry="${p.small ? 2.2 : 3.5}"/></g>`;
+        inner += `<linearGradient id="${id}-v" gradientUnits="userSpaceOnUse" x1="${f1(sx)}" y1="${f1(sy)}" x2="${f1(sx)}" y2="${f1(sy - len)}">
+          <stop offset="0" stop-color="#fff6dc" stop-opacity=".85"/><stop offset=".25" stop-color="#ffe9bc" stop-opacity=".5"/>
+          <stop offset=".7" stop-color="#ffd98a" stop-opacity=".18"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></linearGradient>`;
+      });
       inner += `<polygon class="hit" points="${pl(p.hit || p.poly)}" fill="transparent"/>`;
       inner += `<circle class="zt" cx="${p.zoom[0]}" cy="${p.zoom[1]}" r="1" fill="transparent"/>`;
       const label = { projects: 'Projects', skills: 'Skills', profile: 'Profile', hobbies: 'Hobbies (museum)', contact: 'Contact (phone booth)' }[name];
@@ -158,22 +169,22 @@
      painting's own pixels; distances and speeds are in metres. */
   traffic = (() => {
     const cv = $('#traffic'), ctx = cv.getContext('2d');
-    // lane centre lines as y(x) polylines — 0 = far lane (driver's left), 1 = near lane
-    const LANES = [
-      [[560, 726], [720, 755], [800, 772], [900, 796], [1020, 828], [1150, 862], [1280, 893], [1400, 922], [1540, 956], [1700, 994]],
-      [[560, 740], [760, 788], [850, 817], [1000, 862], [1100, 894], [1200, 926], [1300, 958], [1420, 996], [1700, 1080]],
-    ];
-    const laneY = (k, x) => {
-      const P = LANES[k];
-      if (x <= P[0][0]) return P[0][1];
-      for (let i = 1; i < P.length; i++) if (x <= P[i][0]) {
-        const [x0, y0] = P[i - 1], [x1, y1] = P[i];
-        return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
-      }
-      return P[P.length - 1][1];
-    };
+    // the far curb, traced off the painting; both lanes sit on the road below it
+    const CURB = [[560, 724], [640, 740], [700, 752], [760, 765], [800, 772], [900, 790], [1000, 808], [1100, 826],
+      [1200, 843], [1300, 862], [1400, 884], [1500, 905], [1600, 925], [1700, 944]];
     // pixels per metre grows toward the viewer (from the lamp posts and the phone booth)
     const ppm = x => Math.max(10, 17 + 0.042 * (x - 738));
+    const curbY = x => {
+      if (x <= CURB[0][0]) return CURB[0][1];
+      for (let i = 1; i < CURB.length; i++) if (x <= CURB[i][0]) {
+        const [x0, y0] = CURB[i - 1], [x1, y1] = CURB[i];
+        return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
+      }
+      return CURB[CURB.length - 1][1];
+    };
+    // where each lane's wheels meet the road: 0 = far lane (driver's left), 1 = near lane
+    const LANE_OFF = [0.85, 2.15];
+    const laneY = (k, x) => curbY(x) + LANE_OFF[k] * ppm(x);
     // metres along the street <-> x, tabulated once
     const X0 = 590, X1 = 1720, M = [0];
     for (let x = X0 + 1; x <= X1; x++) M.push(M[M.length - 1] + 1.05 / ppm(x - 0.5));
@@ -190,6 +201,18 @@
       img.src = `assets/cars/car${n}.webp?v=13`;
       return img;
     });
+    // wheels: [cx, cy, rx, ry, spins?]; lamps: headlights (near side first); contacts = bottom of each wheel
+    const CAR_ART = [
+      { wheels: [[60, 128, 27, 32, 1], [274, 142, 32, 46, 1]], lamps: [[330, 75, 13], [398, 72, 12]] },
+      { wheels: [[42, 118, 18, 30, 0], [220, 140, 32, 48, 1]], lamps: [[285, 85, 13], [360, 85, 12], [305, 122, 7], [378, 122, 6]] },
+      { wheels: [[45, 126, 24, 34, 1], [245, 142, 32, 47, 1]], lamps: [[320, 83, 13], [401, 83, 12]] },
+      { wheels: [[49, 120, 26, 38, 1], [248, 138, 36, 50, 1]], lamps: [[310, 80, 14], [390, 80, 12], [330, 123, 7], [395, 123, 6]] },
+      { wheels: [[60, 130, 27, 38, 1], [231, 143, 32, 46, 1]], lamps: [[293, 85, 12], [367, 82, 11]] },
+      { wheels: [[47, 124, 25, 35, 0], [235, 140, 33, 48, 1]], lamps: [[295, 92, 13], [382, 90, 12], [318, 132, 6], [378, 130, 6]] },
+      { wheels: [[52, 130, 27, 35, 0], [256, 145, 34, 45, 1]], lamps: [[330, 105, 11], [410, 105, 10]] },
+      { wheels: [[55, 132, 28, 33, 0], [254, 142, 34, 47, 1]], lamps: [[328, 70, 14], [415, 70, 13], [360, 120, 7], [435, 120, 6]] },
+    ];
+    const WHEEL_M = 0.38; // tyre radius in metres, for how fast the wheels turn
     const CAR_H = 1.95, LEN = 5.2, S0 = 1.6, HEADWAY = 1.3, ACC = 0.9, DEC = 1.7; // metres, seconds
     let cars = [], raf = 0, last = 0, clock = 0, scale = 1, dpr = 1;
     const spawnAt = [1.2, 3.5];
@@ -242,7 +265,7 @@
       cars.push({
         sprite: pool[Math.floor(Math.random() * pool.length)],
         lane: k, target: null, u: 0, m: 0, v: Math.min(v0, 3), v0,
-        signal: 0, signalT: 0, phase: Math.random() * 6, think: Math.random() * 0.5, lit: 0,
+        signal: 0, signalT: 0, phase: Math.random() * 6, think: Math.random() * 0.5, spin: Math.random() * 6,
       });
       return true;
     }
@@ -289,10 +312,11 @@
       for (const c of cars) {
         c.v = Math.max(0, c.v + c.acc * dt);
         c.m += c.v * dt;
+        c.spin += (c.v / WHEEL_M) * dt;
       }
       cars = cars.filter(c => {
         const x = xAt(c.m), y = carY(c, x), h = CAR_H * ppm(x);
-        return c.m < END && y - h < H + 6;
+        return c.m < END && y - h < H + 6 && x - h * 2.6 < W + 10;
       });
     }
     const ease = t => t * t * (3 - 2 * t);
@@ -304,59 +328,92 @@
     function draw() {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, cv.width, cv.height);
-      ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+      const base = [dpr * scale, 0, 0, dpr * scale, 0, 0];
+      ctx.setTransform(...base);
       const list = cars.map(c => {
-        const img = SPRITES[c.sprite];
-        const x = xAt(c.m), y = carY(c, x), h = CAR_H * ppm(x);
+        const img = SPRITES[c.sprite], art = CAR_ART[c.sprite];
+        const fx = xAt(c.m), fy = carY(c, fx), h = CAR_H * ppm(fx), k = h / 190;
         const w = img.naturalWidth ? h * img.naturalWidth / img.naturalHeight : h * 2.35;
-        const slope = (carY(c, x + 4) - carY(c, x - 4)) / 8;
-        return { c, img, x, y, h, w, ang: Math.atan(slope) };
-      }).sort((a, b) => a.y - b.y);
+        const [R, F] = art.wheels;
+        const fcx = F[0], fcy = F[1] + F[3], rcx = R[0], rcy = R[1] + R[3]; // tyre contacts in sprite px
+        // tilt the car so the rear tyre lands on the road too (the road falls away faster than the drawing)
+        const span = (fcx - rcx) * k;
+        let rx = fx - span;
+        for (let i = 0; i < 2; i++) rx = fx - span * Math.cos(Math.atan2(fy - carY(c, rx), fx - rx));
+        const roadAng = Math.atan2(fy - carY(c, rx), fx - rx);
+        const artAng = Math.atan2(fcy - rcy, fcx - rcx);
+        return { c, img, art, fx, fy, h, w, k, fcx, fcy, rot: roadAng - artAng, roadAng };
+      }).sort((a, b) => a.fy - b.fy);
+      const toLocal = o => { ctx.setTransform(...base); ctx.translate(o.fx, o.fy); ctx.rotate(o.rot); ctx.scale(o.k, o.k); ctx.translate(-o.fcx, -o.fcy); };
 
-      // headlight beams on the wet road (drawn first so cars sit on top of them)
+      // headlight pools on the wet road ahead of each car (drawn first so the cars sit on top)
       ctx.globalCompositeOperation = 'lighter';
       for (const o of list) {
-        const fx = o.x + o.w * 0.5, fy = o.y - o.h * 0.12;
-        ctx.save();
-        ctx.translate(fx, fy); ctx.rotate(o.ang);
-        ctx.scale(1, 0.22);
-        const r = o.w * 0.95;
-        const g = ctx.createRadialGradient(r * 0.25, 0, 0, r * 0.25, 0, r);
-        g.addColorStop(0, 'rgba(255,214,140,.30)'); g.addColorStop(0.5, 'rgba(255,200,120,.11)'); g.addColorStop(1, 'rgba(255,200,120,0)');
+        ctx.setTransform(...base);
+        ctx.translate(o.fx + o.w * 0.12, o.fy - o.h * 0.02); ctx.rotate(o.roadAng);
+        ctx.scale(1, 0.24);
+        const r = o.w * 0.75;
+        const g = ctx.createRadialGradient(r * 0.55, 0, 0, r * 0.55, 0, r);
+        g.addColorStop(0, 'rgba(255,214,140,.26)'); g.addColorStop(0.5, 'rgba(255,200,120,.09)'); g.addColorStop(1, 'rgba(255,200,120,0)');
         ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(r * 0.25, 0, r, 0, Math.PI * 2); ctx.fill();
-        ctx.restore();
+        ctx.beginPath(); ctx.arc(r * 0.55, 0, r, 0, Math.PI * 2); ctx.fill();
       }
       ctx.globalCompositeOperation = 'source-over';
 
       for (const o of list) {
-        const { c, img, x, h, w } = o;
-        const bob = Math.sin(clock * 11 + c.phase) * h * 0.006;
-        const y = o.y + bob;
-        // contact shadow
+        const { c, img, art, h } = o;
+        // contact shadow along the line between the tyres
+        ctx.setTransform(...base);
+        ctx.translate(o.fx, o.fy); ctx.rotate(o.roadAng);
         ctx.fillStyle = 'rgba(2,2,14,.5)';
-        ctx.beginPath(); ctx.ellipse(x + w * 0.02, o.y - h * 0.03, w * 0.5, h * 0.09, o.ang * 0.5, 0, Math.PI * 2); ctx.fill();
-        if (img.complete && img.naturalWidth) ctx.drawImage(img, x - w / 2, y - h * 0.97, w, h);
-        // headlamp glow
-        ctx.globalCompositeOperation = 'lighter';
-        for (const [hx, hy, s] of [[0.3, -0.52, 0.11], [0.43, -0.5, 0.13]]) {
-          const gx = x + w * hx, gy = y + h * hy, r = h * s * 1.6;
-          const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, r);
-          g.addColorStop(0, 'rgba(255,226,160,.45)'); g.addColorStop(1, 'rgba(255,226,160,0)');
-          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, r, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(-o.w * 0.3, -h * 0.01, o.w * 0.48, h * 0.075, 0, 0, Math.PI * 2); ctx.fill();
+
+        toLocal(o);
+        const bob = Math.sin(clock * 11 + c.phase) * 0.9; // a gentle suspension bounce, in sprite px
+        if (img.complete && img.naturalWidth) ctx.drawImage(img, 0, bob, img.naturalWidth, img.naturalHeight);
+
+        // wheels turning: tread marks on the tyre and spokes on the hub, rotating with the road speed
+        for (const [cx, cy, rx, ry, spins] of art.wheels) {
+          if (!spins) continue;
+          ctx.save();
+          ctx.translate(cx, cy + bob * 0.3); ctx.scale(rx, ry);
+          ctx.beginPath(); ctx.arc(0, 0, 0.97, 0, Math.PI * 2); ctx.clip();
+          ctx.lineCap = 'round';
+          for (let i = 0; i < 6; i++) {
+            const a = c.spin + i * Math.PI / 3, ca = Math.cos(a), sa = Math.sin(a);
+            ctx.strokeStyle = 'rgba(8,6,16,.42)'; ctx.lineWidth = 0.07;
+            ctx.beginPath(); ctx.moveTo(ca * 0.72, sa * 0.72); ctx.lineTo(ca * 0.93, sa * 0.93); ctx.stroke();
+            if (i % 2 === 0) {
+              ctx.strokeStyle = 'rgba(255,236,200,.16)'; ctx.lineWidth = 0.05;
+              ctx.beginPath(); ctx.moveTo(ca * 0.16, sa * 0.16); ctx.lineTo(ca * 0.5, sa * 0.5); ctx.stroke();
+            }
+          }
+          ctx.restore();
         }
-        // turn signal: amber blink on the side the driver is moving to
+
+        // headlamps glow exactly where they are painted
+        ctx.globalCompositeOperation = 'lighter';
+        for (const [lx, ly, lr] of art.lamps) {
+          const r = lr * 2.2;
+          const g = ctx.createRadialGradient(lx, ly + bob, 0, lx, ly + bob, r);
+          g.addColorStop(0, 'rgba(255,230,170,.55)'); g.addColorStop(0.4, 'rgba(255,220,150,.2)'); g.addColorStop(1, 'rgba(255,220,150,0)');
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(lx, ly + bob, r, 0, Math.PI * 2); ctx.fill();
+        }
+        // turn signal: we see each car's right side, so a move to the near lane (right) blinks the near
+        // headlamp and the back corner; a move to the far lane (left) blinks the outer headlamp
         if (c.signal !== 0 && Math.floor(clock * 3.2 + c.phase) % 2 === 0) {
-          const side = c.signal < 0 ? [[0.22, -0.5], [-0.47, -0.55]] : [[0.47, -0.38], [-0.42, -0.42]];
-          for (const [sx, sy] of side) {
-            const gx = x + w * sx, gy = y + h * sy, r = h * 0.12;
-            const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, r);
+          const [nearL, farL] = art.lamps;
+          const spots = c.signal > 0 ? [[nearL[0] - nearL[2] * 1.4, nearL[1] + nearL[2] * 0.8], [8, 100]] : [[farL[0] + farL[2] * 1.3, farL[1] + farL[2] * 0.8]];
+          for (const [sx, sy] of spots) {
+            const r = 16;
+            const g = ctx.createRadialGradient(sx, sy + bob, 0, sx, sy + bob, r);
             g.addColorStop(0, 'rgba(255,170,40,.95)'); g.addColorStop(0.35, 'rgba(255,150,30,.55)'); g.addColorStop(1, 'rgba(255,140,20,0)');
-            ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, r, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy + bob, r, 0, Math.PI * 2); ctx.fill();
           }
         }
         ctx.globalCompositeOperation = 'source-over';
       }
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     function frame(t) {
@@ -646,7 +703,7 @@
   const MAIL_TO = 'yimgi09@gmail.com';
   const MAIL_ENDPOINT = `https://formsubmit.co/ajax/${MAIL_TO}`;
   const phoneHot = $('#phoneHot'), msgModal = $('.msg-modal'), msgForm = $('#msgForm');
-  const msgStatus = $('.tg-status', msgForm), sendBtn = $('.tg-send', msgForm), sendLabel = $('span', sendBtn);
+  const msgStatus = $('.tg-status', msgForm), sendBtn = $('.tg-send', msgForm), sendLabel = $('.cc-sent', sendBtn);
   function openMsg() {
     const r = phoneHot.getBoundingClientRect();
     const pop = $('.msg-pop', msgModal);
@@ -703,10 +760,11 @@
       sendLabel.textContent = 'Sent ✓';
       contactRoom.classList.add('ringing');
       setLcd('MESSAGE SENT', 3000);
-      setTimeout(() => { sendLabel.textContent = 'Send message'; sendBtn.disabled = false; }, 3000);
+      setTimeout(() => { sendLabel.textContent = ''; sendBtn.disabled = false; }, 3000);
     } catch (err) {
       sendBtn.disabled = false;
       sendLabel.textContent = 'Try again';
+      setTimeout(() => { sendLabel.textContent = ''; }, 2400);
       setLcd('NO ANSWER', 2400);
       const mailto = `mailto:${MAIL_TO}?subject=${encodeURIComponent(`Portfolio message from ${name}`)}&body=${encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')')}`;
       msgStatus.dataset.kind = 'err';
@@ -731,8 +789,9 @@
       try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
       ta.parentNode.removeChild(ta);
     }
-    copyBtn.textContent = ok ? 'Copied!' : email;
-    copyTimer = setTimeout(() => { copyBtn.textContent = 'Copy my address'; }, 2400);
+    const copied = $('.cc-copied');
+    copied.textContent = ok ? 'Copied!' : email;
+    copyTimer = setTimeout(() => { copied.textContent = ''; }, 2400);
   });
 
   /* ==========================================================
@@ -751,24 +810,34 @@
   const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
 
   /* ---------- rain outside every room window ----------
-     Window glass outlined in each painting's own pixels. Streaks fall
-     behind the glass, and a few drops slide slowly down the panes. */
+     Each room has a mask of its window glass (traced off the painting), so
+     the rain stays behind the frames and behind anyone sitting in front of
+     the window, but still falls the full height of the glass. Rain falls
+     outside; beads of water cling to the pane, and now and then one grows
+     heavy and runs down, leaving a wet trail. */
   const ROOM_WINDOWS = {
-    projects: { w: 1672, h: 941, polys: [
-      [[0, 0], [298, 0], [298, 470], [0, 470]],
-      [[1370, 40], [1672, 40], [1672, 470], [1370, 470]]] },
-    profile: { w: 1448, h: 1086, polys: [
-      [[122, 90], [150, 45], [190, 30], [230, 45], [255, 70], [275, 45], [330, 25], [390, 45], [420, 70],
-       [445, 45], [490, 30], [530, 45], [558, 90], [558, 395], [122, 395]]] },
-    skills: { w: 1671, h: 941, polys: [
-      [[468, 620], [468, 210], [500, 150], [560, 110], [632, 95], [700, 110], [760, 150], [797, 210], [797, 620],
-       [700, 620], [700, 505], [610, 505], [610, 620]]] },
-    hobbies: { w: 1671, h: 941, polys: [
-      [[0, 635], [0, 60], [40, 30], [100, 40], [150, 90], [158, 140], [158, 635]]] },
-    contact: { w: 1672, h: 941, polys: [
-      [[163, 0], [528, 40], [528, 873], [163, 929]],
-      [[1161, 40], [1496, 0], [1496, 941], [1161, 880]]] },
+    projects: { w: 1672, h: 941, boxes: [[0, 0, 300, 665], [1345, 0, 1672, 665]] },
+    profile: { w: 1448, h: 1086, boxes: [[110, 25, 565, 425]] },
+    skills: { w: 1671, h: 941, boxes: [[466, 92, 800, 625]] },
+    hobbies: { w: 1671, h: 941, boxes: [[0, 30, 160, 640]] },
+    contact: { w: 1672, h: 941, boxes: [[160, 0, 530, 935], [1150, 0, 1500, 941]] },
   };
+  // one water drop, drawn once: a dark refracted rim below, a pale body, a bright glint up top
+  const DROP = (() => {
+    const c = document.createElement('canvas'), s = 64;
+    c.width = s; c.height = s;
+    const g = c.getContext('2d'), r = s / 2 - 2;
+    g.translate(s / 2, s / 2);
+    let gr = g.createRadialGradient(0, -r * 0.25, r * 0.1, 0, 0, r);
+    gr.addColorStop(0, 'rgba(210,218,255,.18)'); gr.addColorStop(0.7, 'rgba(170,180,235,.22)'); gr.addColorStop(1, 'rgba(20,18,50,.55)');
+    g.fillStyle = gr; g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill();
+    gr = g.createLinearGradient(0, r * 0.2, 0, r);
+    gr.addColorStop(0, 'rgba(230,236,255,0)'); gr.addColorStop(1, 'rgba(230,236,255,.45)');
+    g.fillStyle = gr; g.beginPath(); g.arc(0, r * 0.1, r * 0.82, 0.15 * Math.PI, 0.85 * Math.PI); g.fill();
+    g.fillStyle = 'rgba(255,255,255,.9)';
+    g.beginPath(); g.ellipse(-r * 0.32, -r * 0.38, r * 0.2, r * 0.13, -0.6, 0, Math.PI * 2); g.fill();
+    return c;
+  })();
   const roomRain = {};
   Object.entries(ROOM_WINDOWS).forEach(([name, cfg]) => {
     const scene = $('.scene', rooms[name]);
@@ -777,26 +846,28 @@
     cv.setAttribute('aria-hidden', 'true');
     scene.insertBefore(cv, $('.scene-img', scene).nextSibling);
     const ctx = cv.getContext('2d');
-    const clip = new Path2D();
-    cfg.polys.forEach(p => { clip.moveTo(p[0][0], p[0][1]); p.slice(1).forEach(q => clip.lineTo(q[0], q[1])); clip.closePath(); });
-    const boxes = cfg.polys.map(p => {
-      const xs = p.map(q => q[0]), ys = p.map(q => q[1]);
-      return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
-    });
+    const mask = new Image();
+    mask.src = `assets/rain-mask-${name}.png?v=14`;
+    const boxes = cfg.boxes.map(([x0, y0, x1, y1]) => ({ x0, y0, x1, y1 }));
     const area = boxes.reduce((s, b) => s + (b.x1 - b.x0) * (b.y1 - b.y0), 0);
-    const pick = () => boxes[Math.floor(Math.random() * boxes.length)];
-    const streak = (b, anywhere) => ({
-      b, x: b.x0 - 40 + Math.random() * (b.x1 - b.x0 + 40),
-      y: anywhere ? b.y0 + Math.random() * (b.y1 - b.y0) : b.y0 - 30 - Math.random() * 60,
-      len: 14 + Math.random() * 18, v: 650 + Math.random() * 350, a: 0.16 + Math.random() * 0.2,
+    const pick = () => { let r = Math.random() * area; for (const b of boxes) { r -= (b.x1 - b.x0) * (b.y1 - b.y0); if (r <= 0) return b; } return boxes[0]; };
+    const WIND = 0.12;
+    // rain falling outside, past the glass
+    const streak = (anywhere, b = pick()) => ({
+      b, x: b.x0 - 60 + Math.random() * (b.x1 - b.x0 + 60),
+      y: anywhere ? b.y0 + Math.random() * (b.y1 - b.y0) : b.y0 - 40 - Math.random() * 80,
+      len: 18 + Math.random() * 26, v: 900 + Math.random() * 500, a: 0.1 + Math.random() * 0.16, w: 0.8 + Math.random() * 0.7,
     });
-    const bead = (b, anywhere) => ({
-      b, x: b.x0 + Math.random() * (b.x1 - b.x0),
-      y: anywhere ? b.y0 + Math.random() * (b.y1 - b.y0) : b.y0 + Math.random() * 20,
-      r: 1.4 + Math.random() * 1.8, v: 8 + Math.random() * 40, a: 0.22 + Math.random() * 0.25, pause: Math.random() * 3,
+    // beads stuck to the pane
+    const bead = (b = pick()) => ({ b, x: b.x0 + Math.random() * (b.x1 - b.x0), y: b.y0 + Math.random() * (b.y1 - b.y0), r: 0.9 + Math.random() * 2.2, life: 6 + Math.random() * 14 });
+    // drops running down the glass
+    const runner = (b = pick()) => ({
+      b, x: b.x0 + 6 + Math.random() * (b.x1 - b.x0 - 12), y: b.y0 + Math.random() * (b.y1 - b.y0) * 0.6,
+      r: 2.6 + Math.random() * 2.4, v: 0, hold: 0.5 + Math.random() * 2.5, trail: [], drift: (Math.random() - 0.5) * 0.4,
     });
-    const streaks = Array.from({ length: Math.round(area / 1500) }, () => streak(pick(), true));
-    const beads = Array.from({ length: Math.round(area / 9000) }, () => bead(pick(), true));
+    const streaks = Array.from({ length: Math.round(area / 1300) }, () => streak(true));
+    const beads = Array.from({ length: Math.round(area / 900) }, () => bead());
+    const runners = Array.from({ length: Math.max(2, Math.round(area / 22000)) }, () => runner());
     let scale = 1, dpr = 1, raf = 0, last = 0;
     function size() {
       const r = scene.getBoundingClientRect();
@@ -808,29 +879,63 @@
     function frame(t) {
       const dt = Math.min(0.05, (t - last) / 1000 || 0);
       last = t;
+      ctx.globalCompositeOperation = 'source-over';
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, cv.width, cv.height);
       ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
-      ctx.save();
-      ctx.clip(clip);
       ctx.lineCap = 'round';
-      ctx.lineWidth = 1.35 / scale;
+      // falling rain: a faint tail and a brighter head
       for (const d of streaks) {
-        d.y += d.v * dt; d.x += d.v * 0.14 * dt;
-        if (d.y - d.len > d.b.y1) Object.assign(d, streak(pick(), false));
-        ctx.strokeStyle = `rgba(206,210,255,${d.a})`;
-        ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.len * 0.14, d.y - d.len); ctx.stroke();
+        d.y += d.v * dt; d.x += d.v * WIND * dt;
+        if (d.y - d.len > d.b.y1) Object.assign(d, streak(false));
+        const tx = d.x - d.len * WIND, ty = d.y - d.len;
+        ctx.lineWidth = d.w / scale;
+        ctx.strokeStyle = `rgba(200,206,255,${d.a * 0.45})`;
+        ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(d.x, d.y); ctx.stroke();
+        ctx.strokeStyle = `rgba(225,230,255,${d.a})`;
+        ctx.beginPath(); ctx.moveTo(d.x - d.len * 0.35 * WIND, d.y - d.len * 0.35); ctx.lineTo(d.x, d.y); ctx.stroke();
       }
-      // droplets clinging to the glass, sliding down in fits and starts
+      // beads on the glass slowly evaporate and reappear elsewhere
       for (const d of beads) {
-        if (d.pause > 0) d.pause -= dt; else { d.y += d.v * dt; if (Math.random() < 0.01) d.pause = 0.4 + Math.random() * 1.5; }
-        if (d.y > d.b.y1 + 4) Object.assign(d, bead(pick(), false));
-        ctx.fillStyle = `rgba(220,224,255,${d.a * 0.35})`;
-        ctx.fillRect(d.x - d.r * 0.35, d.y - d.r * 6, d.r * 0.7, d.r * 6);
-        ctx.fillStyle = `rgba(230,232,255,${d.a})`;
-        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill();
+        d.life -= dt;
+        if (d.life <= 0) Object.assign(d, bead());
+        const a = Math.min(1, d.life / 1.5);
+        ctx.globalAlpha = 0.85 * a;
+        ctx.drawImage(DROP, d.x - d.r, d.y - d.r * 1.1, d.r * 2, d.r * 2.2);
       }
-      ctx.restore();
+      ctx.globalAlpha = 1;
+      // runners: sit, then slide in fits and starts, wandering a little and leaving a wet trail
+      for (const d of runners) {
+        if (d.hold > 0) d.hold -= dt;
+        else {
+          d.v = Math.min(160, d.v + 260 * dt);
+          if (Math.random() < 0.012) { d.hold = 0.15 + Math.random() * 0.6; d.v = 0; }
+          d.y += d.v * dt;
+          d.x += d.drift * d.v * dt * 0.15 + (Math.random() - 0.5) * 0.6;
+          const lastP = d.trail[d.trail.length - 1];
+          if (!lastP || d.y - lastP.y > 3) d.trail.push({ x: d.x, y: d.y, t: 0 });
+          // sweep up any beads it runs into, and grow a little
+          for (const b of beads) if (Math.abs(b.x - d.x) < d.r + b.r && Math.abs(b.y - d.y) < d.r + b.r) { d.r = Math.min(6, d.r + b.r * 0.08); b.life = 0; }
+        }
+        for (const p of d.trail) p.t += dt;
+        while (d.trail.length && d.trail[0].t > 3.5) d.trail.shift();
+        if (d.y > d.b.y1 + 10) { Object.assign(d, runner()); continue; }
+        // trail: a thin, fading streak of wet glass with tiny droplets left behind
+        for (let i = 1; i < d.trail.length; i++) {
+          const p0 = d.trail[i - 1], p1 = d.trail[i], fade = 1 - p1.t / 3.5;
+          ctx.strokeStyle = `rgba(205,212,255,${0.08 * fade})`;
+          ctx.lineWidth = d.r * 0.75;
+          ctx.beginPath(); ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.stroke();
+          if (i % 5 === 0) { ctx.globalAlpha = 0.6 * fade; ctx.drawImage(DROP, p1.x - d.r * 0.3, p1.y - d.r * 0.3, d.r * 0.6, d.r * 0.66); ctx.globalAlpha = 1; }
+        }
+        ctx.drawImage(DROP, d.x - d.r, d.y - d.r * 1.25, d.r * 2, d.r * 2.5);
+      }
+      // keep everything to the glass: behind the frames and behind people
+      if (mask.complete && mask.naturalWidth) {
+        ctx.globalCompositeOperation = 'destination-in';
+        ctx.drawImage(mask, 0, 0, cfg.w, cfg.h);
+        ctx.globalCompositeOperation = 'source-over';
+      }
       raf = requestAnimationFrame(frame);
     }
     roomRain[name] = {
