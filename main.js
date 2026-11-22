@@ -976,6 +976,7 @@
   }));
 
   function showRoom(name) {
+    if (typeof sound !== 'undefined') sound.setIndoors(true);
     runRoomRain(name);
     updateControls(name);
     if (name !== 'skills' && openBook >= 0) closeBook(false);
@@ -1010,6 +1011,7 @@
   }
 
   function exit() {
+    sound.setIndoors(false);
     clearTimers();
     const room = rooms[current];
     $$('.poi.lit, .sign.lit', world).forEach(el => el.classList.remove('lit', 'chosen'));
@@ -1079,6 +1081,113 @@
     if (current === 'projects') goSlide(slideI + step);
     if (current === 'hobbies') goHobby(hobbyI + step);
   });
+
+
+  /* ==========================================================
+     RAIN SOUND — made live with the Web Audio API (no audio file):
+     a soft hiss of distant rain, a low wash, and scattered drops.
+     Browsers only allow sound after the visitor interacts, so it
+     starts on the first click, tap or key press. Indoors it is
+     muffled, as if heard through the window.
+     ========================================================== */
+  const sound = (() => {
+    const btn = $('#soundToggle');
+    let wanted = true;
+    try { wanted = localStorage.getItem('rain-sound') !== 'off'; } catch (e) { /* storage blocked */ }
+    let ctx = null, master = null, tone = null, dropBus = null, dropTimer = 0, indoors = false;
+
+    function noiseBuffer(c, seconds, brown) {
+      const len = Math.floor(c.sampleRate * seconds), buf = c.createBuffer(2, len, c.sampleRate);
+      for (let ch = 0; ch < 2; ch++) {
+        const d = buf.getChannelData(ch);
+        let last = 0;
+        for (let i = 0; i < len; i++) {
+          const w = Math.random() * 2 - 1;
+          if (brown) { last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; } else d[i] = w;
+        }
+      }
+      return buf;
+    }
+    function loop(buf) { const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true; s.start(); return s; }
+
+    function build() {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain(); master.gain.value = 0;
+      tone = ctx.createBiquadFilter(); tone.type = 'lowpass'; tone.frequency.value = 9000; tone.Q.value = 0.4;
+      tone.connect(master); master.connect(ctx.destination);
+      // steady hiss of rain falling all over the street
+      const white = noiseBuffer(ctx, 4, false);
+      const hiss = loop(white);
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 900;
+      const shelf = ctx.createBiquadFilter(); shelf.type = 'highshelf'; shelf.frequency.value = 6000; shelf.gain.value = -10;
+      const hissGain = ctx.createGain(); hissGain.gain.value = 0.05;
+      hiss.connect(hp).connect(shelf).connect(hissGain).connect(tone);
+      // slow swell, so it breathes like real rain instead of sounding like static
+      const lfo = ctx.createOscillator(), lfoGain = ctx.createGain();
+      lfo.frequency.value = 0.07; lfoGain.gain.value = 0.012;
+      lfo.connect(lfoGain).connect(hissGain.gain); lfo.start();
+      // low wash of water on the road
+      const wash = loop(noiseBuffer(ctx, 5, true));
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 500;
+      const washGain = ctx.createGain(); washGain.gain.value = 0.11;
+      wash.connect(lp).connect(washGain).connect(tone);
+      // individual drops: tiny filtered ticks, scattered left and right
+      dropBus = ctx.createGain(); dropBus.gain.value = 0.5; dropBus.connect(tone);
+      const tick = () => {
+        if (!ctx || ctx.state !== 'running') return;
+        const t = ctx.currentTime + Math.random() * 0.05;
+        const src = ctx.createBufferSource(); src.buffer = white;
+        const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800 + Math.random() * 4200; bp.Q.value = 6 + Math.random() * 8;
+        const g = ctx.createGain(), peak = 0.03 + Math.random() * 0.09;
+        g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + 0.002); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.03 + Math.random() * 0.05);
+        const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+        let node = src.connect(bp).connect(g);
+        if (pan) { pan.pan.value = Math.random() * 1.6 - 0.8; node = node.connect(pan); }
+        node.connect(dropBus);
+        src.start(t, Math.random() * 3, 0.1);
+      };
+      dropTimer = setInterval(() => { const n = 1 + Math.floor(Math.random() * 3); for (let i = 0; i < n; i++) tick(); }, 70);
+      applyPlace(true);
+    }
+    function applyPlace(instant) {
+      if (!ctx) return;
+      const t = ctx.currentTime, k = instant ? 0.01 : 0.6;
+      // outside: open and bright; inside: heard through glass, quieter and duller
+      tone.frequency.setTargetAtTime(indoors ? 1600 : 9000, t, k);
+      dropBus.gain.setTargetAtTime(indoors ? 0.25 : 0.5, t, k);
+      master.gain.setTargetAtTime(wanted ? (indoors ? 0.55 : 1) : 0, t, instant ? 0.4 : 0.5);
+    }
+    function render() {
+      btn.classList.toggle('off', !wanted);
+      btn.setAttribute('aria-pressed', String(wanted));
+      btn.setAttribute('aria-label', wanted ? 'Mute rain sound' : 'Play rain sound');
+      btn.title = wanted ? 'Rain sound on' : 'Rain sound off';
+    }
+    function start() {
+      if (!wanted) return;
+      if (!ctx) build();
+      if (ctx.state === 'suspended') ctx.resume();
+      applyPlace(false);
+    }
+    // the first interaction anywhere unlocks audio
+    const unlock = () => { start(); removeEventListener('pointerdown', unlock); removeEventListener('keydown', unlock); };
+    addEventListener('pointerdown', unlock);
+    addEventListener('keydown', unlock);
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      wanted = !wanted;
+      try { localStorage.setItem('rain-sound', wanted ? 'on' : 'off'); } catch (err) { /* storage blocked */ }
+      render();
+      if (wanted) start(); else applyPlace(false);
+    });
+    // quiet when the tab is hidden
+    document.addEventListener('visibilitychange', () => {
+      if (!ctx) return;
+      if (document.hidden) ctx.suspend(); else if (wanted) ctx.resume();
+    });
+    render();
+    return { setIndoors(v) { indoors = v; applyPlace(false); } };
+  })();
 
   requestAnimationFrame(() => { route(true); fitSlides(); });
 })();

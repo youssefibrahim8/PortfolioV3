@@ -536,6 +536,24 @@ body.pannable .swipe-hint { display: block; }
   72.3% { opacity: .95; } 73.4% { opacity: .2; } 74%, 100% { opacity: 0; }
 }
 
+/* rain sound on/off, styled like the round 1-5 room buttons */
+.sound-toggle {
+  all: unset; box-sizing: border-box; cursor: pointer;
+  position: fixed; left: var(--gutter); bottom: clamp(14px, 3vh, 26px); z-index: 57;
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid rgba(242,196,107,.5);
+  background: radial-gradient(circle at 35% 30%, #3a2a18, #120a06);
+  transition: box-shadow .3s, border-color .3s;
+}
+.sound-toggle:hover, .sound-toggle:focus-visible { box-shadow: var(--glow); outline: none; }
+.sound-toggle svg { width: 17px; height: 17px; fill: var(--gold); }
+.sound-toggle .wave { fill: none; stroke: var(--gold); stroke-width: 1.8; stroke-linecap: round; }
+.sound-toggle .snd-off { display: none; }
+.sound-toggle.off .snd-on { display: none; }
+.sound-toggle.off .snd-off { display: block; }
+.sound-toggle.off { border-color: rgba(242,196,107,.28); }
+.sound-toggle.off svg { opacity: .65; }
+
 /* ==========================================================
    KEYBOARD CONTROLS — light hint, bottom right, keys styled
    like the 1-5 room buttons
