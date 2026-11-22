@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Josefin+Sans:wght@300;400;600&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/city.webp?v=14">
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
 
@@ -189,8 +189,8 @@
     <img class="scene-img" src="assets/library.webp?v=14" alt="" draggable="false">
     <svg class="scene-svg" viewBox="0 0 1671 941" preserveAspectRatio="none">
       <polygon class="book-hot" data-i="0" points="1150,557 1158,520 1188,301 1196,293 1212,288 1246,292 1280,300 1270,400 1259,520 1252,572 1205,560 1172,562" tabindex="0" role="button" aria-label="Skill One"/>
-      <polygon class="book-hot" data-i="1" points="1264,512 1289,237 1296,227 1310,222 1332,224 1341,228 1338,510" tabindex="0" role="button" aria-label="Skill Two"/>
-      <polygon class="book-hot" data-i="2" points="1394,519 1436,163 1442,155 1458,149 1524,144 1574,151 1578,170 1576,510 1540,513 1483,516 1440,517" tabindex="0" role="button" aria-label="Skill Three"/>
+      <polygon class="book-hot" data-i="1" points="1264,512 1289,237 1296,227 1310,222 1334,222 1423,235 1412,288 1348,302 1341,310 1338,510" tabindex="0" role="button" aria-label="Skill Two"/>
+      <polygon class="book-hot" data-i="2" points="1392,530 1436,163 1442,155 1458,149 1524,144 1574,151 1578,170 1577,518 1520,520 1470,521 1430,525" tabindex="0" role="button" aria-label="Skill Three"/>
     </svg>
     <div class="book-tip" aria-hidden="true"></div>
     <p class="lib-hint">Take a book from the shelf</p>
@@ -240,7 +240,7 @@
         <radialGradient id="gCaseLight" cx=".5" cy="1" r=".8"><stop offset="0" stop-color="#ffd98a" stop-opacity=".35"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
       </defs>
       <!-- placeholder exhibits inside the glass cases -->
-      <g class="exhibit" data-i="0">
+      <g class="exhibit" data-i="0" transform="translate(-62 0)">
         <ellipse cx="160" cy="742" rx="110" ry="14" fill="url(#gCaseLight)"/>
         <rect x="112" y="712" width="96" height="26" rx="3" fill="#2a160c" stroke="#d9a24a" stroke-width="2"/>
         <path d="M160 552 c-22 0 -26 12 -18 22 c-34 16 -46 52 -38 86 c6 26 26 46 56 52 c30 -6 50 -26 56 -52 c8 -34 -4 -70 -38 -86 c8 -10 4 -22 -18 -22z" fill="url(#gRed)" stroke="#f2c46b" stroke-width="2"/>
@@ -261,7 +261,7 @@
         <path d="M1213 608 c-12 0 -14 16 0 18 M1253 608 c12 0 14 16 0 18" fill="none" stroke="#d9a24a" stroke-width="3"/>
         <rect x="1228" y="644" width="10" height="16" fill="url(#gGold)"/><rect x="1216" y="660" width="34" height="10" fill="url(#gGold)"/>
       </g>
-      <g class="exhibit" data-i="3">
+      <g class="exhibit" data-i="3" transform="translate(1588 738) scale(.85) translate(-1505 -738)">
         <ellipse cx="1505" cy="742" rx="120" ry="14" fill="url(#gCaseLight)"/>
         <rect x="1440" y="712" width="130" height="26" rx="3" fill="#2a160c" stroke="#d9a24a" stroke-width="2"/>
         <circle cx="1505" cy="640" r="64" fill="#140c22" stroke="url(#gGold)" stroke-width="6"/>
@@ -271,10 +271,10 @@
         <rect x="1495" y="704" width="20" height="10" fill="url(#gGold)"/>
       </g>
       <!-- the cases themselves are clickable -->
-      <polygon class="case-hot" data-i="0" points="1,502 198,501 324,528 324,743 200,767 1,759" tabindex="0" role="button" aria-label="Exhibit I"/>
-      <polygon class="case-hot" data-i="1" points="362,569 467,568 507,579 507,688 468,697 362,690" tabindex="0" role="button" aria-label="Exhibit II"/>
-      <polygon class="case-hot" data-i="2" points="1161,572 1200,565 1303,566 1301,691 1201,695 1162,688" tabindex="0" role="button" aria-label="Exhibit III"/>
-      <polygon class="case-hot" data-i="3" points="1340,516 1500,482 1671,482 1671,749 1504,776 1340,745" tabindex="0" role="button" aria-label="Exhibit IV"/>
+      <polygon class="case-hot" data-i="0" points="0,499 198,499 326,526 326,776 0,776" tabindex="0" role="button" aria-label="Exhibit I"/>
+      <polygon class="case-hot" data-i="1" points="356,562 466,562 512,577 512,699 356,699" tabindex="0" role="button" aria-label="Exhibit II"/>
+      <polygon class="case-hot" data-i="2" points="1158,576 1200,561 1306,561 1306,699 1158,699" tabindex="0" role="button" aria-label="Exhibit III"/>
+      <polygon class="case-hot" data-i="3" points="1338,515 1497,482 1671,482 1671,786 1338,786" tabindex="0" role="button" aria-label="Exhibit IV"/>
     </svg>
     <div class="case-tip" aria-hidden="true"></div>
     <div class="wall-text" aria-live="polite">
