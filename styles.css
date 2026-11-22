@@ -52,8 +52,8 @@ button { font: inherit; color: inherit; }
 .scene-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 .poi { cursor: pointer; outline: none; }
-.poi .beam { opacity: 0; transition: opacity .45s ease; pointer-events: none; mix-blend-mode: screen; transform-box: view-box; animation: sweepA 5.2s ease-in-out infinite alternate; animation-play-state: paused; }
-.poi .beam-b { animation-name: sweepB; animation-duration: 4.6s; }
+.poi .beam { opacity: 0; transition: opacity .45s ease; pointer-events: none; mix-blend-mode: screen; transform-box: view-box; animation: sweepA 3.1s ease-in-out infinite alternate; animation-play-state: paused; }
+.poi .beam-b { animation-name: sweepB; animation-duration: 2.7s; }
 .poi.lit .beam, .poi:focus-visible .beam { opacity: 1; animation-play-state: running; }
 /* the searchlights sweep slowly, out of step with each other */
 @keyframes sweepA { from { transform: rotate(-5deg); } to { transform: rotate(4deg); } }
