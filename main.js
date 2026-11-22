@@ -62,6 +62,7 @@
     return s + `</g>`;
   }
 
+  const BEAM_MASKS = ['projects', 'hobbies', 'profile', 'contact'];
   const world = $('#world');
   (function buildCity() {
     let s = `<defs>
@@ -83,12 +84,16 @@
         // the beam is drawn along its own axis and then turned, so it can sweep about the lamp
         const ang = Math.atan2(top - sy, ex - sx) * 180 / Math.PI + 90;
         inner += `<g class="beam beam-${tag}" style="transform-origin:${f1(sx)}px ${f1(sy)}px">` +
-          `<polygon class="cone" points="${f1(sx - 2.5)},${f1(sy)} ${f1(sx + 2.5)},${f1(sy)} ${f1(sx + half)},${f1(sy - len)} ${f1(sx - half)},${f1(sy - len)}" fill="url(#${id}-v)" transform="rotate(${f1(ang)} ${f1(sx)} ${f1(sy)})"/>` +
-          `<ellipse class="lamp-pool" cx="${f1(sx)}" cy="${f1(sy)}" rx="${p.small ? 5 : 9}" ry="${p.small ? 2.2 : 3.5}"/></g>`;
+          `<polygon class="cone" points="${f1(sx - 2.5)},${f1(sy)} ${f1(sx + 2.5)},${f1(sy)} ${f1(sx + half)},${f1(sy - len)} ${f1(sx - half)},${f1(sy - len)}" fill="url(#${id}-v)" transform="rotate(${f1(ang)} ${f1(sx)} ${f1(sy)})"/></g>`;
         inner += `<linearGradient id="${id}-v" gradientUnits="userSpaceOnUse" x1="${f1(sx)}" y1="${f1(sy)}" x2="${f1(sx)}" y2="${f1(sy - len)}">
           <stop offset="0" stop-color="#fff6dc" stop-opacity=".85"/><stop offset=".25" stop-color="#ffe9bc" stop-opacity=".5"/>
           <stop offset=".7" stop-color="#ffd98a" stop-opacity=".18"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></linearGradient>`;
       });
+      if (BEAM_MASKS.includes(name)) {
+        inner = `<mask id="bm-${name}" maskUnits="userSpaceOnUse" x="-400" y="-600" width="2472" height="1741">` +
+          `<image href="assets/beam-mask-${name}.png?v=15" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="none"/></mask>` +
+          `<g mask="url(#bm-${name})">${inner}</g>`;
+      }
       inner += `<polygon class="hit" points="${pl(p.hit || p.poly)}" fill="transparent"/>`;
       inner += `<circle class="zt" cx="${p.zoom[0]}" cy="${p.zoom[1]}" r="1" fill="transparent"/>`;
       const label = { projects: 'Projects', skills: 'Skills', profile: 'Profile', hobbies: 'Hobbies (museum)', contact: 'Contact (phone booth)' }[name];
@@ -169,22 +174,28 @@
      painting's own pixels; distances and speeds are in metres. */
   traffic = (() => {
     const cv = $('#traffic'), ctx = cv.getContext('2d');
-    // the far curb, traced off the painting; both lanes sit on the road below it
-    const CURB = [[560, 724], [640, 740], [700, 752], [760, 765], [800, 772], [900, 790], [1000, 808], [1100, 826],
-      [1200, 843], [1300, 862], [1400, 884], [1500, 905], [1600, 925], [1700, 944]];
-    // pixels per metre grows toward the viewer (from the lamp posts and the phone booth)
-    const ppm = x => Math.max(10, 17 + 0.042 * (x - 738));
-    const curbY = x => {
-      if (x <= CURB[0][0]) return CURB[0][1];
-      for (let i = 1; i < CURB.length; i++) if (x <= CURB[i][0]) {
-        const [x0, y0] = CURB[i - 1], [x1, y1] = CURB[i];
+    // the far curb and the dashed centre line, both measured off the painting
+    const CURB = [[560, 712], [760, 745], [800, 752], [900, 770], [1000, 792], [1100, 815], [1200, 838], [1300, 864],
+      [1400, 887], [1500, 908], [1600, 928], [1700, 948], [1800, 968]];
+    const DASH = [[560, 735], [760, 770], [863, 795], [902, 804], [933, 812], [975, 824], [1021, 837], [1075, 854],
+      [1112, 866], [1161, 884], [1188, 893], [1293, 934], [1400, 979], [1500, 1022], [1600, 1065], [1700, 1110], [1800, 1155]];
+    const along = (P, x) => {
+      if (x <= P[0][0]) return P[0][1];
+      for (let i = 1; i < P.length; i++) if (x <= P[i][0]) {
+        const [x0, y0] = P[i - 1], [x1, y1] = P[i];
         return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
       }
-      return CURB[CURB.length - 1][1];
+      return P[P.length - 1][1];
     };
-    // where each lane's wheels meet the road: 0 = far lane (driver's left), 1 = near lane
-    const LANE_OFF = [0.85, 2.15];
-    const laneY = (k, x) => curbY(x) + LANE_OFF[k] * ppm(x);
+    // pixels per metre grows toward the viewer (from the lamp posts and the phone booth)
+    const ppm = x => Math.max(10, 17 + 0.042 * (x - 738));
+    // where a car's near-side tyres meet the road. The lane is the band between the curb and the
+    // dashes (far lane) or between the dashes and the same width again (near lane); the car's body
+    // fills the band above its tyres, so the tyres sit 80% of the way across.
+    const laneY = (k, x) => {
+      const c = along(CURB, x), d = along(DASH, x), g = d - c;
+      return (k === 0 ? c : d) + g * 0.8;
+    };
     // metres along the street <-> x, tabulated once
     const X0 = 590, X1 = 1720, M = [0];
     for (let x = X0 + 1; x <= X1; x++) M.push(M[M.length - 1] + 1.05 / ppm(x - 0.5));
@@ -215,7 +226,7 @@
     const WHEEL_M = 0.38; // tyre radius in metres, for how fast the wheels turn
     const CAR_H = 1.95, LEN = 5.2, S0 = 1.6, HEADWAY = 1.3, ACC = 0.9, DEC = 1.7; // metres, seconds
     let cars = [], raf = 0, last = 0, clock = 0, scale = 1, dpr = 1;
-    const spawnAt = [1.2, 3.5];
+    let spawnIn = 2;
 
     function size() {
       const w = cityScene.clientWidth, h = cityScene.clientHeight;
@@ -272,11 +283,9 @@
 
     function step(dt) {
       clock += dt;
-      // new cars turn the corner from behind the balcony
-      for (let k = 0; k < 2; k++) {
-        spawnAt[k] -= dt;
-        if (spawnAt[k] <= 0 && cars.length < 8) spawnAt[k] = spawn(k) ? 1.8 + Math.random() * 4.5 : 0.6;
-      }
+      // new cars turn the corner from behind the balcony: one or two every fifteen seconds or so
+      spawnIn -= dt;
+      if (spawnIn <= 0) spawnIn = spawn(Math.random() < 0.72 ? 1 : 0) ? 6 + Math.random() * 8 : 1;
       cars.sort((a, b) => b.m - a.m);
       for (const c of cars) {
         // follow whichever car is ahead in every lane this car occupies
@@ -425,7 +434,7 @@
     }
     // start with a little traffic already on the street
     function seed() {
-      for (let i = 0; i < 260; i++) step(0.05);
+      for (let i = 0; i < 220; i++) step(0.05);
     }
     size();
     addEventListener('resize', size);

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Josefin+Sans:wght@300;400;600&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/city.webp?v=14">
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
 
@@ -20,9 +20,10 @@
   <div class="city-scroll" id="cityScroll">
     <div class="city-scene" id="cityScene">
       <img class="scene-img" src="assets/city.webp?v=14" alt="" draggable="false">
-      <div class="sky-drift" aria-hidden="true"><div class="sky-strip"></div></div>
+      <div class="sky-drift" aria-hidden="true"><div class="sky-strip"></div><img class="sky-moon" src="assets/sky-moon.webp?v=15" alt="" draggable="false"><div class="sky-front-wrap"><div class="sky-front"></div></div></div>
       <canvas class="traffic" id="traffic" aria-hidden="true"></canvas>
       <img class="city-front" src="assets/city-front.webp?v=14" alt="" draggable="false">
+      <div class="lamp-flickers" aria-hidden="true"><i class="lamp-flicker lf-a" style="left:57.356%;top:69.926%;width:3.110%;height:5.526%"></i><i class="lamp-flicker lf-b" style="left:73.804%;top:75.239%;width:4.067%;height:7.226%"></i><i class="lamp-flicker lf-c" style="left:90.849%;top:79.384%;width:5.024%;height:8.927%"></i></div>
       <svg class="scene-svg" id="world" viewBox="0 0 1672 941" preserveAspectRatio="none" role="group" aria-label="City — choose a building"></svg>
     </div>
   </div>
@@ -140,7 +141,7 @@
       </defs>
       <!-- the painted steam, set swirling -->
       <image class="steam" href="assets/steam.png?v=14" x="1000" y="465" width="100" height="135" filter="url(#steamWave)" aria-hidden="true"/>
-      <polygon class="file-hot" id="fileHot" points="627,597 877,611 883,628 878,642 826,733 812,743 660,729 514,717 510,703" tabindex="0" role="button" aria-label="Open the case file on Youssef Ibrahim"/>
+      <polygon class="file-hot" id="fileHot" points="628,598 876,610 882,624 880,636 830,728 814,741 660,730 515,717 509,702" tabindex="0" role="button" aria-label="Open the case file on Youssef Ibrahim"/>
     </svg>
     <div class="file-tag" aria-hidden="true"><b>Ibrahim, Y.</b><span>Case file · click to open</span></div>
   </div>
@@ -154,14 +155,14 @@
     <div class="file-pop">
       <button class="file-close" type="button">Back on the desk ✕</button>
       <article class="dossier" aria-label="Case file: Youssef Ibrahim">
-        <img class="ds-art" src="assets/case-file.webp?v=14" alt="" draggable="false">
+        <img class="ds-art" src="assets/case-file.webp?v=15" alt="" draggable="false">
         <h3 class="sr-only">Case No. 47-2189 — Ibrahim, Y.</h3>
         <dl class="ds-fields">
-          <div class="ds-f" style="--y:24.4%"><dt class="sr-only">Name</dt><dd>Youssef Ibrahim</dd></div>
-          <div class="ds-f" style="--y:37.8%"><dt class="sr-only">Program</dt><dd>B.C.S. Computer Science</dd></div>
-          <div class="ds-f" style="--y:51.5%"><dt class="sr-only">Institution</dt><dd>Carleton University</dd></div>
-          <div class="ds-f" style="--y:64.5%"><dt class="sr-only">Based in</dt><dd>City, Province</dd></div>
-          <div class="ds-f" style="--y:77.9%"><dt class="sr-only">Status</dt><dd>Open to opportunities</dd></div>
+          <div class="ds-f" style="--y:21.6%"><dt class="sr-only">Name</dt><dd>Youssef Ibrahim</dd></div>
+          <div class="ds-f" style="--y:35%"><dt class="sr-only">Program</dt><dd>B.C.S. Computer Science</dd></div>
+          <div class="ds-f" style="--y:48.6%"><dt class="sr-only">Institution</dt><dd>Carleton University</dd></div>
+          <div class="ds-f" style="--y:61.6%"><dt class="sr-only">Based in</dt><dd>City, Province</dd></div>
+          <div class="ds-f" style="--y:75%"><dt class="sr-only">Status</dt><dd>Open to opportunities</dd></div>
         </dl>
         <span class="ds-stamp">Confidential</span>
         <div class="ds-summary">
@@ -187,9 +188,9 @@
   <div class="scene">
     <img class="scene-img" src="assets/library.webp?v=14" alt="" draggable="false">
     <svg class="scene-svg" viewBox="0 0 1671 941" preserveAspectRatio="none">
-      <polygon class="book-hot" data-i="0" points="1187,302 1210,290 1236,293 1282,301 1262,512 1257,576 1198,553 1149,564" tabindex="0" role="button" aria-label="Skill One"/>
-      <polygon class="book-hot" data-i="1" points="1289,234 1312,222 1336,222 1426,238 1408,283 1338,307 1323,508 1261,512" tabindex="0" role="button" aria-label="Skill Two"/>
-      <polygon class="book-hot" data-i="2" points="1438,163 1464,144 1570,148 1568,208 1559,525 1464,520 1393,523" tabindex="0" role="button" aria-label="Skill Three"/>
+      <polygon class="book-hot" data-i="0" points="1185,303 1197,293 1217,290 1247,294 1280,301 1260,507 1256,560 1170,560 1150,563 1150,552" tabindex="0" role="button" aria-label="Skill One"/>
+      <polygon class="book-hot" data-i="1" points="1287,232 1295,222 1312,219 1334,221 1423,236 1406,289 1347,301 1340,309 1322,508 1265,513" tabindex="0" role="button" aria-label="Skill Two"/>
+      <polygon class="book-hot" data-i="2" points="1433,170 1445,155 1470,146 1500,145 1566,152 1566,195 1558,525 1505,527 1400,522 1404,500" tabindex="0" role="button" aria-label="Skill Three"/>
     </svg>
     <div class="book-tip" aria-hidden="true"></div>
     <p class="lib-hint">Take a book from the shelf</p>
@@ -270,10 +271,10 @@
         <rect x="1495" y="704" width="20" height="10" fill="url(#gGold)"/>
       </g>
       <!-- the cases themselves are clickable -->
-      <polygon class="case-hot" data-i="0" points="4,500 325,505 325,762 4,762" tabindex="0" role="button" aria-label="Exhibit I"/>
-      <polygon class="case-hot" data-i="1" points="358,565 508,565 508,698 358,698" tabindex="0" role="button" aria-label="Exhibit II"/>
-      <polygon class="case-hot" data-i="2" points="1160,565 1305,565 1305,698 1160,698" tabindex="0" role="button" aria-label="Exhibit III"/>
-      <polygon class="case-hot" data-i="3" points="1340,482 1668,482 1668,762 1340,762" tabindex="0" role="button" aria-label="Exhibit IV"/>
+      <polygon class="case-hot" data-i="0" points="0,499 200,499 325,526 325,742 200,767 0,760" tabindex="0" role="button" aria-label="Exhibit I"/>
+      <polygon class="case-hot" data-i="1" points="361,566 469,566 510,576 510,689 470,699 362,692" tabindex="0" role="button" aria-label="Exhibit II"/>
+      <polygon class="case-hot" data-i="2" points="1159,571 1200,563 1305,565 1302,693 1201,697 1160,689" tabindex="0" role="button" aria-label="Exhibit III"/>
+      <polygon class="case-hot" data-i="3" points="1338,517 1498,479 1671,481 1671,752 1498,780 1332,752 1336,530" tabindex="0" role="button" aria-label="Exhibit IV"/>
     </svg>
     <div class="case-tip" aria-hidden="true"></div>
     <div class="wall-text" aria-live="polite">
@@ -307,11 +308,7 @@
     <img class="scene-img" src="assets/booth.webp?v=14" alt="" draggable="false">
     <i class="flicker flicker-booth" aria-hidden="true"></i>
     <svg class="scene-svg" viewBox="0 0 1672 941" preserveAspectRatio="none">
-      <defs>
-        <radialGradient id="phoneGlow" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ffd98a" stop-opacity=".3"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
-      </defs>
-      <ellipse class="phone-halo" cx="938" cy="500" rx="180" ry="260" fill="url(#phoneGlow)"/>
-      <polygon class="phone-hot" id="phoneHot" points="835,310 850,298 1035,298 1050,315 1050,690 1000,700 905,700 885,720 860,722 825,705 820,620 830,545 830,360" tabindex="0" role="button" aria-label="Pick up the phone to send Youssef a message"/>
+      <polygon class="phone-hot" id="phoneHot" points="833,330 838,318 865,317 868,302 1012,302 1016,317 1043,318 1049,330 1049,690 1043,694 888,694 886,705 875,722 858,725 842,718 832,700 826,660 828,600 833,560" tabindex="0" role="button" aria-label="Pick up the phone to send Youssef a message"/>
     </svg>
     <div class="lcd" aria-hidden="true"><span id="lcd">INSERT 10¢</span></div>
     <div class="phone-tag" aria-hidden="true"><b>Pick up</b><span>Leave a message</span></div>
@@ -372,6 +369,6 @@
   </div>
 </aside>
 
-<script src="main.js?v=14"></script>
+<script src="main.js?v=15"></script>
 </body>
 </html>

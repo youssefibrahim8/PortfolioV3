@@ -55,25 +55,45 @@ button { font: inherit; color: inherit; }
 .poi .beam { opacity: 0; transition: opacity .45s ease; pointer-events: none; mix-blend-mode: screen; transform-box: view-box; animation: sweepA 5.2s ease-in-out infinite alternate; animation-play-state: paused; }
 .poi .beam-b { animation-name: sweepB; animation-duration: 4.6s; }
 .poi.lit .beam, .poi:focus-visible .beam { opacity: 1; animation-play-state: running; }
-.poi .lamp-pool { fill: #fff2cc; filter: drop-shadow(0 0 4px rgba(255,220,150,.95)); }
 /* the searchlights sweep slowly, out of step with each other */
 @keyframes sweepA { from { transform: rotate(-5deg); } to { transform: rotate(4deg); } }
 @keyframes sweepB { from { transform: rotate(5deg); } to { transform: rotate(-4deg); } }
-/* the clouds drift slowly across the sky; the moon, spire and rooftops stay put */
+/* every cloud drifts across the sky and passes behind the skyline; the moon stays put and the
+   dark wisps slide across its face */
 .sky-drift {
-  position: absolute; left: 21.4115%; top: 0; width: 78.5885%; height: 26.5675%;
+  position: absolute; left: 23.5048%; top: 0; width: 76.4952%; height: 46.7588%;
   overflow: hidden; pointer-events: none;
-  -webkit-mask: url(assets/sky-mask.png?v=14) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png?v=14) 0 0 / 100% 100% no-repeat;
+  -webkit-mask: url(assets/sky-mask.png?v=15) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png?v=15) 0 0 / 100% 100% no-repeat;
 }
-.sky-strip {
-  position: absolute; top: 0; height: 100%; left: -158.4475%; width: 407.9148%;
-  background: url(assets/sky-tile.webp?v=14) 0 0 / 20% 100% repeat-x;
-  animation: skyDrift 260s linear infinite; will-change: transform;
+.sky-strip, .sky-front {
+  position: absolute; top: 0; height: 100%; left: -84.363%; width: 268.725%;
+  animation: skyDrift 140s linear infinite; will-change: transform;
 }
-@keyframes skyDrift { to { transform: translateX(20%); } }
+.sky-strip { background: url(assets/sky-tile.webp?v=15) 0 0 / 31.394% 100% repeat-x; }
+.sky-moon { position: absolute; left: 0; top: 0; width: 55.747%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
+.sky-front-wrap {
+  position: absolute; inset: 0;
+  -webkit-mask: radial-gradient(ellipse 10.6% 30.9% at 24.94% 20.91%, #000 0, #000 92%, transparent 100%) 0 0 / 100% 100% no-repeat;
+  mask: radial-gradient(ellipse 10.6% 30.9% at 24.94% 20.91%, #000 0, #000 92%, transparent 100%) 0 0 / 100% 100% no-repeat;
+}
+.sky-front { background: url(assets/cloud-front-tile.webp?v=15) 0 0 / 31.394% 100% repeat-x; }
+@keyframes skyDrift { to { transform: translateX(31.394%); } }
 /* cars on the street, and what stands in front of them (balcony, trees, near lamp) */
 .traffic { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .city-front { position: absolute; left: 29.9043%; top: 72.9012%; width: 39.5933%; height: auto; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+/* a few tired street lamps stutter now and then */
+.lamp-flickers { position: absolute; inset: 0; pointer-events: none; }
+.lamp-flicker { position: absolute; border-radius: 50%; opacity: 0; background: radial-gradient(closest-side, rgba(8,6,22,.92), rgba(8,6,22,.7) 35%, rgba(8,6,22,0)); animation: streetFlickA 6.7s linear infinite; }
+.lf-b { animation-name: streetFlickB; animation-duration: 8.9s; }
+.lf-c { animation-name: streetFlickA; animation-duration: 11.3s; animation-delay: -4s; }
+@keyframes streetFlickA {
+  0%, 70% { opacity: 0; } 70.6% { opacity: .9; } 71.2% { opacity: .2; } 71.8% { opacity: .85; } 73% { opacity: 0; }
+  88% { opacity: 0; } 88.5% { opacity: .7; } 89.2%, 100% { opacity: 0; }
+}
+@keyframes streetFlickB {
+  0%, 22% { opacity: 0; } 22.5% { opacity: .8; } 23.3%, 57% { opacity: 0; } 57.4% { opacity: .95; } 58% { opacity: .3; }
+  58.6% { opacity: .9; } 60.5% { opacity: .9; } 61.2%, 100% { opacity: 0; }
+}
 .room-rain { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .rain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; }
 
@@ -386,7 +406,6 @@ body.pannable .swipe-hint { display: block; }
 /* the phone itself: pick it up to leave a message */
 .phone-hot { stroke: rgba(255,226,170,.55); fill: rgba(242,196,107,.04); animation: filePulse 2.4s ease-in-out infinite; }
 .phone-hot:hover, .phone-hot:focus-visible { animation: none; }
-.phone-halo { pointer-events: none; animation: halo 2.4s ease-in-out infinite; }
 .phone-tag {
   position: absolute; left: 56.1%; top: 31%; z-index: 3; pointer-events: none; transform: translate(-50%, -100%);
   padding: 7px 14px 5px; background: rgba(20,6,8,.9); border: 1px solid rgba(242,196,107,.7);
@@ -397,8 +416,7 @@ body.pannable .swipe-hint { display: block; }
 .phone-tag::after { content: ""; position: absolute; left: 50%; bottom: -8px; width: 12px; height: 12px; margin-left: -6px; background: inherit; border: inherit; border-top: 0; border-left: 0; transform: rotate(45deg); }
 .phone-tag b { font-family: var(--display); font-weight: 400; font-size: clamp(.8rem, 1.1vw, 1.05rem); letter-spacing: .08em; text-transform: uppercase; }
 .phone-tag span { font-size: clamp(.5rem, .7vw, .62rem); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
-.room-contact.off-hook .phone-hot, .room-contact.off-hook .phone-tag, .room-contact.off-hook .phone-halo { opacity: 0; animation: none; }
-
+.room-contact.off-hook .phone-hot, .room-contact.off-hook .phone-tag, .room-contact.off-hook 
 .msg-modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 56px var(--gutter) 24px; overflow: auto; background: rgba(5,3,12,0); transition: background .4s; }
 .msg-modal[hidden] { display: none; }
 .msg-modal.show { background: rgba(5,3,12,.74); }
@@ -458,14 +476,14 @@ body.pannable .swipe-hint { display: block; }
 .dossier { position: relative; width: 100%; aspect-ratio: 1599 / 984; container-type: inline-size; color: #2a1d14; font-family: var(--type); filter: drop-shadow(0 30px 50px rgba(0,0,0,.7)); }
 .ds-art { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
 .ds-fields { margin: 0; }
-.ds-f { position: absolute; left: 23.4%; width: 21.4%; top: var(--y); }
+.ds-f { position: absolute; left: 23.6%; width: 21.4%; top: var(--y); }
 .ds-f dd { margin: 0; font-size: 1.62cqw; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-summary, .ds-current { position: absolute; left: 55.2%; width: 36.6%; }
-.ds-summary { top: 23.5%; height: 33%; overflow: hidden; }
-.ds-current { top: 64.5%; height: 20%; overflow: hidden; }
+.ds-summary, .ds-current { position: absolute; left: 55%; width: 36.8%; }
+.ds-summary { top: 22%; height: 33%; overflow: hidden; }
+.ds-current { top: 63.5%; height: 21%; overflow: hidden; }
 .ds-summary p, .ds-current p { margin: 0 0 1.1cqw; font-size: 1.42cqw; line-height: 1.6; }
 .ds-sig { font-family: var(--hand); font-size: 2.6cqw !important; color: #1e2a5a; transform: rotate(-4deg); text-align: right; margin-top: 1.4cqw !important; }
-.ds-stamp { position: absolute; left: 6.6%; top: 71%; border: .3cqw double var(--red); color: var(--red); padding: .3cqw 1.2cqw .15cqw; font-family: var(--sans); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; font-size: 1.2cqw; transform: rotate(-12deg); opacity: .72; mix-blend-mode: multiply; }
+.ds-stamp { position: absolute; left: 8%; top: 66%; border: .3cqw double var(--red); color: var(--red); padding: .3cqw 1.2cqw .15cqw; font-family: var(--sans); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; font-size: 1.2cqw; transform: rotate(-12deg); opacity: .72; mix-blend-mode: multiply; }
 
 /* ---------- the leave-a-message card (painted deco card) ---------- */
 .msg-pop { width: min(560px, 94vw, calc((100vh - 90px) * .98)); }
@@ -493,9 +511,9 @@ body.pannable .swipe-hint { display: block; }
 .callcard .tg-status[data-kind="ok"] { color: #c9f29a; }
 .callcard .tg-status[data-kind="err"] { color: #ff8a80; }
 .callcard .tg-status a { color: inherit; }
-.tg-copy { all: unset; position: absolute; left: 48.8%; top: 81.2%; width: 19.3%; height: 3.4%; cursor: pointer; border-radius: 2px; transition: box-shadow .3s, background .3s; }
+.tg-copy { all: unset; position: absolute; left: 48.8%; top: 83.75%; width: 19.4%; height: 3.4%; cursor: pointer; border-radius: 2px; transition: box-shadow .3s, background .3s; }
 .tg-copy:hover, .tg-copy:focus-visible { background: rgba(255,120,110,.12); box-shadow: 0 0 1.4cqw rgba(255,120,110,.5); }
-.cc-copied { position: absolute; left: 48.8%; top: 81.2%; width: 19.3%; height: 3.4%; display: grid; place-items: center; background: #050405; color: #c9f29a; font-family: var(--type); font-size: 2.2cqw; pointer-events: none; opacity: 0; transition: opacity .2s; }
+.cc-copied { position: absolute; left: 48.8%; top: 83.75%; width: 19.4%; height: 3.4%; display: grid; place-items: center; background: #050405; color: #c9f29a; font-family: var(--type); font-size: 2.2cqw; pointer-events: none; opacity: 0; transition: opacity .2s; }
 .cc-copied:not(:empty) { opacity: 1; }
 
 
