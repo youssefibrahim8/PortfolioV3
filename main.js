@@ -91,7 +91,7 @@
       });
       if (BEAM_MASKS.includes(name)) {
         inner = `<mask id="bm-${name}" maskUnits="userSpaceOnUse" x="-400" y="-600" width="2472" height="1741">` +
-          `<image href="assets/beam-mask-${name}.png?v=15" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="none"/></mask>` +
+          `<image href="assets/beam-mask-${name}.png?v=17" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="none"/></mask>` +
           `<g mask="url(#bm-${name})">${inner}</g>`;
       }
       inner += `<polygon class="hit" points="${pl(p.hit || p.poly)}" fill="transparent"/>`;
