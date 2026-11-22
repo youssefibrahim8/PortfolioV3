@@ -297,7 +297,12 @@ body.pannable .swipe-hint { display: block; }
 .tome.open .tome-page.right { opacity: 1; }
 .tome-flip { position: absolute; top: 0; bottom: 0; left: 50%; width: 50%; transform-origin: 0 50%; transform-style: preserve-3d; transition: transform 1s cubic-bezier(.45,.05,.25,1); }
 .tome.open .tome-flip { transform: rotateY(-180deg); }
-.tome-flip .tome-face { left: 0; width: 100%; backface-visibility: hidden; }
+.tome-flip .tome-face { left: 0; width: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+/* swap faces halfway through the 1s flip, so the cover can never show through the open page */
+.tome-face.cover { visibility: visible; transition: visibility 0s .5s; }
+.tome.open .tome-face.cover { visibility: hidden; }
+.tome-face.back { visibility: hidden; transition: visibility 0s .5s; }
+.tome.open .tome-face.back { visibility: visible; }
 .tome-face.cover {
   border-radius: 0 6px 6px 0;
   background: linear-gradient(90deg, #4a0e14, #8a1c22 12%, #6a1218);
@@ -320,7 +325,8 @@ body.pannable .swipe-hint { display: block; }
 .t-used { margin: 0; padding-left: 3cqw; font-size: 1.9cqw; line-height: 1.7; }
 .t-folio { position: absolute; bottom: 3cqw; left: 0; right: 0; text-align: center; font-size: 1.4cqw; color: #8a7a6a; }
 .tome-close {
-  position: absolute; left: 29%; top: 85%; transform: translateX(-50%); z-index: 6;
+  /* pinned to the screen, not the painting, so it never falls below the bottom edge */
+  position: fixed; left: 50%; bottom: clamp(18px, 4vh, 36px); transform: translateX(-50%); z-index: 56;
   cursor: pointer; background: rgba(14,9,32,.9); border: 1px solid var(--gold); color: var(--gold);
   padding: 8px 14px 6px; text-transform: uppercase; letter-spacing: .2em; font-size: .64rem; font-weight: 600;
   opacity: 0; pointer-events: none; transition: opacity .4s .6s, background .3s, color .3s;
@@ -587,7 +593,6 @@ body.pannable .swipe-hint { display: block; }
   .page-l { grid-template-columns: 1fr; border-right: 0; border-bottom: 1px dashed rgba(50,35,30,.3); min-height: 0; }
   .polaroid { width: 130px; }
   .tome { left: 4%; width: 46%; }
-  .tome-close { left: 27%; top: 82%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
