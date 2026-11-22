@@ -187,7 +187,7 @@
 
     const SPRITES = [1, 2, 3, 4, 5, 6, 7, 8].map(n => {
       const img = new Image();
-      img.src = `assets/cars/car${n}.webp`;
+      img.src = `assets/cars/car${n}.webp?v=13`;
       return img;
     });
     const CAR_H = 1.95, LEN = 5.2, S0 = 1.6, HEADWAY = 1.3, ACC = 0.9, DEC = 1.7; // metres, seconds

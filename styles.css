@@ -62,11 +62,11 @@ button { font: inherit; color: inherit; }
 .sky-drift {
   position: absolute; left: 21.4115%; top: 0; width: 78.5885%; height: 26.5675%;
   overflow: hidden; pointer-events: none;
-  -webkit-mask: url(assets/sky-mask.png) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png) 0 0 / 100% 100% no-repeat;
+  -webkit-mask: url(assets/sky-mask.png?v=13) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png?v=13) 0 0 / 100% 100% no-repeat;
 }
 .sky-strip {
   position: absolute; top: 0; height: 100%; left: -158.4475%; width: 407.9148%;
-  background: url(assets/sky-tile.webp) 0 0 / 20% 100% repeat-x;
+  background: url(assets/sky-tile.webp?v=13) 0 0 / 20% 100% repeat-x;
   animation: skyDrift 260s linear infinite; will-change: transform;
 }
 @keyframes skyDrift { to { transform: translateX(20%); } }
