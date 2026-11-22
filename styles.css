@@ -69,7 +69,7 @@ button { font: inherit; color: inherit; }
   position: absolute; top: 0; height: 100%; left: -84.363%; width: 268.725%;
   animation: skyDrift 140s linear infinite; will-change: transform;
 }
-.sky-strip { background: url(assets/sky-tile.webp?v=15) 0 0 / 31.394% 100% repeat-x; }
+.sky-strip { background: url(assets/sky-tile.webp?v=17) 0 0 / 31.394% 100% repeat-x; }
 .sky-moon { position: absolute; left: 0; top: 0; width: 55.747%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
 .sky-front-wrap {
   position: absolute; inset: 0;
@@ -176,12 +176,12 @@ body.pannable .swipe-hint { display: block; }
 
 .file-hot, .book-hot, .case-hot, .phone-hot {
   cursor: pointer; outline: none;
-  fill: rgba(242,196,107,0); stroke: rgba(255,226,170,0); stroke-width: 3; stroke-linejoin: round;
+  fill: rgba(242,196,107,0); stroke: rgba(255,226,170,0); stroke-width: 2; stroke-linejoin: round;
   transition: fill .35s, stroke .35s, filter .35s;
   vector-effect: non-scaling-stroke;
 }
 .file-hot:hover, .file-hot:focus-visible, .book-hot:hover, .book-hot:focus-visible, .case-hot:hover, .case-hot:focus-visible, .phone-hot:hover, .phone-hot:focus-visible {
-  fill: rgba(242,196,107,.14); stroke: rgba(255,236,200,.95); filter: drop-shadow(0 0 8px rgba(242,196,107,.9));
+  fill: rgba(242,196,107,.12); stroke: rgba(255,236,200,.9); filter: drop-shadow(0 0 5px rgba(242,196,107,.75));
 }
 
 /* ==========================================================
