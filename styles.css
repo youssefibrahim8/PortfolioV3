@@ -63,7 +63,7 @@ button { font: inherit; color: inherit; }
 .sky-drift {
   position: absolute; left: 23.5048%; top: 0; width: 76.4952%; height: 46.7588%;
   overflow: hidden; pointer-events: none;
-  -webkit-mask: url(assets/sky-mask.png?v=18) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png?v=18) 0 0 / 100% 100% no-repeat;
+  -webkit-mask: url(assets/sky-mask.png?v=19) 0 0 / 100% 100% no-repeat; mask: url(assets/sky-mask.png?v=19) 0 0 / 100% 100% no-repeat;
 }
 .sky-strip, .sky-front {
   position: absolute; top: 0; height: 100%; left: -92.963%; width: 192.963%;
