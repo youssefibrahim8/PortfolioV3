@@ -8,10 +8,9 @@
 
   /* ---------- language: English or French (all text lives in i18n.js) ---------- */
   const DICT = window.I18N || { en: {} };
-  const browserLang = () => (/^fr/i.test(navigator.language || '') ? 'fr' : 'en');
   let LANG = 'en';
-  try { const saved = localStorage.getItem('lang'); LANG = (saved === 'en' || saved === 'fr') ? saved : browserLang(); }
-  catch (e) { LANG = browserLang(); }
+  // English unless the visitor has picked French on the enter screen before
+  try { LANG = localStorage.getItem('lang') === 'fr' ? 'fr' : 'en'; } catch (e) { LANG = 'en'; }
   const t = (k, vars) => {
     let v = (DICT[LANG] && k in DICT[LANG]) ? DICT[LANG][k] : (k in DICT.en ? DICT.en[k] : k);
     if (vars && typeof v === 'string') v = v.replace(/\{(\w+)\}/g, (_, n) => (vars[n] ?? ''));
