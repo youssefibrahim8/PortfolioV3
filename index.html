@@ -251,11 +251,12 @@
         <linearGradient id="gGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".16"/><stop offset=".5" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#ffffff" stop-opacity=".08"/></linearGradient>
         <radialGradient id="panIn" cx=".38" cy=".35" r=".75"><stop offset="0" stop-color="#4a4152"/><stop offset=".6" stop-color="#231a2c"/><stop offset="1" stop-color="#120c18"/></radialGradient>
         <radialGradient id="ballShade" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#3a2410" stop-opacity=".45"/></radialGradient>
+        <clipPath id="postClip"><rect x="186" y="498" width="16" height="276"/><rect x="1493" y="482" width="18" height="300"/></clipPath>
         <clipPath id="ballClip"><circle cx="1233" cy="644" r="24"/></clipPath>
         <radialGradient id="gCaseLight" cx=".5" cy="1" r=".8"><stop offset="0" stop-color="#ffd98a" stop-opacity=".35"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
       </defs>
       <!-- the hobbies, each standing inside its glass case -->
-      <g class="exhibit" data-i="0">
+      <g class="exhibit" data-i="0" transform="translate(65 18)">
         <ellipse cx="98" cy="742" rx="100" ry="13" fill="url(#gCaseLight)"/>
         <rect x="50" y="712" width="96" height="26" rx="3" fill="#2a160c" stroke="#d9a24a" stroke-width="2"/>
         <path d="M86 712 L91 690 H105 L110 712Z" fill="url(#gBronze)" stroke="#d9a24a" stroke-width="1.5"/>
@@ -287,7 +288,7 @@
         <g clip-path="url(#ballClip)" fill="#251829" stroke="#251829" stroke-width="1.6" stroke-linejoin="round"><polygon points="1233.0,636.5 1240.1,641.7 1237.4,650.1 1228.6,650.1 1225.9,641.7"/><line x1="1233.0" y1="636.5" x2="1233.0" y2="629.0"/><polygon points="1228.9,625.7 1226.3,617.8 1233.0,613.0 1239.7,617.8 1237.1,625.7"/><line x1="1240.1" y1="641.7" x2="1247.3" y2="639.4"/><polygon points="1249.2,634.4 1255.8,629.6 1262.5,634.4 1259.9,642.2 1251.7,642.2"/><line x1="1237.4" y1="650.1" x2="1241.8" y2="656.1"/><polygon points="1247.1,656.4 1253.8,661.3 1251.2,669.1 1243.0,669.1 1240.4,661.3"/><line x1="1228.6" y1="650.1" x2="1224.2" y2="656.1"/><polygon points="1225.6,661.3 1223.0,669.1 1214.8,669.1 1212.2,661.3 1218.9,656.4"/><line x1="1225.9" y1="641.7" x2="1218.7" y2="639.4"/><polygon points="1214.3,642.2 1206.1,642.2 1203.5,634.4 1210.2,629.6 1216.8,634.4"/></g>
         <circle cx="1233" cy="644" r="24" fill="url(#ballShade)" stroke="url(#gGold)" stroke-width="2.5"/>
       </g>
-      <g class="exhibit" data-i="3">
+      <g class="exhibit" data-i="3" transform="translate(-62 25)">
         <ellipse cx="1588" cy="742" rx="100" ry="12" fill="url(#gCaseLight)"/>
         <rect x="1533" y="716" width="110" height="22" rx="3" fill="#2a160c" stroke="#d9a24a" stroke-width="2"/>
         <path d="M1566 716 L1576 698 M1610 716 L1600 698" stroke="#d9a24a" stroke-width="3" stroke-linecap="round"/>
@@ -300,9 +301,11 @@
       </g>
       <!-- a faint reflection on the glass in front of each piece -->
       <g class="case-glare" aria-hidden="true">
-        <path d="M30 520 L62 520 L22 760 L-10 760Z"/><path d="M372 574 L388 574 L370 690 L354 690Z"/>
-        <path d="M1272 572 L1288 572 L1270 690 L1254 690Z"/><path d="M1640 500 L1662 500 L1630 770 L1608 770Z"/>
+        <path d="M40 520 L66 520 L36 762 L10 762Z"/><path d="M372 574 L388 574 L370 690 L354 690Z"/>
+        <path d="M1272 572 L1288 572 L1270 690 L1254 690Z"/><path d="M1600 500 L1622 500 L1592 772 L1570 772Z"/>
       </g>
+      <!-- each big case's front corner post sits in front of the piece inside it -->
+      <image class="case-posts" href="assets/museum.webp?v=14" x="0" y="0" width="1671" height="941" preserveAspectRatio="none" clip-path="url(#postClip)" aria-hidden="true"/>
       <!-- the cases themselves are clickable -->
       <polygon class="case-hot" data-i="0" points="0,499 198,499 326,526 326,746 198,776 0,776" tabindex="0" role="button" aria-label="Exhibit I"/>
       <polygon class="case-hot" data-i="1" points="356,562 466,562 512,577 512,689 468,699 356,699" tabindex="0" role="button" aria-label="Exhibit II"/>

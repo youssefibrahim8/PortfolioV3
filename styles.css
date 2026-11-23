@@ -350,6 +350,7 @@ body.pannable .swipe-hint { display: block; }
    ========================================================== */
 .exhibit { pointer-events: none; transition: filter .4s; }
 .case-glare { pointer-events: none; fill: #fff6e0; opacity: .07; }
+.case-posts { pointer-events: none; }
 .exhibit.on { filter: drop-shadow(0 0 10px rgba(255,214,140,.75)) brightness(1.15); }
 .case-hot.on { fill: rgba(242,196,107,.1); stroke: rgba(255,236,200,.9); filter: drop-shadow(0 0 10px rgba(242,196,107,.85)); }
 .wall-text {
