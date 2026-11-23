@@ -201,6 +201,17 @@ body.pannable .swipe-hint { display: block; }
 .s-body h3 { margin: 10px 0 14px; font-family: var(--display); font-weight: 400; font-size: 56px; line-height: 1.02; color: #22142e; }
 .s-body p:not(.s-kicker) { margin: 0 0 20px; font-size: 22px; line-height: 1.5; color: #3a2c40; }
 .s-body .tags li { font-size: 13px; letter-spacing: .22em; text-transform: uppercase; padding: 6px 12px 3px; border: 1px solid rgba(138,90,34,.6); color: #8a5a22; }
+/* a real project has more to say: tighter type and a wider text column so it clears the slide controls */
+.slide-proj { grid-template-columns: 1.55fr 1fr; gap: 34px; padding-top: 44px; align-items: start; }
+.slide-proj .s-art { margin-top: 40px; }
+.slide-proj .s-body h3 { font-size: 44px; margin: 8px 0 10px; white-space: nowrap; }
+.slide-proj .s-body p:not(.s-kicker) { font-size: 18.5px; line-height: 1.45; margin-bottom: 10px; }
+.slide-proj .s-body .s-small { font-size: 15.5px !important; }
+.slide-proj .tags { gap: 6px; }
+.slide-proj .tags li { font-size: 11px; padding: 5px 10px 3px; }
+.s-links { display: flex; gap: 28px; margin-top: 14px; }
+.s-links .s-link { margin-top: 0; }
+.s-body .s-small { font-size: 18px !important; color: #5a4a52 !important; }
 .s-link { display: inline-block; margin-top: 22px; font-size: 15px; font-weight: 600; letter-spacing: .26em; text-transform: uppercase; color: var(--red); text-decoration: none; border-bottom: 1px solid; }
 .s-art { aspect-ratio: 4 / 3; overflow: hidden; box-shadow: 0 0 0 3px #8a5a22, 0 0 0 7px rgba(138,90,34,.25), 0 14px 28px rgba(40,20,10,.35); }
 .s-art svg { width: 100%; height: 100%; }
@@ -310,18 +321,18 @@ body.pannable .swipe-hint { display: block; }
   box-shadow: 0 0 30px rgba(242,196,107,.35), 0 30px 60px rgba(0,0,0,.6);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4cqw;
 }
-.tome[data-book="0"] .tome-face.cover { background: linear-gradient(90deg, #0e1230, #1f2a5a 12%, #141c44); }
+.tome[data-book="1"] .tome-face.cover, .tome[data-book="3"] .tome-face.cover { background: linear-gradient(90deg, #0e1230, #1f2a5a 12%, #141c44); }
 .cover-emblem { width: 14cqw; aspect-ratio: 1; border: 2px solid var(--gold); transform: rotate(45deg); box-shadow: 0 0 12px rgba(242,196,107,.6), inset 0 0 0 4px rgba(242,196,107,.25); }
 .cover-title { font-family: var(--display); font-weight: 400; font-size: 4cqw; color: #ffe9bc; text-align: center; padding: 0 3cqw; }
 .tome-face.back { transform: rotateY(180deg); border-radius: 6px 0 0 6px; box-shadow: inset -14px 0 22px -14px rgba(0,0,0,.45), 0 30px 60px rgba(0,0,0,.6); }
 .t-kicker { margin: 0 0 1.6cqw; font-size: 1.5cqw; letter-spacing: .3em; text-transform: uppercase; color: #8a5a22; }
-.t-title { margin: 0 0 2cqw; font-family: var(--display); font-weight: 400; font-size: 5.4cqw; line-height: 1.02; color: #22142e; }
+.t-title { margin: 0 0 2cqw; font-family: var(--display); font-weight: 400; font-size: 4.3cqw; line-height: 1.05; color: #22142e; }
 .t-rule { display: block; width: 40%; height: 2px; background: #8a5a22; margin-bottom: 4cqw; }
 .t-label { margin: 0 0 1.4cqw; font-size: 1.5cqw; letter-spacing: .25em; text-transform: uppercase; color: #8a5a22; }
-.t-level { display: flex; gap: 1.8cqw; }
-.t-level i { width: 2.4cqw; height: 2.4cqw; transform: rotate(45deg); border: 2px solid var(--red); }
-.t-level i.f { background: var(--red); }
-.t-note { margin: 0 0 4cqw; font-size: 2cqw; line-height: 1.6; }
+/* the tools on this shelf, set like little brass labels */
+.t-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1cqw 1cqw; }
+.t-chips li { text-transform: none; letter-spacing: .02em; font-size: 1.62cqw; line-height: 1.2; padding: .55cqw 1.1cqw .35cqw; border: 1px solid rgba(138,90,34,.55); background: rgba(255,248,232,.4); color: #4a2e18; white-space: nowrap; }
+.t-note { margin: 0 0 3.4cqw; font-size: 1.85cqw; line-height: 1.6; }
 .t-used { margin: 0; padding-left: 3cqw; font-size: 1.9cqw; line-height: 1.7; }
 .t-folio { position: absolute; bottom: 3cqw; left: 0; right: 0; text-align: center; font-size: 1.4cqw; color: #8a7a6a; }
 .tome-close {
@@ -338,6 +349,7 @@ body.pannable .swipe-hint { display: block; }
    HOBBIES — words on the gallery wall, things in the cases
    ========================================================== */
 .exhibit { pointer-events: none; transition: filter .4s; }
+.case-glare { pointer-events: none; fill: #fff6e0; opacity: .07; }
 .exhibit.on { filter: drop-shadow(0 0 10px rgba(255,214,140,.75)) brightness(1.15); }
 .case-hot.on { fill: rgba(242,196,107,.1); stroke: rgba(255,236,200,.9); filter: drop-shadow(0 0 10px rgba(242,196,107,.85)); }
 .wall-text {
@@ -483,11 +495,12 @@ body.pannable .swipe-hint { display: block; }
 .ds-art { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
 .ds-fields { margin: 0; }
 .ds-f { position: absolute; left: 23.6%; width: 21.4%; top: var(--y); }
+.ds-f-wrap dd { white-space: normal !important; font-size: 1.42cqw !important; line-height: 1.3 !important; }
 .ds-f dd { margin: 0; font-size: 1.62cqw; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ds-summary, .ds-current { position: absolute; left: 55%; width: 36.8%; }
-.ds-summary { top: 22%; height: 33%; overflow: hidden; }
+.ds-summary { top: 22%; height: 34.5%; overflow: hidden; }
 .ds-current { top: 63.5%; height: 21%; overflow: hidden; }
-.ds-summary p, .ds-current p { margin: 0 0 1.1cqw; font-size: 1.42cqw; line-height: 1.6; }
+.ds-summary p, .ds-current p { margin: 0 0 1cqw; font-size: 1.3cqw; line-height: 1.55; }
 .ds-sig { font-family: var(--hand); font-size: 2.6cqw !important; color: #1e2a5a; transform: rotate(-4deg); text-align: right; margin-top: 1.4cqw !important; }
 .ds-stamp { position: absolute; left: 8%; top: 66%; border: .3cqw double var(--red); color: var(--red); padding: .3cqw 1.2cqw .15cqw; font-family: var(--sans); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; font-size: 1.2cqw; transform: rotate(-12deg); opacity: .72; mix-blend-mode: multiply; }
 

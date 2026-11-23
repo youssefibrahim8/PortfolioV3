@@ -617,10 +617,20 @@
   modal.addEventListener('click', e => { if (e.target === modal) closeFile(); });
 
   /* ==========================================================
-     SKILLS — take one of the three books, it opens on the left
+     SKILLS — take one of the five books, it opens on the left
      ========================================================== */
-  const SKILL_LEVELS = [4, 3, 4];
-  const skill = i => ({ ...t('skills')[i], level: SKILL_LEVELS[i] });
+  const skill = i => t('skills')[i];
+  const SHELF = ['I', 'II', 'III', 'IV', 'V'];
+  const listInto = (ul, items) => { ul.textContent = ''; items.forEach(x => { const li = document.createElement('li'); li.textContent = x; ul.appendChild(li); }); };
+  function fillTome(i) {
+    const sk = skill(i);
+    $('.cover-title', tome).textContent = sk.name;
+    $('.t-section', tome).textContent = t('sk.shelf', { r: SHELF[i] });
+    $('.t-title', tome).textContent = sk.name;
+    listInto($('.t-chips', tome), sk.items);
+    $('.t-note', tome).textContent = sk.note;
+    listInto($('.t-used', tome), sk.used);
+  }
   const skillsRoom = $('.room-skills'), tome = $('#tome'), tip = $('.book-tip');
   const bookPolys = $$('.book-hot');
   let openBook = -1;
@@ -647,17 +657,12 @@
   });
   function takeBook(i) {
     if (openBook === i) return;
-    const sk = skill(i);
     const swap = openBook >= 0;
     const doIt = () => {
       openBook = i;
       bookPolys.forEach((p, k) => p.classList.toggle('taken', k === i));
       tome.dataset.book = i;
-      $('.cover-title', tome).textContent = sk.name;
-      $('.t-section', tome).textContent = sk.section;
-      $('.t-title', tome).textContent = sk.name;
-      $('.t-level', tome).innerHTML = Array.from({ length: 5 }, (_, k) => `<i class="${k < sk.level ? 'f' : ''}"></i>`).join('');
-      $('.t-note', tome).textContent = sk.note;
+      fillTome(i);
       const scene = tome.parentElement, s = scene.clientWidth / 1671;
       const b = polyBox(bookPolys[i]);
       const tr = tome.getBoundingClientRect(), sr = scene.getBoundingClientRect();
@@ -686,13 +691,7 @@
   $('.tome-close').addEventListener('click', () => closeBook(false));
   onLang(() => {
     bookPolys.forEach(p => p.setAttribute('aria-label', skill(+p.dataset.i).name));
-    if (openBook >= 0) {
-      const sk = skill(openBook);
-      $('.cover-title', tome).textContent = sk.name;
-      $('.t-section', tome).textContent = sk.section;
-      $('.t-title', tome).textContent = sk.name;
-      $('.t-note', tome).textContent = sk.note;
-    }
+    if (openBook >= 0) fillTome(openBook);
   });
 
   /* ==========================================================
