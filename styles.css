@@ -215,6 +215,9 @@ body.pannable .swipe-hint { display: block; }
 .s-link { display: inline-block; margin-top: 22px; font-size: 15px; font-weight: 600; letter-spacing: .26em; text-transform: uppercase; color: var(--red); text-decoration: none; border-bottom: 1px solid; }
 .s-art { aspect-ratio: 4 / 3; overflow: hidden; box-shadow: 0 0 0 3px #8a5a22, 0 0 0 7px rgba(138,90,34,.25), 0 14px 28px rgba(40,20,10,.35); }
 .s-art svg { width: 100%; height: 100%; }
+/* a project logo, centred on its own brand colour inside the gold frame */
+.s-art.s-logo { background: #1e4089; display: grid; place-items: center; }
+.s-art.s-logo img { width: 74%; height: auto; display: block; }
 .s-ui { position: absolute; left: 130px; right: 60px; bottom: 34px; display: flex; align-items: center; justify-content: center; gap: 24px; z-index: 3; }
 .s-btn { cursor: pointer; width: 60px; height: 60px; border-radius: 50%; border: 2px solid #8a5a22; background: rgba(255,248,232,.6); color: #8a5a22; font-size: 38px; line-height: 1; display: grid; place-items: center; padding-bottom: 6px; transition: background .3s, color .3s, box-shadow .3s; }
 .s-btn:hover, .s-btn:focus-visible { background: #22142e; color: var(--gold); box-shadow: 0 6px 18px rgba(40,20,10,.35); outline: none; }

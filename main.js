@@ -565,6 +565,7 @@
   }
   $$('.slide-proj').forEach((sl, i) => {
     const svg = $('.s-art svg', sl), s = +sl.dataset.seed;
+    if (!svg) return; // slides with their own image keep it
     svg.setAttribute('viewBox', '0 0 400 300');
     svg.setAttribute('preserveAspectRatio', 'xMidYMax slice');
     svg.innerHTML = `<defs><linearGradient id="sgSky${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1240"/><stop offset="1" stop-color="#4a3a8a"/></linearGradient></defs>
