@@ -7,11 +7,34 @@
   <meta name="description" content="Portfolio of Youssef Ibrahim — Computer Science at Carleton University.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Josefin+Sans:wght@300;400;600&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=EB+Garamond:ital,wght@1,700&family=Josefin+Sans:wght@300;400;600&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/city.webp?v=14">
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=25">
 </head>
-<body>
+<body class="intro-open">
+
+<!-- =====================================================
+     ENTER SCREEN — shown every time the site opens. Entering is the
+     click that lets the rain sound start; the language is chosen here.
+     ===================================================== -->
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introName">
+  <div class="intro-rays" aria-hidden="true"></div>
+  <div class="intro-frame" aria-hidden="true"><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i></div>
+  <div class="intro-inner">
+    <span class="intro-mark" aria-hidden="true"><span>YI</span></span>
+    <p class="intro-kicker" data-i18n="intro.kicker">Portfolio of</p>
+    <p class="intro-name" id="introName">Youssef Ibrahim</p>
+    <i class="intro-rule" aria-hidden="true"></i>
+    <p class="intro-sub" data-i18n="intro.sub">Computer Science · Carleton University</p>
+    <button class="intro-enter" id="introEnter" type="button"><span data-i18n="intro.enter">Enter</span></button>
+    <div class="intro-lang" id="introLang" role="group" aria-label="Language" data-i18n-aria="intro.lang" data-lang="en">
+      <button type="button" data-lang="en" aria-pressed="true" lang="en">EN</button>
+      <button type="button" data-lang="fr" aria-pressed="false" lang="fr">FR</button>
+    </div>
+    <p class="intro-sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13.5" width="4.5" height="7" rx="1.6"/><rect x="16.5" y="13.5" width="4.5" height="7" rx="1.6"/></svg><span data-i18n="intro.sound">With sound: rain over the city</span></p>
+  </div>
+</div>
+
 
 <!-- =====================================================
      THE CITY — the balcony view
@@ -24,7 +47,7 @@
       <canvas class="traffic" id="traffic" aria-hidden="true"></canvas>
       <img class="city-front" src="assets/city-front.webp?v=14" alt="" draggable="false">
       <div class="lamp-flickers" aria-hidden="true"><i class="lamp-flicker lf-a" style="left:57.356%;top:69.926%;width:3.110%;height:5.526%"></i><i class="lamp-flicker lf-b" style="left:73.804%;top:75.239%;width:4.067%;height:7.226%"></i><i class="lamp-flicker lf-c" style="left:90.849%;top:79.384%;width:5.024%;height:8.927%"></i></div>
-      <svg class="scene-svg" id="world" viewBox="0 0 1672 941" preserveAspectRatio="none" role="group" aria-label="City — choose a building"></svg>
+      <svg class="scene-svg" id="world" viewBox="0 0 1672 941" preserveAspectRatio="none" role="group" aria-label="City — choose a building" data-i18n-aria="city.aria"></svg>
     </div>
   </div>
   <canvas class="rain" id="rain" aria-hidden="true"></canvas>
@@ -32,14 +55,14 @@
     <span class="mark" aria-hidden="true"><span>YI</span></span>
     <div>
       <h1>Youssef Ibrahim</h1>
-      <p>Computer Science · Carleton University</p>
+      <p data-i18n="city.sub">Computer Science · Carleton University</p>
     </div>
   </header>
   <div class="hud">
     <span class="time" id="time">--:--</span>
-    <span class="hint">Hover a building · click to go inside</span>
+    <span class="hint" data-i18n="city.hint">Hover a building · click to go inside</span>
   </div>
-  <p class="swipe-hint" aria-hidden="true">← swipe to look around →</p>
+  <p class="swipe-hint" aria-hidden="true" data-i18n="city.swipe">← swipe to look around →</p>
 </main>
 
 <div class="flash" aria-hidden="true"></div>
@@ -47,88 +70,94 @@
 <!-- =====================================================
      PROJECTS — the boardroom
      ===================================================== -->
-<section class="room room-projects" data-room="projects" aria-label="Projects" inert
+<section class="room room-projects" data-room="projects" aria-label="Projects" data-i18n-aria="room.projects" inert
          style="--img:url(assets/boardroom.webp?v=14); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
   <div class="scene">
     <img class="scene-img" src="assets/boardroom.webp?v=14" alt="" draggable="false">
     <div class="slides-quad" id="slidesQuad">
       <div class="slides" id="slides" aria-live="polite">
         <article class="slide slide-title on">
-          <p class="s-kicker">A presentation by Youssef Ibrahim</p>
-          <h3>Selected Projects</h3>
+          <p class="s-kicker" data-i18n="proj.by">A presentation by Youssef Ibrahim</p>
+          <h3 data-i18n="proj.selected">Selected Projects</h3>
           <i class="s-rule"></i>
-          <p class="s-sub">Carleton University · Computer Science</p>
+          <p class="s-sub" data-i18n="proj.uni">Carleton University · Computer Science</p>
         </article>
         <article class="slide slide-proj" data-seed="11">
           <div class="s-body">
-            <p class="s-kicker">Project 01</p>
-            <h3>Project One</h3>
-            <p>Placeholder description: what it does, who it's for, and what you learned building it.</p>
-            <ul class="tags"><li>Tag</li><li>Tag</li><li>Tag</li></ul>
-            <a href="#" class="s-link">View project →</a>
+            <p class="s-kicker" data-i18n="proj.k1">Project 01</p>
+            <h3 data-i18n="proj.t1">Project One</h3>
+            <p data-i18n="proj.desc">Placeholder description: what it does, who it's for, and what you learned building it.</p>
+            <ul class="tags"><li data-i18n="proj.tag">Tag</li><li data-i18n="proj.tag">Tag</li><li data-i18n="proj.tag">Tag</li></ul>
+            <a href="#" class="s-link" data-i18n="proj.view">View project →</a>
           </div>
           <div class="s-art"><svg></svg></div>
         </article>
         <article class="slide slide-proj" data-seed="27">
           <div class="s-body">
-            <p class="s-kicker">Project 02</p>
-            <h3>Project Two</h3>
-            <p>Placeholder description: what it does, who it's for, and what you learned building it.</p>
-            <ul class="tags"><li>Tag</li><li>Tag</li></ul>
-            <a href="#" class="s-link">View project →</a>
+            <p class="s-kicker" data-i18n="proj.k2">Project 02</p>
+            <h3 data-i18n="proj.t2">Project Two</h3>
+            <p data-i18n="proj.desc">Placeholder description: what it does, who it's for, and what you learned building it.</p>
+            <ul class="tags"><li data-i18n="proj.tag">Tag</li><li data-i18n="proj.tag">Tag</li></ul>
+            <a href="#" class="s-link" data-i18n="proj.view">View project →</a>
           </div>
           <div class="s-art"><svg></svg></div>
         </article>
         <article class="slide slide-proj" data-seed="43">
           <div class="s-body">
-            <p class="s-kicker">Project 03</p>
-            <h3>Project Three</h3>
-            <p>Placeholder description: what it does, who it's for, and what you learned building it.</p>
-            <ul class="tags"><li>Tag</li><li>Tag</li><li>Tag</li></ul>
-            <a href="#" class="s-link">View project →</a>
+            <p class="s-kicker" data-i18n="proj.k3">Project 03</p>
+            <h3 data-i18n="proj.t3">Project Three</h3>
+            <p data-i18n="proj.desc">Placeholder description: what it does, who it's for, and what you learned building it.</p>
+            <ul class="tags"><li data-i18n="proj.tag">Tag</li><li data-i18n="proj.tag">Tag</li><li data-i18n="proj.tag">Tag</li></ul>
+            <a href="#" class="s-link" data-i18n="proj.view">View project →</a>
           </div>
           <div class="s-art"><svg></svg></div>
         </article>
         <article class="slide slide-proj" data-seed="61">
           <div class="s-body">
-            <p class="s-kicker">Project 04</p>
-            <h3>Project Four</h3>
-            <p>Placeholder description: what it does, who it's for, and what you learned building it.</p>
-            <ul class="tags"><li>Tag</li><li>Tag</li></ul>
-            <a href="#" class="s-link">View project →</a>
+            <p class="s-kicker" data-i18n="proj.k4">Project 04</p>
+            <h3 data-i18n="proj.t4">Project Four</h3>
+            <p data-i18n="proj.desc">Placeholder description: what it does, who it's for, and what you learned building it.</p>
+            <ul class="tags"><li data-i18n="proj.tag">Tag</li><li data-i18n="proj.tag">Tag</li></ul>
+            <a href="#" class="s-link" data-i18n="proj.view">View project →</a>
           </div>
           <div class="s-art"><svg></svg></div>
         </article>
         <article class="slide slide-title">
-          <p class="s-kicker">End of deck</p>
-          <h3>Questions?</h3>
+          <p class="s-kicker" data-i18n="proj.end">End of deck</p>
+          <h3 data-i18n="proj.q">Questions?</h3>
           <i class="s-rule"></i>
-          <p class="s-sub">Find me at the red phone booth on the corner.</p>
+          <p class="s-sub" data-i18n="proj.find">Find me at the red phone booth on the corner.</p>
         </article>
         <div class="s-ui">
-          <button class="s-btn prev" type="button" aria-label="Previous slide">‹</button>
+          <button class="s-btn prev" type="button" aria-label="Previous slide" data-i18n-aria="proj.prev">‹</button>
           <div class="s-dots"></div>
           <span class="s-count">01 / 06</span>
-          <button class="s-btn next" type="button" aria-label="Next slide">›</button>
+          <button class="s-btn next" type="button" aria-label="Next slide" data-i18n-aria="proj.next">›</button>
         </div>
       </div>
     </div>
   </div>
   <header class="room-head">
-    <a class="back" href="#">← Street</a>
-    <div class="room-title"><p class="label">Top Floor · Projects</p><h2>The Boardroom</h2></div>
-    <nav class="elevator" aria-label="Rooms"></nav>
+    <a class="back" href="#" data-i18n="nav.street">← Street</a>
+    <div class="room-title"><p class="label" data-i18n="proj.label">Top Floor · Projects</p><h2 data-i18n="proj.title">The Boardroom</h2></div>
+    <nav class="elevator" aria-label="Rooms" data-i18n-aria="nav.rooms"></nav>
   </header>
 </section>
 
 <!-- =====================================================
      PROFILE — the precinct desk
      ===================================================== -->
-<section class="room room-profile" data-room="profile" aria-label="Profile" inert
+<section class="room room-profile" data-room="profile" aria-label="Profile" data-i18n-aria="room.profile" inert
          style="--img:url(assets/precinct.webp?v=14); --ar:1.3333; --fx:.5; --fy:.6; --mw:200">
   <div class="scene">
     <img class="scene-img" src="assets/precinct.webp?v=14" alt="" draggable="false">
     <i class="flicker flicker-desk" aria-hidden="true"></i>
+    <div class="folder-fr fr-only" aria-hidden="true">
+      <img data-src="assets/precinct-folder-blank.webp?v=1" alt="" draggable="false">
+      <span class="ff ff-title" data-i18n="folder.title">CASE FILE</span>
+      <span class="ff ff-no" data-i18n="folder.no">CASE NO. 47-2189</span>
+      <span class="ff ff-subj" data-i18n="folder.subject">SUBJECT:</span>
+    </div>
     <svg class="scene-svg" viewBox="0 0 1448 1086" preserveAspectRatio="none">
       <defs>
         <radialGradient id="fileGlow" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ffd98a" stop-opacity=".45"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
@@ -141,38 +170,48 @@
       </defs>
       <!-- the painted steam, set swirling -->
       <image class="steam" href="assets/steam.png?v=14" x="1000" y="465" width="100" height="135" filter="url(#steamWave)" aria-hidden="true"/>
-      <polygon class="file-hot" id="fileHot" points="628,598 876,610 882,624 880,636 830,728 814,741 660,730 515,717 509,702" tabindex="0" role="button" aria-label="Open the case file on Youssef Ibrahim"/>
+      <polygon class="file-hot" id="fileHot" points="628,598 876,610 882,624 880,636 830,728 814,741 660,730 515,717 509,702" tabindex="0" role="button" aria-label="Open the case file on Youssef Ibrahim" data-i18n-aria="prof.open"/>
     </svg>
-    <div class="file-tag" aria-hidden="true"><b>Ibrahim, Y.</b><span>Case file · click to open</span></div>
+    <div class="file-tag" aria-hidden="true"><b>Ibrahim, Y.</b><span data-i18n="prof.tag">Case file · click to open</span></div>
   </div>
   <header class="room-head">
-    <a class="back" href="#">← Street</a>
-    <div class="room-title"><p class="label">The Precinct · Profile</p><h2>Detective Bureau</h2></div>
-    <nav class="elevator" aria-label="Rooms"></nav>
+    <a class="back" href="#" data-i18n="nav.street">← Street</a>
+    <div class="room-title"><p class="label" data-i18n="prof.label">The Precinct · Profile</p><h2 data-i18n="prof.title">Detective Bureau</h2></div>
+    <nav class="elevator" aria-label="Rooms" data-i18n-aria="nav.rooms"></nav>
   </header>
 
   <div class="file-modal" hidden>
     <div class="file-pop">
-      <button class="file-close" type="button">Back on the desk ✕</button>
-      <article class="dossier" aria-label="Case file: Youssef Ibrahim">
+      <button class="file-close" type="button" data-i18n="prof.close">Back on the desk ✕</button>
+      <article class="dossier" aria-label="Case file: Youssef Ibrahim" data-i18n-aria="prof.dossier">
         <img class="ds-art" src="assets/case-file.webp?v=15" alt="" draggable="false">
-        <h3 class="sr-only">Case No. 47-2189 — Ibrahim, Y.</h3>
+        <img class="ds-art ds-art-fr" data-src="assets/case-file-blank.webp?v=1" alt="" draggable="false">
+        <div class="ds-labels fr-only" aria-hidden="true">
+          <span class="dl" style="left:23.39%;top:17.68%" data-i18n="prof.l.name">Name</span>
+          <span class="dl" style="left:23.33%;top:31.15%" data-i18n="prof.l.program">Program</span>
+          <span class="dl" style="left:23.33%;top:44.66%" data-i18n="prof.l.inst">Institution</span>
+          <span class="dl" style="left:23.26%;top:57.77%" data-i18n="prof.l.based">Based in</span>
+          <span class="dl" style="left:23.33%;top:71.04%" data-i18n="prof.l.status">Status</span>
+          <span class="dl" style="left:55.03%;top:17.68%" data-i18n="prof.l.summary">Summary</span>
+          <span class="dl" style="left:54.91%;top:59.04%" data-i18n="prof.l.current">Currently</span>
+        </div>
+        <h3 class="sr-only" data-i18n="prof.case">Case No. 47-2189 — Ibrahim, Y.</h3>
         <dl class="ds-fields">
-          <div class="ds-f" style="--y:21.6%"><dt class="sr-only">Name</dt><dd>Youssef Ibrahim</dd></div>
-          <div class="ds-f" style="--y:35%"><dt class="sr-only">Program</dt><dd>B.C.S. Computer Science</dd></div>
-          <div class="ds-f" style="--y:48.6%"><dt class="sr-only">Institution</dt><dd>Carleton University</dd></div>
-          <div class="ds-f" style="--y:61.6%"><dt class="sr-only">Based in</dt><dd>City, Province</dd></div>
-          <div class="ds-f" style="--y:75%"><dt class="sr-only">Status</dt><dd>Open to opportunities</dd></div>
+          <div class="ds-f" style="--y:21.6%"><dt class="sr-only" data-i18n="prof.l.name">Name</dt><dd>Youssef Ibrahim</dd></div>
+          <div class="ds-f" style="--y:35%"><dt class="sr-only" data-i18n="prof.l.program">Program</dt><dd data-i18n="prof.v.program">B.C.S. Computer Science</dd></div>
+          <div class="ds-f" style="--y:48.6%"><dt class="sr-only" data-i18n="prof.l.inst">Institution</dt><dd data-i18n="prof.v.inst">Carleton University</dd></div>
+          <div class="ds-f" style="--y:61.6%"><dt class="sr-only" data-i18n="prof.l.based">Based in</dt><dd data-i18n="prof.v.based">City, Province</dd></div>
+          <div class="ds-f" style="--y:75%"><dt class="sr-only" data-i18n="prof.l.status">Status</dt><dd data-i18n="prof.v.status">Open to opportunities</dd></div>
         </dl>
-        <span class="ds-stamp">Confidential</span>
+        <span class="ds-stamp" data-i18n="prof.stamp">Confidential</span>
         <div class="ds-summary">
-          <h4 class="sr-only">Summary</h4>
-          <p>Placeholder bio. Two or three sentences about who you are, what you build, and what you're curious about right now.</p>
-          <p>Second placeholder paragraph: what you're studying, what kind of work you're looking for, or something people should know about you.</p>
+          <h4 class="sr-only" data-i18n="prof.l.summary">Summary</h4>
+          <p data-i18n="prof.bio1">Placeholder bio. Two or three sentences about who you are, what you build, and what you're curious about right now.</p>
+          <p data-i18n="prof.bio2">Second placeholder paragraph: what you're studying, what kind of work you're looking for, or something people should know about you.</p>
         </div>
         <div class="ds-current">
-          <h4 class="sr-only">Currently</h4>
-          <p>Placeholder: a course, project, or role you're working on.</p>
+          <h4 class="sr-only" data-i18n="prof.l.current">Currently</h4>
+          <p data-i18n="prof.now">Placeholder: a course, project, or role you're working on.</p>
           <p class="ds-sig">Y. Ibrahim</p>
         </div>
       </article>
@@ -183,7 +222,7 @@
 <!-- =====================================================
      SKILLS — the library
      ===================================================== -->
-<section class="room room-skills" data-room="skills" aria-label="Skills" inert
+<section class="room room-skills" data-room="skills" aria-label="Skills" data-i18n-aria="room.skills" inert
          style="--img:url(assets/library.webp?v=14); --ar:1.7758; --fx:.72; --fy:.45; --mw:240">
   <div class="scene">
     <img class="scene-img" src="assets/library.webp?v=14" alt="" draggable="false">
@@ -193,14 +232,14 @@
       <polygon class="book-hot" data-i="2" points="1393,537 1436,163 1442,155 1458,149 1524,144 1566,150 1570,160 1568,200 1568,521 1500,527 1440,532" tabindex="0" role="button" aria-label="Skill Three"/>
     </svg>
     <div class="book-tip" aria-hidden="true"></div>
-    <p class="lib-hint">Take a book from the shelf</p>
+    <p class="lib-hint" data-i18n="sk.hint">Take a book from the shelf</p>
 
     <div class="tome" id="tome" aria-live="polite">
       <div class="tome-page right">
-        <p class="t-kicker">Notes</p>
+        <p class="t-kicker" data-i18n="sk.notes">Notes</p>
         <p class="t-note"></p>
-        <p class="t-kicker">Used in</p>
-        <ul class="t-used"><li>Placeholder project</li><li>Placeholder course</li></ul>
+        <p class="t-kicker" data-i18n="sk.used">Used in</p>
+        <ul class="t-used"><li data-i18n="sk.p1">Placeholder project</li><li data-i18n="sk.p2">Placeholder course</li></ul>
         <span class="t-folio">— ii —</span>
       </div>
       <div class="tome-flip">
@@ -209,25 +248,25 @@
           <p class="t-kicker t-section"></p>
           <h3 class="t-title"></h3>
           <i class="t-rule"></i>
-          <p class="t-label">Proficiency</p>
+          <p class="t-label" data-i18n="sk.prof">Proficiency</p>
           <div class="t-level"></div>
           <span class="t-folio">— i —</span>
         </div>
       </div>
     </div>
-    <button class="tome-close" type="button">Return to shelf ✕</button>
+    <button class="tome-close" type="button" data-i18n="sk.close">Return to shelf ✕</button>
   </div>
   <header class="room-head">
-    <a class="back" href="#">← Street</a>
-    <div class="room-title"><p class="label">The Library · Skills</p><h2>Reading Room</h2></div>
-    <nav class="elevator" aria-label="Rooms"></nav>
+    <a class="back" href="#" data-i18n="nav.street">← Street</a>
+    <div class="room-title"><p class="label" data-i18n="sk.label">The Library · Skills</p><h2 data-i18n="sk.title">Reading Room</h2></div>
+    <nav class="elevator" aria-label="Rooms" data-i18n-aria="nav.rooms"></nav>
   </header>
 </section>
 
 <!-- =====================================================
      HOBBIES — the museum
      ===================================================== -->
-<section class="room room-hobbies" data-room="hobbies" aria-label="Hobbies" inert
+<section class="room room-hobbies" data-room="hobbies" aria-label="Hobbies" data-i18n-aria="room.hobbies" inert
          style="--img:url(assets/museum.webp?v=14); --ar:1.7758; --fx:.5; --fy:.5; --mw:240">
   <div class="scene">
     <img class="scene-img" src="assets/museum.webp?v=14" alt="" draggable="false">
@@ -285,35 +324,35 @@
         <p class="wt-desc">Placeholder: what this hobby is, when you got into it, and why it matters to you.</p>
         <p class="wt-credit">Gift of Y. Ibrahim, 2026</p>
       </div>
-      <nav class="wt-nav" aria-label="Exhibits">
-        <button class="wt-btn prev" type="button" aria-label="Previous exhibit">‹</button>
+      <nav class="wt-nav" aria-label="Exhibits" data-i18n-aria="hob.nav">
+        <button class="wt-btn prev" type="button" aria-label="Previous exhibit" data-i18n-aria="hob.prev">‹</button>
         <div class="wt-dots"></div>
-        <button class="wt-btn next" type="button" aria-label="Next exhibit">›</button>
+        <button class="wt-btn next" type="button" aria-label="Next exhibit" data-i18n-aria="hob.next">›</button>
       </nav>
     </div>
   </div>
   <header class="room-head">
-    <a class="back" href="#">← Street</a>
-    <div class="room-title"><p class="label">The Museum · Hobbies</p><h2>Museum of Pastimes</h2></div>
-    <nav class="elevator" aria-label="Rooms"></nav>
+    <a class="back" href="#" data-i18n="nav.street">← Street</a>
+    <div class="room-title"><p class="label" data-i18n="hob.label">The Museum · Hobbies</p><h2 data-i18n="hob.title">Museum of Pastimes</h2></div>
+    <nav class="elevator" aria-label="Rooms" data-i18n-aria="nav.rooms"></nav>
   </header>
 </section>
 
 <!-- =====================================================
      CONTACT — inside the red phone booth
      ===================================================== -->
-<section class="room room-contact" data-room="contact" aria-label="Contact" inert
+<section class="room room-contact" data-room="contact" aria-label="Contact" data-i18n-aria="room.contact" inert
          style="--img:url(assets/booth.webp?v=14); --ar:1.7768; --fx:.5; --fy:.45; --mw:230">
   <div class="scene">
     <img class="scene-img" src="assets/booth.webp?v=14" alt="" draggable="false">
     <i class="flicker flicker-booth" aria-hidden="true"></i>
     <svg class="scene-svg" viewBox="0 0 1672 941" preserveAspectRatio="none">
-      <polygon class="phone-hot" id="phoneHot" points="866,316 870,300 1004,300 1008,316 1036,320 1044,332 1044,556 1047,562 1047,690 1040,696 905,696 899,690 899,560 836,558 829,550 829,332 836,322" tabindex="0" role="button" aria-label="Pick up the phone to send Youssef a message"/>
+      <polygon class="phone-hot" id="phoneHot" points="866,316 870,300 1004,300 1008,316 1036,320 1044,332 1044,556 1047,562 1047,690 1040,696 905,696 899,690 899,560 836,558 829,550 829,332 836,322" tabindex="0" role="button" aria-label="Pick up the phone to send Youssef a message" data-i18n-aria="con.phone"/>
     </svg>
     <div class="lcd" aria-hidden="true"><span id="lcd">INSERT 10¢</span></div>
-    <div class="phone-tag" aria-hidden="true"><b>Pick up</b><span>Leave a message</span></div>
+    <div class="phone-tag" aria-hidden="true"><b data-i18n="con.pick">Pick up</b><span data-i18n="con.leave">Leave a message</span></div>
     <div class="dial-panel">
-      <p class="dp-head">Make a call</p>
+      <p class="dp-head" data-i18n="con.make">Make a call</p>
       <a class="dp-btn" href="#" target="_blank" rel="noopener" data-who="GITHUB">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.6.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
         <span><b>GitHub</b><small>github.com/yourname</small></span>
@@ -322,29 +361,40 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.2c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21h-4z"/></svg>
         <span><b>LinkedIn</b><small>in/yourname</small></span>
       </a>
-      <p class="dp-foot">or pick up the phone →</p>
+      <p class="dp-foot" data-i18n="con.or">or pick up the phone →</p>
     </div>
   </div>
   <header class="room-head">
-    <a class="back" href="#">← Street</a>
-    <div class="room-title"><p class="label">Corner Booth · Contact</p><h2>Public Telephone</h2></div>
-    <nav class="elevator" aria-label="Rooms"></nav>
+    <a class="back" href="#" data-i18n="nav.street">← Street</a>
+    <div class="room-title"><p class="label" data-i18n="con.label">Corner Booth · Contact</p><h2 data-i18n="con.title">Public Telephone</h2></div>
+    <nav class="elevator" aria-label="Rooms" data-i18n-aria="nav.rooms"></nav>
   </header>
 
   <div class="msg-modal" hidden>
     <div class="msg-pop" role="dialog" aria-modal="true" aria-labelledby="msgTitle">
-      <button class="msg-close" type="button">Hang up ✕</button>
+      <button class="msg-close" type="button" data-i18n="con.hang">Hang up ✕</button>
       <form class="callcard" id="msgForm" novalidate>
         <img class="cc-art" src="assets/phone-card.webp?v=14" alt="" draggable="false">
-        <h3 class="sr-only" id="msgTitle">Leave a message for Youssef Ibrahim</h3>
-        <label class="cc-field cc-name"><span class="sr-only">Your name</span><input name="name" type="text" autocomplete="name" maxlength="120" required></label>
-        <label class="cc-field cc-email"><span class="sr-only">Your email (so I can reply)</span><input name="email" type="email" autocomplete="email" maxlength="200" required></label>
-        <label class="cc-field cc-msg"><span class="sr-only">Message</span><textarea name="message" maxlength="5000" required></textarea></label>
+        <img class="cc-art cc-art-fr" data-src="assets/phone-card-blank.webp?v=1" alt="" draggable="false">
+        <div class="cc-labels fr-only" aria-hidden="true">
+          <span class="cl cl-kicker" data-i18n="card.kicker">NIGHT LINE · COLLECT CALL</span>
+          <span class="cl cl-title" data-i18n="card.title">Leave a Message</span>
+          <span class="cl cl-to" data-i18n="card.to">To: Youssef Ibrahim</span>
+          <span class="cl cl-field" style="top:22.92%" data-i18n="card.name">YOUR NAME</span>
+          <span class="cl cl-field" style="top:33.35%"><span data-i18n="card.email">YOUR EMAIL</span> <em data-i18n="card.emailnote">(so I can reply)</em></span>
+          <span class="cl cl-field" style="top:43.82%" data-i18n="card.msg">MESSAGE</span>
+          <span class="cl cl-send" data-i18n="card.send">SEND MESSAGE</span>
+        </div>
+        <h3 class="sr-only" id="msgTitle" data-i18n="con.formtitle">Leave a message for Youssef Ibrahim</h3>
+        <label class="cc-field cc-name"><span class="sr-only" data-i18n="con.f.name">Your name</span><input name="name" type="text" autocomplete="name" maxlength="120" required></label>
+        <label class="cc-field cc-email"><span class="sr-only" data-i18n="con.f.email">Your email (so I can reply)</span><input name="email" type="email" autocomplete="email" maxlength="200" required></label>
+        <label class="cc-field cc-msg"><span class="sr-only" data-i18n="con.f.msg">Message</span><textarea name="message" maxlength="5000" required></textarea></label>
         <input class="tg-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         <p class="tg-status" role="status" aria-live="polite"></p>
-        <button class="tg-send" type="submit"><span class="sr-only">Send message</span><span class="cc-sent" aria-hidden="true"></span></button>
-        <button class="tg-copy" type="button" data-email="yimgi09@gmail.com"><span class="sr-only">Copy my address</span></button>
+        <button class="tg-send" type="submit"><span class="sr-only" data-i18n="con.send">Send message</span><span class="cc-sent" aria-hidden="true"></span></button>
+        <button class="tg-copy" type="button" data-email="yimgi09@gmail.com"><span class="sr-only" data-i18n="con.copy">Copy my address</span></button>
         <span class="cc-copied" aria-hidden="true"></span>
+        <p class="cc-pref fr-only"><span data-i18n="card.pref">Prefer email?</span> <button class="tg-copy-fr" type="button" data-email="yimgi09@gmail.com" data-i18n="card.copy">Copy my address</button></p>
       </form>
     </div>
   </div>
@@ -353,18 +403,18 @@
 <!-- =====================================================
      KEYBOARD CONTROLS — shown while inside a room
      ===================================================== -->
-<aside class="controls" id="controls" aria-label="Keyboard controls">
+<aside class="controls" id="controls" aria-label="Keyboard controls" data-i18n-aria="ctl.aria">
   <i class="ctl-crown" aria-hidden="true"></i>
   <div class="ctl-row">
     <div class="ctl-group">
-      <button class="key" type="button" data-act="prev" aria-label="Previous room (Q)"><span>Q</span></button>
-      <button class="key" type="button" data-act="next" aria-label="Next room (E)"><span>E</span></button>
-      <span class="ctl-label">Switch<small id="ctlWhere"></small></span>
+      <button class="key" type="button" data-act="prev" aria-label="Previous room (Q)" data-i18n-aria="ctl.prev"><span>Q</span></button>
+      <button class="key" type="button" data-act="next" aria-label="Next room (E)" data-i18n-aria="ctl.next"><span>E</span></button>
+      <span class="ctl-label"><span data-i18n="ctl.switch">Switch</span><small id="ctlWhere"></small></span>
     </div>
     <i class="ctl-sep" aria-hidden="true"></i>
     <div class="ctl-group">
-      <button class="key wide" type="button" data-act="back" aria-label="Back to the street (Esc)"><span>Esc</span></button>
-      <span class="ctl-label">Back<small>to the street</small></span>
+      <button class="key wide" type="button" data-act="back" aria-label="Back to the street (Esc)" data-i18n-aria="ctl.backaria"><span>Esc</span></button>
+      <span class="ctl-label"><span data-i18n="ctl.back">Back</span><small data-i18n="ctl.tostreet">to the street</small></span>
     </div>
   </div>
 </aside>
@@ -374,6 +424,7 @@
   <svg class="snd-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="wave" d="M16.5 9.5l5 5M21.5 9.5l-5 5"/></svg>
 </button>
 
-<script src="main.js?v=18"></script>
+<script src="i18n.js?v=1"></script>
+<script src="main.js?v=19"></script>
 </body>
 </html>

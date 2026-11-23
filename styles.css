@@ -369,7 +369,7 @@ body.pannable .swipe-hint { display: block; }
   background: rgba(30,40,20,.9); border: 1px solid rgba(242,196,107,.5);
   container-type: size;
 }
-.lcd span { font-family: var(--type); font-size: min(46cqh, 13cqw); color: #c9f29a; text-shadow: 0 0 5px rgba(180,255,140,.8); white-space: nowrap; letter-spacing: .03em; }
+.lcd span { font-family: var(--type); font-size: min(46cqh, calc(130cqw / var(--n, 10))); color: #c9f29a; text-shadow: 0 0 5px rgba(180,255,140,.8); white-space: nowrap; letter-spacing: .03em; }
 .room-contact.ringing .lcd span { animation: lcdBlink .4s steps(1) infinite; }
 @keyframes lcdBlink { 50% { opacity: .25; } }
 .dial-panel {
@@ -553,6 +553,155 @@ body.pannable .swipe-hint { display: block; }
 .sound-toggle.off .snd-off { display: block; }
 .sound-toggle.off { border-color: rgba(242,196,107,.28); }
 .sound-toggle.off svg { opacity: .65; }
+
+
+/* ==========================================================
+   ENTER SCREEN — dark deco title card over the rainy city
+   ========================================================== */
+.intro {
+  position: fixed; inset: 0; z-index: 200; overflow: hidden;
+  display: grid; place-items: center; padding: 40px var(--gutter);
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 42%, rgba(46,30,82,.55), rgba(10,7,20,0) 70%),
+    radial-gradient(ellipse at 50% 50%, rgba(10,7,20,.72), rgba(6,4,14,.96) 75%);
+  -webkit-backdrop-filter: blur(7px) saturate(.8); backdrop-filter: blur(7px) saturate(.8);
+  transition: opacity 1s ease, visibility 0s linear 1s;
+}
+.intro.leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+.intro[hidden] { display: none; }
+/* soft gold sunburst behind the name */
+.intro-rays {
+  position: absolute; left: 50%; top: 44%; width: 170vmax; height: 170vmax; transform: translate(-50%, -50%);
+  background: repeating-conic-gradient(from 0deg, rgba(242,196,107,.055) 0deg 2.2deg, transparent 2.2deg 9deg);
+  -webkit-mask: radial-gradient(circle, #000 0, rgba(0,0,0,.55) 22%, transparent 48%); mask: radial-gradient(circle, #000 0, rgba(0,0,0,.55) 22%, transparent 48%);
+  animation: raysTurn 140s linear infinite; pointer-events: none;
+}
+@keyframes raysTurn { to { transform: translate(-50%, -50%) rotate(360deg); } }
+/* double gold frame with stepped deco corners */
+.intro-frame { position: absolute; inset: clamp(12px, 2.4vmin, 26px); border: 1px solid rgba(242,196,107,.55); pointer-events: none; }
+.intro-frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(242,196,107,.22); }
+.intro-frame .c { position: absolute; width: 46px; height: 46px; }
+.intro-frame .c::before, .intro-frame .c::after { content: ""; position: absolute; border-color: var(--gold); border-style: solid; }
+.intro-frame .c::before { inset: -1px auto auto -1px; width: 46px; height: 46px; border-width: 2px 0 0 2px; }
+.intro-frame .c::after { inset: 10px auto auto 10px; width: 20px; height: 20px; border-width: 1px 0 0 1px; opacity: .8; }
+.intro-frame .tl { top: 0; left: 0; }
+.intro-frame .tr { top: 0; right: 0; transform: scaleX(-1); }
+.intro-frame .bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.intro-frame .br { bottom: 0; right: 0; transform: scale(-1, -1); }
+
+.intro-inner {
+  position: relative; display: flex; flex-direction: column; align-items: center; text-align: center;
+  transition: transform 1s cubic-bezier(.5, 0, .2, 1), filter 1s ease;
+  animation: introIn 1.2s cubic-bezier(.2, .8, .2, 1) both;
+}
+@keyframes introIn { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } }
+.intro.leaving .intro-inner { transform: scale(1.06); filter: blur(3px); }
+.intro-mark { position: relative; width: clamp(54px, 7vmin, 76px); height: clamp(54px, 7vmin, 76px); display: grid; place-items: center; margin-bottom: clamp(14px, 2.6vh, 26px); }
+.intro-mark::before, .intro-mark::after { content: ""; position: absolute; transform: rotate(45deg); border: 1px solid var(--gold); }
+.intro-mark::before { inset: 9px; box-shadow: var(--glow); }
+.intro-mark::after { inset: 14px; opacity: .4; }
+.intro-mark span { font-family: var(--display); font-size: clamp(1rem, 1.9vmin, 1.3rem); color: var(--cream); position: relative; top: 1px; }
+.intro-kicker {
+  margin: 0; font-size: clamp(.68rem, 1.25vw, .9rem); font-weight: 600; letter-spacing: .5em; text-transform: uppercase;
+  color: var(--gold); text-shadow: var(--glow); padding-left: .5em;
+}
+.intro-name {
+  margin: clamp(10px, 1.6vh, 18px) 0 0; font-family: var(--display); font-weight: 400; line-height: .95;
+  font-size: clamp(2.5rem, 9vw, 7.4rem); letter-spacing: .03em; text-transform: uppercase; white-space: nowrap;
+  background: linear-gradient(180deg, #fff6df 0%, #f6dfa4 42%, #e0a94f 72%, #a8722e 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(60,30,10,.75)) drop-shadow(0 0 26px rgba(242,196,107,.35));
+}
+.intro-rule {
+  display: block; width: min(440px, 70vw); height: 16px; margin: clamp(14px, 2.2vh, 22px) 0 clamp(10px, 1.6vh, 16px);
+  background:
+    linear-gradient(90deg, transparent, var(--gold) 18%, var(--gold) 82%, transparent) 50% 50% / 100% 1px no-repeat,
+    linear-gradient(45deg, transparent 38%, var(--gold) 38% 62%, transparent 62%) 50% 50% / 14px 14px no-repeat;
+}
+.intro-sub { margin: 0; font-size: clamp(.7rem, 1.3vw, .95rem); letter-spacing: .32em; text-transform: uppercase; color: var(--mute); padding-left: .32em; }
+.intro-enter {
+  all: unset; box-sizing: border-box; cursor: pointer; position: relative;
+  margin-top: clamp(28px, 5vh, 48px); padding: clamp(14px, 2.2vh, 18px) clamp(46px, 7vw, 74px);
+  font-family: var(--display); font-size: clamp(1.25rem, 2.6vw, 1.85rem); letter-spacing: .28em; text-transform: uppercase; color: #fff1d6;
+  background: linear-gradient(180deg, #2a1c12, #120a06);
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
+  transition: color .3s, background .3s, transform .15s;
+  animation: enterGlow 2.6s ease-in-out infinite;
+}
+.intro-enter span { position: relative; z-index: 1; padding-left: .28em; }
+/* gold double border, drawn inside the chamfered shape */
+.intro-enter::before, .intro-enter::after { content: ""; position: absolute; pointer-events: none; }
+.intro-enter::before {
+  inset: 0; background: linear-gradient(135deg, #ffe7a8, #d9a24a 45%, #8a5a22);
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px,
+    0 14px, 2px 14.8px, 2px calc(100% - 14.8px), 14.8px calc(100% - 2px), calc(100% - 14.8px) calc(100% - 2px), calc(100% - 2px) calc(100% - 14.8px), calc(100% - 2px) 14.8px, calc(100% - 14.8px) 2px, 14.8px 2px, 2px 14.8px, 0 14px);
+}
+.intro-enter::after { inset: 6px; border: 1px solid rgba(242,196,107,.35); }
+.intro-enter:hover, .intro-enter:focus-visible { color: var(--ink); background: linear-gradient(180deg, #ffe9b8, #e3ad55); outline: none; }
+.intro-enter:active { transform: translateY(1px); }
+@keyframes enterGlow { 0%, 100% { filter: drop-shadow(0 0 6px rgba(242,196,107,.25)); } 50% { filter: drop-shadow(0 0 18px rgba(242,196,107,.6)); } }
+/* EN | FR switch with a sliding gold thumb */
+.intro-lang {
+  position: relative; display: grid; grid-template-columns: 1fr 1fr; margin-top: clamp(18px, 3vh, 26px);
+  width: 128px; height: 36px; border: 1px solid rgba(242,196,107,.6); border-radius: 18px;
+  background: rgba(14,9,32,.7); box-shadow: inset 0 0 12px rgba(0,0,0,.5);
+}
+.intro-lang::before {
+  content: ""; position: absolute; top: 3px; left: 3px; width: calc(50% - 3px); height: calc(100% - 6px); border-radius: 15px;
+  background: radial-gradient(circle at 35% 30%, #fff1c8, #d9a24a); box-shadow: 0 0 12px rgba(242,196,107,.6);
+}
+.intro-lang.anim::before { transition: transform .35s cubic-bezier(.5, 0, .2, 1.2); }
+.intro-lang[data-lang="fr"]::before { transform: translateX(100%); }
+.intro-lang button {
+  all: unset; position: relative; z-index: 1; cursor: pointer; display: grid; place-items: center;
+  font-family: var(--display); font-size: .9rem; letter-spacing: .14em; color: var(--gold); transition: color .3s;
+}
+.intro-lang button[aria-pressed="true"] { color: #241405; }
+.intro-lang button:focus-visible { outline: 1px dashed var(--gold); outline-offset: -5px; border-radius: 15px; }
+.intro-sound { display: flex; align-items: center; gap: 9px; margin: clamp(16px, 2.6vh, 22px) 0 0; font-size: clamp(.72rem, 1.1vw, .86rem); letter-spacing: .08em; color: rgba(246,234,210,.72); font-style: italic; }
+.intro-sound svg { width: 17px; height: 17px; fill: none; stroke: var(--gold); stroke-width: 1.6; flex: none; }
+.intro-sound svg rect { fill: rgba(242,196,107,.25); }
+/* while the enter screen is up, the corner buttons wait */
+body.intro-open .sound-toggle, body.intro-open .controls { opacity: 0; pointer-events: none; }
+@media (max-width: 520px) { .intro-name { font-size: clamp(2rem, 11.5vw, 3rem); white-space: normal; } .intro-kicker { letter-spacing: .34em; } }
+
+/* ==========================================================
+   FRENCH — the painted card and case file get text-free art,
+   with the labels set as real text in matching styles
+   ========================================================== */
+.fr-only, .ds-art-fr, .cc-art-fr { display: none; }
+html.lang-fr .fr-only { display: block; }
+html.lang-fr .ds-art-fr, html.lang-fr .cc-art-fr { display: block; }
+html.lang-fr .ds-art:not(.ds-art-fr), html.lang-fr .cc-art:not(.cc-art-fr) { display: none; }
+html.lang-fr .tg-copy, html.lang-fr .cc-copied { display: none; }
+.ds-labels { position: absolute; inset: 0; pointer-events: none; }
+/* the closed folder on the precinct desk */
+.room-profile .scene { container-type: inline-size; }
+.folder-fr { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.folder-fr img { position: absolute; left: 41.4365%; top: 57.2744%; width: 13.8122%; height: 6.2615%; }
+.folder-fr .ff { position: absolute; white-space: nowrap; line-height: 1; font-family: var(--sans); font-weight: 600; text-transform: uppercase; color: #2a1a10; opacity: .92; }
+.ff-title { left: 49.65%; top: 59.12%; transform: translate(-50%, -50%) rotate(3.4deg); font-size: 1.62cqw; letter-spacing: .07em; }
+.ff-no { left: 42.8%; top: 60.7%; transform: translateY(-50%) rotate(3.2deg); transform-origin: 0 50%; font-size: .86cqw; letter-spacing: .03em; }
+.ff-subj { left: 42.2%; top: 62.05%; transform: translateY(-50%) rotate(3.2deg); transform-origin: 0 50%; font-size: .9cqw; letter-spacing: .03em; }
+.ds-labels .dl {
+  position: absolute; transform: translateY(-52%); white-space: nowrap;
+  font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-weight: 700; text-transform: uppercase;
+  font-size: 1.72cqw; letter-spacing: .05em; color: #34241a; text-shadow: 0 1px 0 rgba(255,240,210,.25);
+}
+.cc-labels { position: absolute; inset: 0; pointer-events: none; }
+.cc-labels .cl { position: absolute; white-space: nowrap; line-height: 1; transform: translateY(-50%); }
+.cl-kicker { left: 50%; top: 3.75%; transform: translate(-50%, -50%) !important; font-size: 1.95cqw; letter-spacing: .36em; padding-left: .36em; color: #e7c98c; }
+.cl-title { left: 50%; top: 8.9%; transform: translate(-50%, -50%) !important; font-family: var(--display); font-size: 5.5cqw; color: #f2c879; text-shadow: 0 0 1.2cqw rgba(242,196,107,.35); }
+.cl-to { left: 50%; top: 18.2%; transform: translate(-50%, -50%) !important; font-family: var(--type); font-size: 2.5cqw; color: #eadfc8; }
+.cl-field { left: 8.16%; font-size: 1.95cqw; letter-spacing: .3em; color: #e7c98c; }
+.cl-field em { font-style: italic; letter-spacing: .12em; text-transform: none; font-size: .86em; opacity: .9; }
+.cl-send { left: 74.2%; top: 75.5%; transform: translate(-50%, -50%) !important; font-size: 2.45cqw; letter-spacing: .32em; padding-left: .32em; color: #f3e3c6; }
+.cc-pref {
+  position: absolute; left: 50.5%; top: 85.2%; transform: translate(-50%, -50%); margin: 0; white-space: nowrap;
+  font-family: var(--type); font-size: 1.95cqw; color: #eadfc8; line-height: 1;
+}
+.tg-copy-fr { all: unset; cursor: pointer; color: #e8635a; border-bottom: 1px solid currentColor; transition: color .25s, text-shadow .25s; }
+.tg-copy-fr:hover, .tg-copy-fr:focus-visible { color: #ff8f86; text-shadow: 0 0 1cqw rgba(255,120,110,.6); }
 
 /* ==========================================================
    KEYBOARD CONTROLS — light hint, bottom right, keys styled

@@ -6,6 +6,34 @@
   const NS = 'http://www.w3.org/2000/svg';
   const pl = a => a.map(p => `${f1(p[0])},${f1(p[1])}`).join(' ');
 
+  /* ---------- language: English or French (all text lives in i18n.js) ---------- */
+  const DICT = window.I18N || { en: {} };
+  const browserLang = () => (/^fr/i.test(navigator.language || '') ? 'fr' : 'en');
+  let LANG = 'en';
+  try { const saved = localStorage.getItem('lang'); LANG = (saved === 'en' || saved === 'fr') ? saved : browserLang(); }
+  catch (e) { LANG = browserLang(); }
+  const t = (k, vars) => {
+    let v = (DICT[LANG] && k in DICT[LANG]) ? DICT[LANG][k] : (k in DICT.en ? DICT.en[k] : k);
+    if (vars && typeof v === 'string') v = v.replace(/\{(\w+)\}/g, (_, n) => (vars[n] ?? ''));
+    return v;
+  };
+  const langHooks = [];
+  const onLang = fn => { langHooks.push(fn); };
+  function applyLang() {
+    document.documentElement.lang = LANG;
+    document.documentElement.classList.toggle('lang-fr', LANG === 'fr');
+    $$('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    $$('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
+    // the French versions of the painted card and case file are only fetched when needed
+    if (LANG === 'fr') $$('img[data-src]').forEach(img => { if (!img.getAttribute('src')) img.src = img.dataset.src; });
+    langHooks.forEach(fn => fn());
+  }
+  function setLang(l) {
+    LANG = l === 'fr' ? 'fr' : 'en';
+    try { localStorage.setItem('lang', LANG); } catch (e) { /* storage blocked */ }
+    applyLang();
+  }
+
   function rng(seed) {
     let s = seed % 2147483647;
     if (s <= 0) s += 2147483646;
@@ -46,9 +74,9 @@
   };
 
   function signSVG(name, poi) {
-    const { t, x, y } = poi.sign, txt = poi.label;
+    const { t: kind, x, y } = poi.sign, txt = t('sign.' + name);
     let s = `<g class="sign" data-room="${name}">`;
-    if (t === 'v') {
+    if (kind === 'v') {
       const w = 26, h = txt.length * 20 + 16, X = x - w / 2;
       s += `<rect class="sign-plate" x="${f1(X)}" y="${y}" width="${w}" height="${h}" rx="3"/>`;
       s += `<rect class="sign-edge" x="${f1(X + 4)}" y="${y + 4}" width="${w - 8}" height="${h - 8}" rx="2"/>`;
@@ -96,13 +124,24 @@
       }
       inner += `<polygon class="hit" points="${pl(p.hit || p.poly)}" fill="transparent"/>`;
       inner += `<circle class="zt" cx="${p.zoom[0]}" cy="${p.zoom[1]}" r="1" fill="transparent"/>`;
-      const label = { projects: 'Projects', skills: 'Skills', profile: 'Profile', hobbies: 'Hobbies (museum)', contact: 'Contact (phone booth)' }[name];
-      pois += `<g class="poi${p.small ? ' small' : ''}" data-room="${name}" tabindex="0" role="button" aria-label="${label}">${inner}</g>`;
-      signs += signSVG(name, p);
+      pois += `<g class="poi${p.small ? ' small' : ''}" data-room="${name}" tabindex="0" role="button" aria-label="${t('poi.' + name)}">${inner}</g>`;
     }
     s += `<g class="pois">${pois}</g><g class="signs">${signs}</g>`;
     world.innerHTML = s;
   })();
+  // the signs are drawn separately so they can be redrawn in the other language
+  function renderSigns() {
+    const grp = $('.signs', world);
+    grp.innerHTML = Object.entries(POIS).map(([name, p]) => signSVG(name, p)).join('');
+    $$('.sign', grp).forEach(sign => {
+      const room = sign.dataset.room, g = $(`.poi[data-room="${room}"]`, world);
+      if (g && g.classList.contains('lit')) sign.classList.add('lit');
+      sign.addEventListener('mouseenter', () => poiLight(room, true));
+      sign.addEventListener('mouseleave', () => poiOff(room));
+      sign.addEventListener('click', () => { location.hash = room; });
+    });
+    $$('.poi', world).forEach(g => g.setAttribute('aria-label', t('poi.' + g.dataset.room)));
+  }
 
   /* ---------- the painting covers the screen; on phones you can swipe along it ---------- */
   const cityScroll = $('#cityScroll'), cityScene = $('#cityScene');
@@ -447,24 +486,28 @@
   traffic.start();
 
   // spotlight + sign light up together
+  function poiLight(room, v) {
+    $(`.poi[data-room="${room}"]`, world)?.classList.toggle('lit', v);
+    $(`.sign[data-room="${room}"]`, world)?.classList.toggle('lit', v);
+  }
+  function poiOff(room) {
+    const g = $(`.poi[data-room="${room}"]`, world);
+    if (g && !g.classList.contains('chosen')) poiLight(room, false);
+  }
   $$('.poi', world).forEach(g => {
-    const sign = $(`.sign[data-room="${g.dataset.room}"]`, world);
-    const on = v => { g.classList.toggle('lit', v); sign && sign.classList.toggle('lit', v); };
-    const off = () => { if (!g.classList.contains('chosen')) on(false); };
-    g.addEventListener('mouseenter', () => on(true));
-    g.addEventListener('mouseleave', off);
-    g.addEventListener('focus', () => on(true));
-    g.addEventListener('blur', off);
-    if (sign) {
-      sign.addEventListener('mouseenter', () => on(true));
-      sign.addEventListener('mouseleave', off);
-      sign.addEventListener('click', () => { location.hash = g.dataset.room; });
-    }
+    const room = g.dataset.room;
+    g.addEventListener('mouseenter', () => poiLight(room, true));
+    g.addEventListener('mouseleave', () => poiOff(room));
+    g.addEventListener('focus', () => poiLight(room, true));
+    g.addEventListener('blur', () => poiOff(room));
   });
+  renderSigns();
+  onLang(renderSigns);
 
   const timeEl = $('#time');
-  const tick = () => { timeEl.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); };
+  const tick = () => { timeEl.textContent = new Date().toLocaleTimeString(LANG === 'fr' ? 'fr-CA' : [], { hour: 'numeric', minute: '2-digit' }); };
   tick(); setInterval(tick, 20000);
+  onLang(tick);
 
   /* ==========================================================
      PROJECTS — slides on the boardroom screen
@@ -534,8 +577,10 @@
 
   const slides = $$('.slide'), dotsEl = $('.s-dots'), countEl = $('.s-count');
   let slideI = 0;
-  dotsEl.innerHTML = slides.map((_, i) => `<button type="button" aria-label="Slide ${i + 1}"></button>`).join('');
+  dotsEl.innerHTML = slides.map(() => '<button type="button"></button>').join('');
   const dots = $$('button', dotsEl);
+  const labelDots = () => dots.forEach((d, i) => d.setAttribute('aria-label', t('proj.dot', { n: i + 1 })));
+  labelDots(); onLang(labelDots);
   function goSlide(i) {
     slideI = (i + slides.length) % slides.length;
     slides.forEach((s, k) => { s.classList.toggle('on', k === slideI); s.inert = k !== slideI; });
@@ -575,11 +620,8 @@
   /* ==========================================================
      SKILLS — take one of the three books, it opens on the left
      ========================================================== */
-  const SKILLS = [
-    { name: 'Skill One', section: 'Languages', level: 4, note: 'Placeholder: what you have built with this, and how comfortable you are with it.' },
-    { name: 'Skill Two', section: 'Frameworks & Tools', level: 3, note: 'Placeholder: what you have built with this, and how comfortable you are with it.' },
-    { name: 'Skill Three', section: 'Concepts', level: 4, note: 'Placeholder: a course or project where you used this.' },
-  ];
+  const SKILL_LEVELS = [4, 3, 4];
+  const skill = i => ({ ...t('skills')[i], level: SKILL_LEVELS[i] });
   const skillsRoom = $('.room-skills'), tome = $('#tome'), tip = $('.book-tip');
   const bookPolys = $$('.book-hot');
   let openBook = -1;
@@ -590,9 +632,9 @@
   };
   bookPolys.forEach(p => {
     const i = +p.dataset.i, b = polyBox(p);
-    p.setAttribute('aria-label', SKILLS[i].name);
+    p.setAttribute('aria-label', skill(i).name);
     const show = () => {
-      tip.textContent = SKILLS[i].name;
+      tip.textContent = skill(i).name;
       tip.style.left = `${((b.x0 + b.x1) / 2 / 1671) * 100}%`;
       tip.style.top = `${(b.y0 / 941) * 100}%`;
       tip.classList.add('on');
@@ -606,7 +648,7 @@
   });
   function takeBook(i) {
     if (openBook === i) return;
-    const sk = SKILLS[i];
+    const sk = skill(i);
     const swap = openBook >= 0;
     const doIt = () => {
       openBook = i;
@@ -643,28 +685,38 @@
     }, quick ? 250 : 500);
   }
   $('.tome-close').addEventListener('click', () => closeBook(false));
+  onLang(() => {
+    bookPolys.forEach(p => p.setAttribute('aria-label', skill(+p.dataset.i).name));
+    if (openBook >= 0) {
+      const sk = skill(openBook);
+      $('.cover-title', tome).textContent = sk.name;
+      $('.t-section', tome).textContent = sk.section;
+      $('.t-title', tome).textContent = sk.name;
+      $('.t-note', tome).textContent = sk.note;
+    }
+  });
 
   /* ==========================================================
      HOBBIES — the wall text and the four glass cases
      ========================================================== */
-  const HOBBIES = [
-    { name: 'Hobby One', item: 'The Amphora', desc: 'Placeholder: what this hobby is, when you got into it, and why it matters to you.' },
-    { name: 'Hobby Two', item: 'The Medal', desc: 'Placeholder: what this hobby is, when you got into it, and why it matters to you.' },
-    { name: 'Hobby Three', item: 'The Cup', desc: 'Placeholder: what this hobby is, when you got into it, and why it matters to you.' },
-    { name: 'Hobby Four', item: 'The Clock', desc: 'Placeholder: what this hobby is, when you got into it, and why it matters to you.' },
-  ];
+  const HOBBY_COUNT = 4;
+  const hobby = i => t('hobbies')[i];
   const ROMAN = ['I', 'II', 'III', 'IV'];
   const wall = $('.wall-text'), cases = $$('.case-hot'), exhibits = $$('.exhibit'), wtDots = $('.wt-dots'), caseTip = $('.case-tip');
-  wtDots.innerHTML = HOBBIES.map((h, i) => `<button type="button" aria-label="Exhibit ${ROMAN[i]}: ${h.name}"></button>`).join('');
+  wtDots.innerHTML = Array.from({ length: HOBBY_COUNT }, () => '<button type="button"></button>').join('');
+  const labelHobbies = () => {
+    $$('button', wtDots).forEach((d, i) => d.setAttribute('aria-label', t('hob.case', { r: ROMAN[i], name: hobby(i).name })));
+    cases.forEach(c => { const i = +c.dataset.i; c.setAttribute('aria-label', t('hob.case', { r: ROMAN[i], name: hobby(i).name })); });
+  };
   let hobbyI = 0;
   function goHobby(i, instant) {
-    hobbyI = (i + HOBBIES.length) % HOBBIES.length;
-    const h = HOBBIES[hobbyI];
+    hobbyI = (i + HOBBY_COUNT) % HOBBY_COUNT;
     const fill = () => {
-      $('.wt-kicker', wall).textContent = `Exhibit ${ROMAN[hobbyI]} of IV`;
+      const h = hobby(hobbyI);
+      $('.wt-kicker', wall).textContent = t('hob.kicker', { r: ROMAN[hobbyI] });
       $('.wt-title', wall).textContent = h.name;
       $('.wt-desc', wall).textContent = h.desc;
-      $('.wt-credit', wall).textContent = `On display: ${h.item} · Gift of Y. Ibrahim`;
+      $('.wt-credit', wall).textContent = t('hob.credit', { item: h.item });
       wall.classList.remove('fade');
     };
     if (instant) fill(); else { wall.classList.add('fade'); setTimeout(fill, 320); }
@@ -672,19 +724,20 @@
     exhibits.forEach((c, k) => c.classList.toggle('on', k === hobbyI));
     $$('button', wtDots).forEach((d, k) => d.classList.toggle('on', k === hobbyI));
   }
+  labelHobbies();
   cases.forEach(c => {
     const i = +c.dataset.i, b = polyBox(c);
-    c.setAttribute('aria-label', `Exhibit ${ROMAN[i]}: ${HOBBIES[i].name}`);
     c.addEventListener('click', () => goHobby(i));
     c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHobby(i); } });
     c.addEventListener('mouseenter', () => {
-      caseTip.textContent = `${ROMAN[i]} · ${HOBBIES[i].name}`;
+      caseTip.textContent = `${ROMAN[i]} · ${hobby(i).name}`;
       caseTip.style.left = `${((b.x0 + b.x1) / 2 / 1671) * 100}%`;
       caseTip.style.top = `${(b.y0 / 941) * 100}%`;
       caseTip.classList.add('on');
     });
     c.addEventListener('mouseleave', () => caseTip.classList.remove('on'));
   });
+  onLang(() => { labelHobbies(); goHobby(hobbyI, true); });
   $('.wt-btn.prev').addEventListener('click', () => goHobby(hobbyI - 1));
   $('.wt-btn.next').addEventListener('click', () => goHobby(hobbyI + 1));
   $$('button', wtDots).forEach((d, k) => d.addEventListener('click', () => goHobby(k)));
@@ -694,18 +747,20 @@
      CONTACT — the booth buttons
      ========================================================== */
   const lcd = $('#lcd'), contactRoom = $('.room-contact');
-  const IDLE = 'INSERT 10¢';
   let lcdTimer;
+  // longer words (the French ones) shrink to fit the little display
+  const showLcd = txt => { lcd.textContent = txt; lcd.style.setProperty('--n', Math.max(10, [...txt].length)); };
   const setLcd = (txt, hold) => {
     clearTimeout(lcdTimer);
-    lcd.textContent = txt;
-    if (hold) lcdTimer = setTimeout(() => { lcd.textContent = IDLE; contactRoom.classList.remove('ringing'); }, hold);
+    showLcd(txt);
+    if (hold) lcdTimer = setTimeout(() => { showLcd(t('lcd.idle')); contactRoom.classList.remove('ringing'); }, hold);
   };
-  const lcdIdle = () => { if (!contactRoom.classList.contains('ringing')) setLcd(IDLE); };
+  const lcdIdle = () => { if (!contactRoom.classList.contains('ringing')) setLcd(t('lcd.idle')); };
+  onLang(lcdIdle);
   $$('.dp-btn').forEach(a => {
-    a.addEventListener('mouseenter', () => setLcd(`DIAL ${a.dataset.who}`));
+    a.addEventListener('mouseenter', () => setLcd(t('lcd.dial', { who: a.dataset.who })));
     a.addEventListener('mouseleave', lcdIdle);
-    a.addEventListener('click', () => { contactRoom.classList.add('ringing'); setLcd(`CALLING ${a.dataset.who}…`, 2400); });
+    a.addEventListener('click', () => { contactRoom.classList.add('ringing'); setLcd(t('lcd.calling', { who: a.dataset.who }), 2400); });
   });
 
   /* ---------- pick up the phone: leave a message that lands in Youssef's inbox ---------- */
@@ -722,7 +777,7 @@
     pop.style.setProperty('--fy', `${f1(r.top + r.height / 2 - (pr.top + pr.height / 2))}px`);
     requestAnimationFrame(() => requestAnimationFrame(() => msgModal.classList.add('show')));
     contactRoom.classList.add('off-hook');
-    setLcd('LINE OPEN');
+    setLcd(t('lcd.open'));
     setTimeout(() => msgForm.elements.name.focus({ preventScroll: true }), 120);
   }
   function closeMsg() {
@@ -733,7 +788,7 @@
   }
   phoneHot.addEventListener('click', openMsg);
   phoneHot.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMsg(); } });
-  phoneHot.addEventListener('mouseenter', () => { if (msgModal.hidden) setLcd('PICK UP'); });
+  phoneHot.addEventListener('mouseenter', () => { if (msgModal.hidden) setLcd(t('lcd.pick')); });
   phoneHot.addEventListener('mouseleave', () => { if (msgModal.hidden) lcdIdle(); });
   $('.msg-close').addEventListener('click', closeMsg);
   msgModal.addEventListener('click', e => { if (e.target === msgModal) closeMsg(); });
@@ -743,13 +798,13 @@
     e.preventDefault();
     const f = msgForm.elements;
     const name = f.name.value.trim(), email = f.email.value.trim(), message = f.message.value.trim();
-    if (!name || !message) return setStatus('Add your name and a message first.', 'err');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setStatus('That email address doesn’t look right.', 'err');
+    if (!name || !message) return setStatus(t('form.need'), 'err');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setStatus(t('form.bademail'), 'err');
     if (f._honey.value) return; // bots fill the hidden field
     sendBtn.disabled = true;
-    sendLabel.textContent = 'Sending…';
-    setStatus('Connecting your call…');
-    setLcd('SENDING…');
+    sendLabel.textContent = t('form.sending');
+    setStatus(t('form.connecting'));
+    setLcd(t('lcd.sending'));
     try {
       const res = await fetch(MAIL_ENDPOINT, {
         method: 'POST',
@@ -765,55 +820,66 @@
       const data = await res.json().catch(() => ({}));
       if (!res.ok || String(data.success) !== 'true') throw new Error(data.message || `HTTP ${res.status}`);
       msgForm.reset();
-      setStatus('Message sent. I’ll get back to you soon.', 'ok');
-      sendLabel.textContent = 'Sent ✓';
+      setStatus(t('form.sent'), 'ok');
+      sendLabel.textContent = t('form.sentbtn');
       contactRoom.classList.add('ringing');
-      setLcd('MESSAGE SENT', 3000);
+      setLcd(t('lcd.sent'), 3000);
       setTimeout(() => { sendLabel.textContent = ''; sendBtn.disabled = false; }, 3000);
     } catch (err) {
       sendBtn.disabled = false;
-      sendLabel.textContent = 'Try again';
+      sendLabel.textContent = t('form.retry');
       setTimeout(() => { sendLabel.textContent = ''; }, 2400);
-      setLcd('NO ANSWER', 2400);
+      setLcd(t('lcd.noanswer'), 2400);
       const mailto = `mailto:${MAIL_TO}?subject=${encodeURIComponent(`Portfolio message from ${name}`)}&body=${encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')')}`;
       msgStatus.dataset.kind = 'err';
-      msgStatus.textContent = 'The line dropped. ';
+      msgStatus.textContent = t('form.dropped');
       const a = document.createElement('a');
       a.href = mailto;
-      a.textContent = 'Send it from your email app instead';
+      a.textContent = t('form.mailapp');
       msgStatus.append(a, '.');
     }
   });
 
-  const copyBtn = $('.tg-copy');
-  let copyTimer;
-  copyBtn.addEventListener('click', async () => {
-    clearTimeout(copyTimer);
-    const email = copyBtn.dataset.email;
-    let ok = false;
-    try { await navigator.clipboard.writeText(email); ok = true; } catch (e) {
+  async function copyEmail(email) {
+    try { await navigator.clipboard.writeText(email); return true; } catch (e) {
       const ta = document.createElement('textarea');
       ta.value = email; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
       document.body.appendChild(ta); ta.select();
+      let ok = false;
       try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
       ta.parentNode.removeChild(ta);
+      return ok;
     }
+  }
+  const copyBtn = $('.tg-copy'), copyBtnFr = $('.tg-copy-fr');
+  let copyTimer;
+  // English: the painted "Copy my address" is a hotspot; feedback shows over it
+  copyBtn.addEventListener('click', async () => {
+    clearTimeout(copyTimer);
+    const ok = await copyEmail(copyBtn.dataset.email);
     const copied = $('.cc-copied');
-    copied.textContent = ok ? 'Copied!' : email;
+    copied.textContent = ok ? t('form.copied') : copyBtn.dataset.email;
     copyTimer = setTimeout(() => { copied.textContent = ''; }, 2400);
+  });
+  // French: the words are real text, so the button itself says it was copied
+  copyBtnFr.addEventListener('click', async () => {
+    clearTimeout(copyTimer);
+    const ok = await copyEmail(copyBtnFr.dataset.email);
+    copyBtnFr.textContent = ok ? t('form.copied') : copyBtnFr.dataset.email;
+    copyTimer = setTimeout(() => { copyBtnFr.textContent = t('card.copy'); }, 2400);
   });
 
   /* ==========================================================
      NAVIGATION — zoom from the balcony into a room
      ========================================================== */
   const ROOMS = ['profile', 'projects', 'skills', 'hobbies', 'contact'];
-  const LABELS = { profile: 'Profile', projects: 'Projects', skills: 'Skills', hobbies: 'Hobbies', contact: 'Contact' };
+  const roomName = r => t('room.' + r);
   const city = $('#city'), flash = $('.flash');
   const rooms = Object.fromEntries($$('.room').map(r => [r.dataset.room, r]));
   let current = null, timers = [];
 
   $$('.elevator').forEach(nav => {
-    nav.innerHTML = ROOMS.map((r, i) => `<a href="#${r}" data-room="${r}" title="${LABELS[r]}" aria-label="${LABELS[r]}">${i + 1}</a>`).join('');
+    nav.innerHTML = ROOMS.map((r, i) => `<a href="#${r}" data-room="${r}" title="${roomName(r)}" aria-label="${roomName(r)}">${i + 1}</a>`).join('');
   });
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
   const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
@@ -967,7 +1033,7 @@
   }
   function updateControls(name) {
     controls.classList.toggle('show', !!name);
-    if (name) ctlWhere.textContent = `${LABELS[neighbour(name, -1)]} · ${LABELS[neighbour(name, 1)]}`;
+    if (name) ctlWhere.textContent = `${roomName(neighbour(name, -1))} · ${roomName(neighbour(name, 1))}`;
   }
   $$('.key', controls).forEach(k => k.addEventListener('click', () => {
     const act = k.dataset.act;
@@ -982,7 +1048,7 @@
     if (name !== 'skills' && openBook >= 0) closeBook(false);
     Object.entries(rooms).forEach(([k, el]) => { const on = k === name; el.classList.toggle('open', on); el.inert = !on; });
     $$('.elevator a').forEach(a => a.classList.toggle('on', a.dataset.room === name));
-    document.title = `${LABELS[name]} — Youssef Ibrahim`;
+    document.title = t('title.room', { room: roomName(name) });
     if (name === 'projects') requestAnimationFrame(fitSlides);
     if (name !== 'profile' && !modal.hidden) closeFile();
     if (name !== 'contact' && !msgModal.hidden) closeMsg();
@@ -1028,7 +1094,7 @@
       later(() => { city.classList.remove('no-anim', 'zoom'); flash.classList.remove('on'); }, 550);
     }
     city.inert = false;
-    document.title = 'Youssef Ibrahim — Portfolio';
+    document.title = t('title.home');
     updateControls(null);
     const g = $(`.poi[data-room="${current}"]`, world);
     later(() => g && g.focus({ preventScroll: true }), reduce ? 0 : 1300);
@@ -1053,9 +1119,15 @@
     const a = e.target.closest('a[href="#"]');
     if (a && !a.classList.contains('back')) e.preventDefault();
   });
+  onLang(() => {
+    $$('.elevator a').forEach(a => { a.title = roomName(a.dataset.room); a.setAttribute('aria-label', roomName(a.dataset.room)); });
+    document.title = current ? t('title.room', { room: roomName(current) }) : t('title.home');
+    if (current) updateControls(current);
+  });
   addEventListener('hashchange', () => route(false));
   addEventListener('resize', () => { if (current === 'projects') fitSlides(); });
   addEventListener('keydown', e => {
+    if (introOpen) return; // the enter screen handles its own keys
     if (e.key === 'Escape') {
       if (!modal.hidden) return closeFile();
       if (!msgModal.hidden) return closeMsg();
@@ -1087,7 +1159,7 @@
      RAIN SOUND — made live with the Web Audio API (no audio file):
      a soft hiss of distant rain, a low wash, and scattered drops.
      Browsers only allow sound after the visitor interacts, so it
-     starts on the first click, tap or key press. Indoors it is
+     starts when they press Enter on the enter screen. Indoors it is
      muffled, as if heard through the window.
      ========================================================== */
   const sound = (() => {
@@ -1160,8 +1232,8 @@
     function render() {
       btn.classList.toggle('off', !wanted);
       btn.setAttribute('aria-pressed', String(wanted));
-      btn.setAttribute('aria-label', wanted ? 'Mute rain sound' : 'Play rain sound');
-      btn.title = wanted ? 'Rain sound on' : 'Rain sound off';
+      btn.setAttribute('aria-label', t(wanted ? 'snd.mute' : 'snd.play'));
+      btn.title = t(wanted ? 'snd.on' : 'snd.off');
     }
     function start() {
       if (!wanted) return;
@@ -1169,10 +1241,6 @@
       if (ctx.state === 'suspended') ctx.resume();
       applyPlace(false);
     }
-    // the first interaction anywhere unlocks audio
-    const unlock = () => { start(); removeEventListener('pointerdown', unlock); removeEventListener('keydown', unlock); };
-    addEventListener('pointerdown', unlock);
-    addEventListener('keydown', unlock);
     btn.addEventListener('click', e => {
       e.stopPropagation();
       wanted = !wanted;
@@ -1186,8 +1254,42 @@
       if (document.hidden) ctx.suspend(); else if (wanted) ctx.resume();
     });
     render();
-    return { setIndoors(v) { indoors = v; applyPlace(false); } };
+    onLang(render);
+    return { start, setIndoors(v) { indoors = v; applyPlace(false); } };
   })();
+
+  /* ==========================================================
+     ENTER SCREEN — pick a language, then Enter: that click is what
+     lets the browser start the rain sound
+     ========================================================== */
+  const intro = $('#intro'), soundBtn = $('#soundToggle');
+  let introOpen = !!intro;
+  if (intro) {
+    [city, controls, soundBtn, ...Object.values(rooms)].forEach(el => { el.inert = true; });
+    const langBox = $('#introLang');
+    const showLangChoice = () => {
+      langBox.dataset.lang = LANG;
+      $$('button', langBox).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
+    };
+    // the knob only slides when the visitor flips it, not when the saved language loads
+    $$('button', langBox).forEach(b => b.addEventListener('click', () => { langBox.classList.add('anim'); if (b.dataset.lang !== LANG) setLang(b.dataset.lang); }));
+    onLang(showLangChoice);
+    $('#introEnter').addEventListener('click', enterSite);
+    setTimeout(() => $('#introEnter').focus({ preventScroll: true }), 60);
+  }
+  function enterSite() {
+    if (!introOpen) return;
+    introOpen = false;
+    sound.start();
+    document.body.classList.remove('intro-open');
+    intro.classList.add('leaving');
+    city.inert = !!current;
+    Object.entries(rooms).forEach(([k, el]) => { el.inert = k !== current; });
+    controls.inert = false; soundBtn.inert = false;
+    setTimeout(() => { intro.hidden = true; }, reduce ? 0 : 1200);
+    if (current) $('.back', rooms[current]).focus({ preventScroll: true });
+  }
+  applyLang();
 
   requestAnimationFrame(() => { route(true); fitSlides(); });
 })();
