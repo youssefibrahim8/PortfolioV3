@@ -6,3 +6,8 @@ tools/
 Thumbs.db
 desktop.ini
 .DS_Store
+# vercel project link (local)
+.vercel/
+
+.vercel
+.env*
